@@ -1,0 +1,54 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<polymer-element name="nautes-zone" attributes="zone canvas">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #title{
+        position: absolute;
+        z-index: 100;
+        left: {{zone.shape.points[0].x}}px;
+        top: {{zone.shape.points[0].y}}px;
+        background-color: rgba(100, 100, 100, 0.7);
+        color: #fff;
+      }
+    </style>
+    <div id="title">
+      {{zone.name}}
+    </div>
+  </template>
+  <script>
+    Polymer("nautes-zone",{
+      canvasChanged: function() {
+          console.log(this.zone.name);
+          var poly = this.zone.shape.points;
+          console.log(poly);
+          var canvas = this.canvas;
+          var context = canvas.getContext('2d');
+
+          var ranR = Math.floor(Math.random() * 255);
+          var ranG = Math.floor(Math.random() * 255);
+          var ranB = Math.floor(Math.random() * 255);
+
+          context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.5)";
+          context.beginPath();
+          context.moveTo(poly[0].x, poly[0].y);
+          console.log("x:"+poly[0].x+" y:"+poly[0].y );
+          for( item=1 ; item < poly.length-1 ; item++ ){
+              context.lineTo( poly[item].x , poly[item].y );
+              console.log("x:"+poly[item].x+" y:"+poly[item].y );
+          }
+          /*if(poly[item].y>poly[0].y){*/
+            context.lineTo( poly[0].x , poly[item].y );
+          /*} else {
+            context.lineTo( poly[item].y , poly[0].y );
+          }*/
+          context.closePath();
+          context.fill();
+          context.addHitRegion({'id': "test", 'cursor': 'pointer'});
+      }
+    });
+  </script>
+</polymer-element>

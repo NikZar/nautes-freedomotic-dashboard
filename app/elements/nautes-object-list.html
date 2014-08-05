@@ -1,0 +1,36 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/nautes-object-row.html">
+
+<polymer-element name="nautes-object-list" attributes="bgColor">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+      }
+    </style>
+
+    <fd-rest-element-service id="objectsService"  fdtype="objects" fditems="{{objects}}"></fd-rest-element-service>
+    <div layout vertical center>
+      <template repeat="{{obj in objects}}">
+        <nautes-object-row bgColor="{{bgColor}}">
+          <img src="{{getImg(obj)}}" width="50" height="50">
+          <h2>{{obj.name}}</h2>
+          <p>{{obj.description}}</p>
+        </nautes-object-row>
+      </template>
+    </div>    
+  </template>
+
+
+  <script>
+    Polymer("nautes-object-list",{
+      getImg: function(obj) {
+        var icon = obj.representation[obj.currentRepresentation].icon;
+        var src = 'https://fritz.bestmazzo.it:9113/v3/resources/' + icon ;
+        return src;
+      }
+    });
+  </script>
+</polymer-element>

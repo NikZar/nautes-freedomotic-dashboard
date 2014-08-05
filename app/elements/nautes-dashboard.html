@@ -1,0 +1,76 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.html">
+<link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.css">
+<link rel="import" href="../elements/nautes-dashboard-service.html">
+<link rel="import" href="../elements/nautes-box.html">
+
+
+<polymer-element name="nautes-dashboard" attributes="selected selectedBox">
+  <template>
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      core-header-panel {
+        height: 100%;
+      }
+      core-toolbar{
+          background-color: #ccc;
+          font-family: Verdana;
+      }
+
+      div{
+          display: block;
+      }
+      #container{
+          background: #444;
+          height: 100%;
+      }
+      .top,
+      .middle,
+      .bottom{
+          position: relative;
+          margin: 2px;
+      }
+    </style>
+
+  <nautes-dashboard-service id="service" boxes="{{boxes}}" boxesObjects="{{boxesObjects}}"></nautes-dashboard-service>
+
+  <div id="container" horizontal layout>
+          <div flex vertical layout>
+            <nautes-box target="{{boxesObjects.environment.title}}" box="{{boxesObjects.environment}}" on-tap="{{boxTap}}" flex two hero hero-id="environment"></nautes-box>
+            <nautes-box target="{{boxesObjects.alerts.title}}" box="{{boxesObjects.alerts}}" on-tap="{{boxTap}}" flex hero hero-id="alerts"></nautes-box>
+            <nautes-box target="{{boxesObjects.info.title}}"  box="{{boxesObjects.info}}" on-tap="{{boxTap}}" flex hero hero-id="info"></nautes-box>
+          </div>
+          <div  flex vertical layout>
+            <nautes-box target="{{boxesObjects.family.title}}"  box="{{boxesObjects.family}}" on-tap="{{boxTap}}" flex hero hero-id="family"></nautes-box>
+            <nautes-box target="{{boxesObjects.actions.title}}"  box="{{boxesObjects.actions}}" on-tap="{{boxTap}}" flex two hero hero-id="actions"></nautes-box>
+            <nautes-box target="{{boxesObjects.settings.title}}"  box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" flex hero hero-id="settings"></nautes-box>
+          </div>
+          <div flex vertical layout>
+            <nautes-box target="{{boxesObjects.objects.title}}"  box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" flex hero hero-id="objects"></nautes-box>
+            <nautes-box target="{{boxesObjects.messages.title}}"  box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" flex hero hero-id="messages"></nautes-box>
+            <nautes-box target="{{boxesObjects.triggers.title}}"  box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" flex two hero hero-id="triggers"></nautes-box>
+          </div>
+        </div>
+
+  </template>
+  <script>
+    Polymer("nautes-dashboard",{
+      boxTap: function(event, detail, sender){
+        console.log("Transition to: "+ sender.getAttribute("target"));
+        this.selected = sender.getAttribute("target").toLowerCase();
+        this.selectedBox = this.boxesObjects[this.selected];
+
+        setTimeout(function() {
+          this.page = 1;
+        }.bind(this), 200);
+      }
+    });
+  </script>
+</polymer-element>

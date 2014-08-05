@@ -1,0 +1,32 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/nautes-environment-row.html">
+
+<fd-rest-element-service id="triggersService"  fdtype="triggers" fditems="{{triggers}}"></fd-rest-element-service>
+
+<polymer-element name="nautes-environment" attributes="bgColor">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+        width: 100%;
+      }
+    </style>
+
+    <fd-rest-element-service id="environmentsService"  fdtype="environments" fditems="{{environments}}"></fd-rest-element-service>
+
+    <div layout vertical center>
+      <template repeat="{{environment in environments}}">
+        <nautes-environment-row bgColor="{{bgColor}}" environment="{{environment}}">
+        </nautes-environment-row>
+      </template>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-environment",{
+    });
+  </script>
+</polymer-element>

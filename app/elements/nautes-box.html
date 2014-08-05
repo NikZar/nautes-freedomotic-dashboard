@@ -1,0 +1,94 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/iconsets/image-icons.html">
+<link rel="import" href="../bower_components/core-icons/iconsets/social-icons.html">
+<link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<polymer-element name="nautes-box" attributes="box tooltip">
+  <template>
+    <style>
+    :host {
+      display: block;
+      background-color: {{box.color}};
+      margin: 4px;
+      min-width: 200px !IMPORTANT;
+      min-height: 200px !IMPORTANT;
+    }
+    core-icon{
+      color: #444;
+    }
+    paper-ripple {
+      color: #aaaaff;
+    }
+    core-tooltip{
+      size: 200;
+    }
+    /* Style #my-button blue with white text and darker blue ink. */
+    #my-button {
+        margin: 10px;
+        font-family: Verdana;
+        background: {{box.color}};
+        color: #444;
+        min-width: 150px;
+    }
+    #left-icon{
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+    #description{
+      display: inline-block;
+      width: 200px;
+      height: 200px;
+    }
+    .category-bg-wrapper{
+      width: 64%;
+      height: 64%;
+    }
+    .category-tile-bg {
+      position: absolute!important;
+    }
+    </style>
+    <div layout vertical center center-justified fit>
+      <core-icon icon="{{box.img}}" size="140"></core-icon>
+      <paper-button id="my-button" label="{{box.title}}"></paper-button>
+      <paper-ripple fit></paper-ripple>
+    </div>
+    <div id="left-icon" layout vertical center center-justified on-tap="{{doFlip}}">
+        <core-tooltip position="left">
+              <core-icon icon="info-outline" size="30"></core-icon>
+              <div id="tipContent" tip>
+                {{box.description}}
+              </div>
+        </core-tooltip>
+    </div>
+    <paper-shadow z="1"></paper-shadow>
+
+  </template>
+  <script>
+    String.prototype.chunk = function(n) {
+        var ret = [];
+        for(var i=0, len=this.length; i < len; i += n) {
+           ret.push(this.substr(i, n))
+        }
+        return ret
+    };
+
+    Polymer("nautes-box",{
+      showDescription: true,
+      created: function() {
+        this.showDescription = true;
+      },
+      doFlip: function(){
+        this.showDescription = !this.showDescription;
+        console.log("tapped!"+this.showDescription);
+      },
+      boxChanged: function(){
+        this.$.tipContent.innerHTML = this.box.description.chunk(40).join("<br /><br />");
+      }
+    });
+  </script>
+</polymer-element>
