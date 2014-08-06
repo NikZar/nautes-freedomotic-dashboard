@@ -3,7 +3,7 @@
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-trigger-row.html">
 
-<polymer-element name="nautes-trigger-list" attributes="bgColor">
+<polymer-element name="nautes-trigger-list" attributes="bgColor toast">
   <template>
     <style>
       :host {
@@ -12,7 +12,7 @@
       }
     </style>
 
-    <fd-rest-element-service id="triggersService"  fdtype="triggers" fditems="{{triggers}}"></fd-rest-element-service>
+    <fd-rest-element-service id="triggersService"  fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}"></fd-rest-element-service>
 
     <div layout vertical center>
       <template repeat="{{trigger in triggers}}">

@@ -2,7 +2,7 @@
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-object-row.html">
 
-<polymer-element name="nautes-object-list" attributes="bgColor">
+<polymer-element name="nautes-object-list" attributes="bgColor toast">
   <template>
     <style>
       :host {
@@ -11,7 +11,7 @@
       }
     </style>
 
-    <fd-rest-element-service id="objectsService"  fdtype="objects" fditems="{{objects}}"></fd-rest-element-service>
+    <fd-rest-element-service id="objectsService"  fdtype="objects" fditems="{{objects}}" toast={{toast}}></fd-rest-element-service>
     <div layout vertical center>
       <template repeat="{{obj in objects}}">
         <nautes-object-row bgColor="{{bgColor}}">

@@ -5,7 +5,7 @@
 
 <fd-rest-element-service id="triggersService"  fdtype="triggers" fditems="{{triggers}}"></fd-rest-element-service>
 
-<polymer-element name="nautes-environment" attributes="bgColor">
+<polymer-element name="nautes-environment" attributes="bgColor toast">
   <template>
     <style>
       :host {
@@ -15,7 +15,8 @@
       }
     </style>
 
-    <fd-rest-element-service id="environmentsService"  fdtype="environments" fditems="{{environments}}"></fd-rest-element-service>
+    <fd-rest-element-service id="environmentsService"  fdtype="environments" fditems="{{environments}}"" toast="{{toast}}">
+    </fd-rest-element-service>
 
     <div layout vertical center>
       <template repeat="{{environment in environments}}">
