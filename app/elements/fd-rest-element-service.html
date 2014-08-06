@@ -1,18 +1,12 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
-<!-- 
-  `<fd-rest-element-service>` provides an API for the FD rest elements
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-  Provides a very simple API: ex. fdtype `plugins` returns the list of installed plugins.
-
-  @element plugin-service
--->
-
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast">
   <template>
     <style>
     :host {
-      display: none;
+      display: block;
     }
     </style>
     <core-ajax id="ajax" 
@@ -22,10 +16,10 @@
       response="{{fditems}}"
       handleAs="json"  withCredentials >
     </core-ajax>
-       
   </template>
   <script>
   Polymer('fd-rest-element-service', {
+    alwaysPrepare: true,
     
     fdtype:'environments',
     
@@ -35,7 +29,7 @@
 
     elementsLoaded: function() {
       // Make a copy of the loaded data
-      console.log(fdtype +" : "+ this.$.ajax.response);
+      console.log(this.fdtype +" : "+ this.$.ajax.response);
       this.fditems = this.$.ajax.response.slice(0);
 
       for (var i = fditems.length - 1; i >= 0; i--) {
@@ -46,7 +40,10 @@
     },
     
     errorHandler: function(event){
-      console.log(event);
+      if(this.toast){
+        this.toast.text="There was a problem loading "+this.fdtype+" data.";
+        this.toast.show();
+      }
     }
   });
   </script>

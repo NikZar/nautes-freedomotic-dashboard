@@ -26,7 +26,20 @@
         height: 100%;
       }
 
+      paper-toast {
+        bottom: 10px;
+        left: 10px;
+      }
+
+      paper-toast a {
+        color: #fff;
+        text-decoration: none;
+      }
+
     </style>
+
+    <paper-toast id="toast" text="There was a problem loading data.">
+    </paper-toast>
 
     <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition">
       
@@ -34,7 +47,8 @@
       
       <section name="environment" on-page-back="{{back}}" layout vertical>
        <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="environment" cross-fade>
-        <nautes-environment bgColor="{{selectedBox.color}}"></nautes-environment>
+        <nautes-environment bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
+        </nautes-environment>
        </nautes-dashboard-page>
       </section>
 
@@ -45,7 +59,8 @@
 
       <section name="objects" on-page-back="{{back}}" layout vertical>
        <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="objects">
-          <nautes-object-list bgColor="{{selectedBox.color}}"></nautes-object-list>
+          <nautes-object-list bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
+          </nautes-object-list>
        </nautes-dashboard-page>
       </section>
 
@@ -76,7 +91,8 @@
 
       <section name="triggers" layout vertical>
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="triggers">
-        <nautes-trigger-list bgColor="{{selectedBox.color}}"></nautes-trigger-list>
+        <nautes-trigger-list bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
+        </nautes-trigger-list>
        </nautes-dashboard-page>
       </section>
     </core-animated-pages>
