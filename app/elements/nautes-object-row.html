@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
 
 <polymer-element name="nautes-object-row" attributes="bgColor">
   <template>
@@ -12,7 +13,6 @@
         font-weight: 300;
       }
       .object-row {
-        margin-bottom: 10px;
         padding: 40px;
         font-family: Tahoma;
         color: #444;
@@ -34,16 +34,17 @@
         border-radius: 50%;
         border: 3px solid #fff;
         background: #444;
-        margin: 10px;
+        margin-right: 30px;
       }
     </style>
 
     <div class="object-row" layout horizontal center>
       <content select="img"></content>
-      <div layout vertical>
+      <div layout vertical center-justified>
         <content select="h2"></content>
         <content></content>
       </div>
+      <paper-shadow z="1"></paper-shadow>
     </div>
 
   </template>

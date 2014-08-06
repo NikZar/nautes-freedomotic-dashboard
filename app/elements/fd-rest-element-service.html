@@ -12,7 +12,7 @@
     <core-ajax id="ajax" 
       auto on-core-error="{{errorHandler}}"
       url="https://fritz.bestmazzo.it:9113/v3/{{fdtype}}/"
-      disabled-on-core-response="{{elementsLoaded}}"
+      disable-on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
       handleAs="json"  withCredentials >
     </core-ajax>
@@ -28,14 +28,16 @@
     },
 
     elementsLoaded: function() {
-      // Make a copy of the loaded data
       console.log(this.fdtype +" : "+ this.$.ajax.response);
-      this.fditems = this.$.ajax.response.slice(0);
 
-      for (var i = fditems.length - 1; i >= 0; i--) {
+      // Make a copy of the loaded data
+      this.fditems = this.$.ajax.response.slice(0);
+      /*
+      for (var i = 0; i < this.fditems.length; i++){
         console.log("element #"+i);
-        console.log(fditems[i]);
+        console.log(this.fditems[i]);
       }
+      */
 
     },
     

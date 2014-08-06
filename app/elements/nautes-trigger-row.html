@@ -1,4 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/core-icons/iconsets/image-icons.html">
 
 <polymer-element name="nautes-trigger-row" attributes="bgColor trigger">
   <template>
@@ -37,14 +40,28 @@
         background: #444;
         margin: 10px;
       }
+      .title{
+        font-weight: bold;
+        font-size: 20px;
+      }
+      span{
+        line-height: 20px;
+        margin-right: 5px;
+      }
+      core-icon{
+        margin-left: 30px;
+        color: #444;
+      }
     </style>
-
-    <div class="trigger-row" layout horizontal center>
-      <div layout vertical>
-          <h2>{{trigger.name}}</h2>
-          <p>{{trigger.description}}</p>
-          <p>{{trigger.channel}}</p>
+    <div layout horizontal center>
+      <core-icon icon="image:flash-on" size="70"></core-icon>
+      <div class="trigger-row" layout vertical center-justified>
+        <div layout horizontal>
+            <span class="title">{{trigger.name}}: </span> <span> {{trigger.description}}</span>
+        </div>
+        <span>Channel: {{trigger.channel}}</span>
       </div>
+      <paper-shadow z="1"></paper-shadow>
     </div>
 
   </template>
