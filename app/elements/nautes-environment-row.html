@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+
 <link rel="import" href="../elements/nautes-zone.html">
 
 <polymer-element name="nautes-environment-row" attributes="environment bgColor">
@@ -29,37 +30,7 @@
     </div>
   </template>
   <script>
-    /*
-    ready: function(){
-            var ctx = this.$.environmentCanvas.getContext('2d');
-            var zones = this.environment.zones;
-            console.log(zones);
-            for (i = 0; i < zones.length; i++) { 
-                var zone = zones[i];
-                console.log(zone);
-                var poly = zone.shape.points;
-                ctx.fillStyle = "#f00";
-                ctx.beginPath();
-                ctx.moveTo(poly[0].x, poly[0].y);
-                console.log( "x:"+poly[0].x+" y:"+poly[0].y );
-                for( item=1 ; item < poly.length-1 ; item++ ){
-                    ctx.lineTo( poly[item].x , poly[item].y );
-                    console.log( "x:"+poly[item].x+" y:"+poly[item].y );
-                }
-                ctx.closePath();
-                ctx.fill();
-            }
-        },*/
     Polymer("nautes-environment-row",{
-      ready: function(){
-          var canvas = this.$.environmentCanvas;
-          canvas.onclick = function (event)
-          {
-              if (event.region) {
-                  alert('You clicked ' + event.region);
-              }
-          }
-        },
       getImg: function(environment) {
         var src = 'https://fritz.bestmazzo.it:9113/v3/resources/' + environment.backgroundImage;
         return src;
