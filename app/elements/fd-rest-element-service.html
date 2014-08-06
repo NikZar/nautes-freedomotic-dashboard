@@ -16,7 +16,7 @@
     }
     </style>
     <core-ajax id="ajax" 
-      auto 
+      auto on-core-error="{{errorHandler}}"
       url="https://fritz.bestmazzo.it:9113/v3/{{fdtype}}/"
       disabled-on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
@@ -32,6 +32,7 @@
     created: function() {
       this.fditems = [];
     },
+
     elementsLoaded: function() {
       // Make a copy of the loaded data
       console.log(fdtype +" : "+ this.$.ajax.response);
@@ -40,7 +41,12 @@
       for (var i = fditems.length - 1; i >= 0; i--) {
         console.log("element #"+i);
         console.log(fditems[i]);
-      };
+      }
+
+    },
+    
+    errorHandler: funtion(event){
+      console.log(event);
     }
   });
   </script>
