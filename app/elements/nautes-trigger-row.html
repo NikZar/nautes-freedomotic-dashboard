@@ -1,6 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
-<polymer-element name="nautes-trigger-row" attributes="bgColor">
+<polymer-element name="nautes-trigger-row" attributes="bgColor trigger">
   <template>
     <style>
       :host {
@@ -11,6 +11,7 @@
         font-size: 1.2rem;
         font-weight: 300;
       }
+      
       .trigger-row {
         margin-bottom: 10px;
         padding: 40px;
@@ -40,8 +41,9 @@
 
     <div class="trigger-row" layout horizontal center>
       <div layout vertical>
-        <content select="h2"></content>
-        <content></content>
+          <h2>{{trigger.name}}</h2>
+          <p>{{trigger.description}}</p>
+          <p>{{trigger.channel}}</p>
       </div>
     </div>
 

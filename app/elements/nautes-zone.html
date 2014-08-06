@@ -22,9 +22,7 @@
   <script>
     Polymer("nautes-zone",{
       canvasChanged: function() {
-          console.log(this.zone.name);
           var poly = this.zone.shape.points;
-          console.log(poly);
           var canvas = this.canvas;
           var context = canvas.getContext('2d');
 
@@ -35,19 +33,11 @@
           context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.5)";
           context.beginPath();
           context.moveTo(poly[0].x, poly[0].y);
-          console.log("x:"+poly[0].x+" y:"+poly[0].y );
-          for( item=1 ; item < poly.length-1 ; item++ ){
+          for( item=1 ; item < poly.length ; item++ ){
               context.lineTo( poly[item].x , poly[item].y );
-              console.log("x:"+poly[item].x+" y:"+poly[item].y );
           }
-          /*if(poly[item].y>poly[0].y){*/
-            context.lineTo( poly[0].x , poly[item].y );
-          /*} else {
-            context.lineTo( poly[item].y , poly[0].y );
-          }*/
           context.closePath();
           context.fill();
-          context.addHitRegion({'id': "test", 'cursor': 'pointer'});
       }
     });
   </script>
