@@ -1,0 +1,31 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<polymer-element name="nautes-zone-object" attributes="envObject">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: absolute;
+        z-index: 1000;
+        left: {{envObject.representation[0].offset.x}}px;
+        top: {{envObject.representation[0].offset.y}}px;
+      }
+    </style>
+    <img src="{{getImg()}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
+  </template>
+  <script>
+    Polymer("nautes-zone-object",{
+      getImg: function() {
+        var obj = this.envObject;
+        if(obj){
+          var icon = obj.representation[obj.currentRepresentation].icon;
+          if(icon){
+            var src = "https://fritz.bestmazzo.it:9113/v3/resources/" + icon;
+            return src;
+          }
+          return "../images/concentric.svg";
+        }
+      }
+    });
+  </script>
+</polymer-element>

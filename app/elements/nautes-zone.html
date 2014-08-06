@@ -1,5 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../elements/nautes-zone-object.html">
+
 <polymer-element name="nautes-zone" attributes="zone canvas">
   <template>
     <style>
@@ -18,6 +20,9 @@
     <div id="title">
       {{zone.name}}
     </div>
+    <template repeat="{{envObject in zone.objects}}">
+      <nautes-zone-object envObject="{{envObject}}"></nautes-zone-object>
+    </template>
   </template>
   <script>
     Polymer("nautes-zone",{
