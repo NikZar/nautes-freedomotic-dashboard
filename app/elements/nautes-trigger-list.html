@@ -16,9 +16,7 @@
 
     <div layout vertical center>
       <template repeat="{{trigger in triggers}}">
-        <nautes-trigger-row bgColor="{{bgColor}}">
-          <h2>{{trigger.name}}</h2>
-          <p>{{trigger.description}}</p>
+        <nautes-trigger-row bgColor="{{bgColor}}" trigger="{{trigger}}">
         </nautes-trigger-row>
       </template>
     </div>    
