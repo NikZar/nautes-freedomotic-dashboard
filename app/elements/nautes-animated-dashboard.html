@@ -14,6 +14,7 @@
 <link rel="import" href="../elements/nautes-object-list.html">
 <link rel="import" href="../elements/nautes-trigger-list.html">
 <link rel="import" href="../elements/nautes-environment.html">
+<link rel="import" href="../elements/nautes-globals.html">
 
 <polymer-element name="nautes-animated-dashboard" attributes="">
   <template>
@@ -44,6 +45,9 @@
 
     <paper-toast id="toast" text="There was a problem loading data.">
     </paper-toast>
+
+    <nautes-globals apiurl="https://fritz.bestmazzo.it:9113/v3/" credentialrequired="true">
+    </nautes-globals>
 
     <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition">
       

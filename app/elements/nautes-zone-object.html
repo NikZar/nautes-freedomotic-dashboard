@@ -18,6 +18,7 @@
       id="objTapRequest"
       url="https://fritz.bestmazzo.it:9113/v3/objects/{{envObject.uuid}}/click"
       on-core-response="{{handleTapResponse}}"
+      on-core-error="{{errorTapHandler}}"
       method="POST"
       withCredentials>
     </core-ajax>
@@ -37,6 +38,12 @@
       errorGetHandler: function(event){
         if(this.toast){
           this.toast.text="There was a problem loading "+this.envObject.name+" data.";
+          this.toast.show();
+        }
+      },
+      errorTapHandler: function(event){
+        if(this.toast){
+          this.toast.text="There was a server problem during "+this.envObject.name+" interaction.";
           this.toast.show();
         }
       },

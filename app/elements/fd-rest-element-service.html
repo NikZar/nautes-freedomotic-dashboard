@@ -2,6 +2,8 @@
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
+<link rel="import" href="../elements/nautes-globals.html">
+
 <polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast">
   <template>
     <style>
@@ -9,13 +11,17 @@
       display: block;
     }
     </style>
+
+    <nautes-globals values="{{globals}}"></nautes-globals>
+    
     <core-ajax id="ajax" 
-      auto on-core-error="{{errorHandler}}"
-      url="https://fritz.bestmazzo.it:9113/v3/{{fdtype}}/"
-      disable-on-core-response="{{elementsLoaded}}"
+      on-core-error="{{errorHandler}}"
+      url="{{globals.apiurl}}{{fdtype}}/"
+      on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
-      handleAs="json"  withCredentials >
+      handleAs="json"  withCredentials?="{{globals.credentialrequired == 'true'}}" >
     </core-ajax>
+
   </template>
   <script>
   Polymer('fd-rest-element-service', {
@@ -25,6 +31,13 @@
     
     created: function() {
       this.fditems = [];
+    },
+
+    ready: function(){
+      var globals = this.globals;
+      if(globals.apiurl != undefined){
+        this.$.ajax.go();
+      }
     },
 
     elementsLoaded: function() {
