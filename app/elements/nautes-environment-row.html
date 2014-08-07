@@ -2,7 +2,7 @@
 
 <link rel="import" href="../elements/nautes-zone.html">
 
-<polymer-element name="nautes-environment-row" attributes="environment bgColor">
+<polymer-element name="nautes-environment-row" attributes="environment bgColor toast">
   <template>
     <style>
       :host {
@@ -24,7 +24,7 @@
         <canvas id="environmentCanvas" width="{{environment.width}}px" height="{{environment.height}}px"></canvas>
         <img src="{{getImg(environment)}}" width="{{environment.width}}px" height="{{environment.height}}px"/>
         <template repeat="{{zone in environment.zones}}">
-          <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}"></nautes-zone>
+          <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
         </template>
       </div>
     </div>

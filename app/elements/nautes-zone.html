@@ -2,7 +2,7 @@
 
 <link rel="import" href="../elements/nautes-zone-object.html">
 
-<polymer-element name="nautes-zone" attributes="zone canvas">
+<polymer-element name="nautes-zone" attributes="zone canvas toast">
   <template>
     <style>
       :host {
@@ -21,7 +21,7 @@
       {{zone.name}}
     </div>
     <template repeat="{{envObject in zone.objects}}">
-      <nautes-zone-object envObject="{{envObject}}"></nautes-zone-object>
+      <nautes-zone-object envObject="{{envObject}}" toast="{{toast}}"></nautes-zone-object>
     </template>
   </template>
   <script>
