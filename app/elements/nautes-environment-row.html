@@ -37,6 +37,7 @@
     Polymer("nautes-environment-row",{
       ready: function(){
           var element = this;
+          element.resize();
           window.addEventListener('resize', function(event){
             element.resize();
           });
@@ -56,7 +57,7 @@
       
       scaleFactor: function(){
         var scaleFactorX =  (window.innerWidth - 100) / this.environment.width;
-        var scaleFactorY =  (window.innerHeight - 100) / this.environment.height;
+        var scaleFactorY =  (window.innerHeight - 150) / this.environment.height;
         var scaleFactor = Math.min(scaleFactorX,scaleFactorY,1);
         return scaleFactor;
       }
