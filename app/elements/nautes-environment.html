@@ -12,13 +12,14 @@
         display: block;
         background-color: {{bgColor}};
         width: 100%;
+        overflow: hidden;
       }
     </style>
 
-    <fd-rest-element-service id="environmentsService"  fdtype="environments" fditems="{{environments}}"" toast="{{toast}}">
+    <fd-rest-element-service fdtype="environments" fditems="{{environments}}" toast="{{toast}}">
     </fd-rest-element-service>
 
-    <div layout vertical center>
+    <div relative>
       <template repeat="{{environment in environments}}">
         <nautes-environment-row bgColor="{{bgColor}}" environment="{{environment}}" toast="{{toast}}">
         </nautes-environment-row>
