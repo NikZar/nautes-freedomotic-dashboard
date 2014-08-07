@@ -11,7 +11,9 @@
       }
     </style>
 
-    <fd-rest-element-service id="objectsService"  fdtype="objects" fditems="{{objects}}" toast={{toast}}></fd-rest-element-service>
+    <fd-rest-element-service fdtype="objects" fditems="{{objects}}" toast={{toast}}>
+    </fd-rest-element-service>
+
     <div layout vertical center>
       <template repeat="{{obj in objects}}">
         <nautes-object-row bgColor="{{bgColor}}">
@@ -21,6 +23,7 @@
         </nautes-object-row>
       </template>
     </div>    
+    
   </template>
 
 

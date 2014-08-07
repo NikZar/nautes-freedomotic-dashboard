@@ -1,0 +1,23 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/fd-rest-element-service.html">
+
+<polymer-element name="nautes-fd-info" attributes="toast">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  </template>
+
+  <fd-rest-element-service fdtype="info/framework" fditems="{{info}}" toast="{{toast}}">
+  </fd-rest-element-service>
+
+
+  <script>
+    Polymer({
+
+    });
+  </script>
+</polymer-element>

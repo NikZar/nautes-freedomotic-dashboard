@@ -12,7 +12,8 @@
       }
     </style>
 
-    <fd-rest-element-service id="triggersService"  fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}"></fd-rest-element-service>
+    <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}">
+    </fd-rest-element-service>
 
     <div layout vertical center>
       <template repeat="{{trigger in triggers}}">
