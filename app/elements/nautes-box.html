@@ -51,6 +51,9 @@
     .category-tile-bg {
       position: absolute!important;
     }
+    #tipContent{
+      line-height: 14px;
+    }
     </style>
     <div layout vertical center center-justified fit>
       <core-icon icon="{{box.img}}" size="140"></core-icon>
@@ -87,7 +90,7 @@
         console.log("tapped!"+this.showDescription);
       },
       boxChanged: function(){
-        this.$.tipContent.innerHTML = this.box.description.chunk(40).join("<br /><br />");
+        this.$.tipContent.innerHTML = this.box.description.chunk(40).join("<br />");
       }
     });
   </script>

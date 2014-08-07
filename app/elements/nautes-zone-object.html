@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 
-<polymer-element name="nautes-zone-object" attributes="envObject">
+<polymer-element name="nautes-zone-object" attributes="envObject toast">
   <template>
     <style>
       :host {
@@ -11,10 +12,46 @@
         top: {{envObject.representation[0].offset.y}}px;
       }
     </style>
-    <img src="{{getImg()}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
+    <img id="envObjectImg" on-tap="{{onTap}}" src="{{getImg()}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
+
+    <core-ajax
+      id="objTapRequest"
+      url="https://fritz.bestmazzo.it:9113/v3/objects/{{envObject.uuid}}/click"
+      on-core-response="{{handleTapResponse}}"
+      method="POST"
+      withCredentials>
+    </core-ajax>
+
+    <core-ajax
+      id="objGetRequest"
+      url="https://fritz.bestmazzo.it:9113/v3/objects/{{envObject.uuid}}"
+      on-core-response="{{handleGetResponse}}"
+      on-core-error="{{errorGetHandler}}"
+      method="GET"
+      withCredentials>
+    </core-ajax>
+
   </template>
   <script>
     Polymer("nautes-zone-object",{
+      errorGetHandler: function(event){
+        if(this.toast){
+          this.toast.text="There was a problem loading "+this.envObject.name+" data.";
+          this.toast.show();
+        }
+      },
+      handleTapResponse: function(response){
+          console.log(response);
+          this.envObject = response;
+          this.$.envObjectImg.src = this.getImg();
+        },
+      handleTapResponse: function(response){
+          console.log(response);
+          this.$.objGetRequest.go();
+        },
+      onTap: function(){
+          this.$.objTapRequest.go();
+        },
       getImg: function() {
         var obj = this.envObject;
         if(obj){
