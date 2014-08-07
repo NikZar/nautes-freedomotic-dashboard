@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/core-animated-pages/transitions/cross-fade.html">
 <link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.html">
 <link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.css">
+<link rel="import" href="../bower_components/flatiron-director/flatiron-director.html">
 
 <link rel="import" href="../elements/nautes-dashboard.html">
 <link rel="import" href="../elements/nautes-dashboard-page.html">
@@ -37,6 +38,9 @@
       }
 
     </style>
+
+    <flatiron-director route="{{selected}}" autoHash on-director-route="{{routeChanged}}">
+    </flatiron-director>
 
     <paper-toast id="toast" text="There was a problem loading data.">
     </paper-toast>
@@ -102,6 +106,11 @@
     Polymer({
       selected: "dashboard",
       selectedBox: null,
+      selectedChanged: function(){
+        if(this.selected===""){
+          this.selected = "dashboard";
+        }
+      },
       back: function(event, detail, sender){
         console.log("Transition to: Dashboard");
         this.selected = "dashboard";

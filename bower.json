@@ -2,11 +2,13 @@
   "name": "nautes-dashboard",
   "version": "0.0.0",
   "dependencies": {
-    
     "core-elements": "Polymer/core-elements#~0.3.3",
-    
     "paper-elements": "Polymer/paper-elements#~0.3.3",
-    "polymer": "Polymer/polymer#~0.3.3"
+    "polymer": "Polymer/polymer#~0.3.3",
+    "flatiron-director": "https://github.com/PolymerLabs/flatiron-director.git#~0.3.0",
+    "x-tag-core": "~0.9.7",
+    "x-tag-flipbox": "~0.2.8",
+    "x-tag-imports": "x-tag/x-tag-imports"
   },
   "devDependencies": {}
 }
