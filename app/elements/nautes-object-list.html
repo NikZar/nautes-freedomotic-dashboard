@@ -28,8 +28,10 @@
     Polymer("nautes-object-list",{
       getImg: function(obj) {
         var icon = obj.representation[obj.currentRepresentation].icon;
-        var src = 'https://fritz.bestmazzo.it:9113/v3/resources/' + icon ;
-        return src;
+        if(icon != null){
+          var src = 'https://fritz.bestmazzo.it:9113/v3/resources/' + icon ;
+          return src;
+        }
       }
     });
   </script>
