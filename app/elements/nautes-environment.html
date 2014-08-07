@@ -29,6 +29,18 @@
   </template>
   <script>
     Polymer("nautes-environment",{
+      resize: function(){
+        var maxHeight = window.innerHeight-80;
+        this.style.maxHeight = maxHeight + "px";
+      },
+
+      ready: function(){
+        var element = this;
+        element.resize();
+        window.addEventListener('resize', function(event){
+          element.resize();
+        });
+      }
     });
   </script>
 </polymer-element>
