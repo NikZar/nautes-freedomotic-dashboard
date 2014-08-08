@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
-<link rel="import" href="../bower_components/core-icons/iconsets/image-icons.html">
+<link rel="import" href="../bower_components/core-icons/image-icons.html">
 
 <polymer-element name="nautes-trigger-row" attributes="bgColor trigger">
   <template>
@@ -48,13 +48,15 @@
         margin-right: 5px;
         font-size: 17px;
       }
-      core-icon{
+      .icon{
         margin-left: 30px;
         color: #444;
+        width: 70px;
+        height: 70px;
       }
     </style>
     <div layout horizontal center>
-      <core-icon icon="image:flash-on" size="70"></core-icon>
+      <core-icon class="icon" icon="image:flash-on"></core-icon>
       <div class="trigger-row" layout vertical center-justified>
         <div layout horizontal>
             <span class="title">{{trigger.name}}: </span> <span> {{trigger.description}}</span>
