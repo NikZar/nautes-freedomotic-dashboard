@@ -1,23 +1,65 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/xml-to-json.js">
 
-<polymer-element name="nautes-fd-info" attributes="toast">
+<polymer-element name="nautes-fd-info" attributes="toast infoXML">
   <template>
     <style>
       :host {
         display: block;
       }
+      div{
+        color: #444;
+        font-family: Verdana;
+        font-size: 20px;
+        padding-top: 20px;
+      }
     </style>
+
+    <fd-rest-element-service fdtype="info/framework" fditems="{{infoXML}}" toast="{{toast}}">
+    </fd-rest-element-service>
+      <div layout vertical center>
+        Freedomotic {{info.FRAMEWORK_MAJOR["#text"]}}.{{info.FRAMEWORK_MINOR["#text"]}}.{{info.FRAMEWORK_BUILD["#text"]}} 
+        "{{info.FRAMEWORK_VERSION_CODENAME["#text"]}}" 
+        {{info.FRAMEWORK_RELEASE_DATE["#text"]}}
+        ({{info.FRAMEWORK_RELEASE_TYPE["#text"]}})
+      </div>
+      <div layout vertical center>
+        {{info.FRAMEWORK_AUTHOR["#text"]}}:
+        {{info.PROJECT_MAIL["#text"]}}
+      </div>
+      <div layout vertical center>
+        License: {{info.FRAMEWORK_LICENSE["#text"]}}
+      </div>
   </template>
-
-  <fd-rest-element-service fdtype="info/framework" fditems="{{info}}" toast="{{toast}}">
-  </fd-rest-element-service>
-
-
   <script>
     Polymer({
+      info: {},
+      infoXMLChanged: function(){
+          if(this.infoXML.length > 0){
+            var parseXml;
 
+            if (window.DOMParser) {
+                parseXml = function(xmlStr) {
+                    return ( new window.DOMParser() ).parseFromString(xmlStr, "text/xml");
+                };
+            } else if (typeof window.ActiveXObject != "undefined" && new window.ActiveXObject("Microsoft.XMLDOM")) {
+                parseXml = function(xmlStr) {
+                    var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+                    xmlDoc.async = "false";
+                    xmlDoc.loadXML(xmlStr);
+                    return xmlDoc;
+                };
+            } else {
+                parseXml = function() { return null; }
+            }
+
+            var xmlDoc = parseXml(this.infoXML);
+
+            this.info = xmlToJson(xmlDoc).frameworkSettings;
+        }
+      }
     });
   </script>
 </polymer-element>

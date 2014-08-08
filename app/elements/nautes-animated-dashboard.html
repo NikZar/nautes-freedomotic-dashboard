@@ -16,6 +16,7 @@
 <link rel="import" href="../elements/nautes-environment.html">
 <link rel="import" href="../elements/nautes-globals.html">
 <link rel="import" href="../elements/nautes-settings.html">
+<link rel="import" href="../elements/nautes-fd-info.html">
 
 <polymer-element name="nautes-animated-dashboard" attributes="">
   <template>
@@ -90,6 +91,8 @@
 
       <section name="info" layout vertical>
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="info">
+        <nautes-fd-info bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
+        </nautes-fd-info>
        </nautes-dashboard-page>
       </section>
 
