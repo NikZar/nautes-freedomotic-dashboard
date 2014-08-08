@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
-<link rel="import" href="../bower_components/core-icons/iconsets/image-icons.html">
-<link rel="import" href="../bower_components/core-icons/iconsets/social-icons.html">
+<link rel="import" href="../bower_components/core-icons/image-icons.html">
+<link rel="import" href="../bower_components/core-icons/social-icons.html">
 <link rel="import" href="../bower_components/core-tooltip/core-tooltip.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
@@ -49,15 +49,23 @@
     #tipContent{
       line-height: 14px;
     }
+    .icon{
+      width: 140px;
+      height: 140px;
+    }
+    .info-icon{
+      width: 30px;
+      height: 30px;
+    }
     </style>
     <div layout vertical center center-justified fit>
-      <core-icon icon="{{box.img}}" size="140"></core-icon>
+      <core-icon icon="{{box.img}}" class="icon"></core-icon>
       <paper-button id="my-button" label="{{box.title}}"></paper-button>
       <paper-ripple fit></paper-ripple>
     </div>
     <div id="left-icon" layout vertical center center-justified on-tap="{{doFlip}}">
         <core-tooltip position="left">
-              <core-icon icon="info-outline" size="30"></core-icon>
+              <core-icon icon="info-outline" class="info-icon"></core-icon>
               <div id="tipContent" tip>
                 {{box.description}}
               </div>
