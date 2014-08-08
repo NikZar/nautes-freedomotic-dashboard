@@ -15,6 +15,7 @@
 <link rel="import" href="../elements/nautes-trigger-list.html">
 <link rel="import" href="../elements/nautes-environment.html">
 <link rel="import" href="../elements/nautes-globals.html">
+<link rel="import" href="../elements/nautes-settings.html">
 
 <polymer-element name="nautes-animated-dashboard" attributes="">
   <template>
@@ -94,6 +95,7 @@
 
       <section name="settings" layout vertical>
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="settings">
+        <nautes-settings></nautes-settings>
        </nautes-dashboard-page>
       </section>
 
@@ -114,9 +116,9 @@
         if(this.selected===""){
           this.selected = "dashboard";
         }
+        console.log("Transition to: " + this.selected.toUpperCase());
       },
       back: function(event, detail, sender){
-        //console.log("Transition to: Dashboard");
         this.selected = "dashboard";
         this.selectedBox = null;
       }
