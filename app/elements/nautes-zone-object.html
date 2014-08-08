@@ -1,6 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 
+<link rel="import" href="../elements/nautes-globals.html">
+
 <polymer-element name="nautes-zone-object" attributes="envObject toast">
   <template>
     <style>
@@ -12,11 +14,14 @@
         top: {{envObject.representation[0].offset.y}}px;
       }
     </style>
+
+    <nautes-globals values="{{globals}}"></nautes-globals>
+
     <img id="envObjectImg" on-tap="{{onTap}}" src="{{getImg()}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
 
     <core-ajax
       id="objTapRequest"
-      url="https://fritz.bestmazzo.it:9113/v3/objects/{{envObject.uuid}}/click"
+      url="{{globals.apiurl}}objects/{{envObject.uuid}}/click"
       on-core-response="{{handleTapResponse}}"
       on-core-error="{{errorTapHandler}}"
       method="POST"
@@ -25,7 +30,7 @@
 
     <core-ajax
       id="objGetRequest"
-      url="https://fritz.bestmazzo.it:9113/v3/objects/{{envObject.uuid}}"
+      url="{{globals.apiurl}}objects/{{envObject.uuid}}"
       on-core-response="{{handleGetResponse}}"
       on-core-error="{{errorGetHandler}}"
       method="GET"
