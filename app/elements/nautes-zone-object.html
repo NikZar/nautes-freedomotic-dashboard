@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 
 <link rel="import" href="../elements/nautes-globals.html">
+<link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
 
 <polymer-element name="nautes-zone-object" attributes="envObject toast">
   <template>
@@ -17,11 +18,14 @@
 
     <nautes-globals values="{{globals}}"></nautes-globals>
 
+    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{updateObject}}">
+    </nautes-fd-websocket-api-service>
+
     <img id="envObjectImg" on-tap="{{onTap}}" src="{{getImg()}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
 
     <core-ajax
       id="objTapRequest"
-      url="{{globals.apiurl}}objects/{{envObject.uuid}}/click"
+      url="https://{{globals.apiurl}}objects/{{envObject.uuid}}/click"
       on-core-response="{{handleTapResponse}}"
       on-core-error="{{errorTapHandler}}"
       method="POST"
@@ -30,7 +34,7 @@
 
     <core-ajax
       id="objGetRequest"
-      url="{{globals.apiurl}}objects/{{envObject.uuid}}"
+      url="https://{{globals.apiurl}}objects/{{envObject.uuid}}"
       on-core-response="{{handleGetResponse}}"
       on-core-error="{{errorGetHandler}}"
       method="GET"
@@ -42,17 +46,17 @@
   <script>
     Polymer("nautes-zone-object",{
       errorGetHandler: function(event){
-        if(this.toast){
-          this.toast.text="There was a problem loading "+this.envObject.name+" data.";
-          this.toast.show();
-        }
-      },
+          if(this.toast){
+            this.toast.text="There was a problem loading "+this.envObject.name+" data.";
+            this.toast.show();
+          }
+        },
       errorTapHandler: function(event){
-        if(this.toast){
-          this.toast.text="There was a server problem during "+this.envObject.name+" interaction.";
-          this.toast.show();
-        }
-      },
+          if(this.toast){
+            this.toast.text="There was a server problem during "+this.envObject.name+" interaction.";
+            this.toast.show();
+          }
+        },
       handleGetResponse: function(response){
           this.envObject = response.detail.response;
           this.$.envObjectImg.src = this.getImg();
@@ -63,16 +67,26 @@
       onTap: function(){
           this.$.objTapRequest.go();
         },
+      updateObject: function(event){
+          var uuid = event.detail.data.uuid;
+          if(uuid !== undefined){
+            var obj = this.envObject;
+            if (obj.uuid === uuid) {
+              console.log("Environment Zone - Asynch update of: "+uuid);
+              this.$.objGetRequest.go();
+            }
+          }
+        },
       getImg: function() {
-        var obj = this.envObject;
-        if(obj){
-          var icon = obj.representation[obj.currentRepresentation].icon;
-          if(icon){
-            var src = this.globals.apiurl + "resources/" + icon;
-            return src;
-          } 
+          var obj = this.envObject;
+          if(obj){
+            var icon = obj.representation[obj.currentRepresentation].icon;
+            if(icon){
+              var src = "https://" + this.globals.apiurl + "resources/" + icon;
+              return src;
+            } 
+          }
         }
-      }
     });
   </script>
 </polymer-element>

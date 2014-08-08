@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/x-websocket/dist/x-websocket.html">
 
-<link rel="import" href="../bower_components/elements/nautes-globals.html">
+<link rel="import" href="../elements/nautes-globals.html">
 
 <polymer-element name="nautes-fd-websocket-api-service" attributes="wstype">
   <template>
@@ -12,13 +12,41 @@
     </style>
     <nautes-globals values="{{globals}}"></nautes-globals>
 
-    <x-websocket url="wws://{{globals.apiurl}}/ws/{{wstype}}" on-message="{{onMessage}}"></x-websocket>
+    <x-websocket url="wss://{{globals.apiurl}}ws/{{wstype}}" on-message="{{onMessage}}"></x-websocket>
 
   </template>
   <script>
     Polymer({
       onMessage: function(event){
-        console.log(event);
+        var data = event.detail.data;
+        data = data.split("|").pop();
+        data = {uuid: data};
+        this.fire("message", { data: data });
+      },
+      _parse: function(input){
+        var statements = input.substring(2, input.length -2).split("; ");
+        var output = {};
+
+        for (var i = 0; i < statements.length; i++) {
+          var statement = statements[i].split(" EQUALS ");
+          var leftSide = statement[0].split(".");
+          var rightSide = statement[1];
+          this._assign(output, leftSide, rightSide);
+        }
+
+        var data = JSON.stringify(output);
+        return JSON.parse(data);
+      },
+      _assign: function(obj, keyPath, value){
+         var lastKeyIndex = keyPath.length-1;
+         for (var i = 0; i < lastKeyIndex; ++i) {
+           key = keyPath[i];
+           if (!(key in obj)){
+             obj[key] = {};
+           }
+           obj = obj[key];
+         }
+         obj[keyPath[lastKeyIndex]] = value;
       }
     });
   </script>
