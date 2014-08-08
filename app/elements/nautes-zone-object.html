@@ -29,6 +29,7 @@
       on-core-response="{{handleGetResponse}}"
       on-core-error="{{errorGetHandler}}"
       method="GET"
+      handleAs="json"
       withCredentials>
     </core-ajax>
 
@@ -47,13 +48,11 @@
           this.toast.show();
         }
       },
-      handleTapResponse: function(response){
-          console.log(response);
-          this.envObject = response;
+      handleGetResponse: function(response){
+          this.envObject = response.detail.response;
           this.$.envObjectImg.src = this.getImg();
         },
       handleTapResponse: function(response){
-          console.log(response);
           this.$.objGetRequest.go();
         },
       onTap: function(){

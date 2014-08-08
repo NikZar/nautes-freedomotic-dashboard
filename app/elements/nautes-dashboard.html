@@ -65,7 +65,7 @@
   <script>
     Polymer("nautes-dashboard",{
       boxTap: function(event, detail, sender){
-        console.log("Transition to: "+ sender.getAttribute("target"));
+        //console.log("Transition to: "+ sender.getAttribute("target"));
         this.selected = sender.getAttribute("target").toLowerCase();
         this.selectedBox = this.boxesObjects[this.selected];
 
