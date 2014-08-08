@@ -19,7 +19,8 @@
       url="{{globals.apiurl}}{{fdtype}}/"
       on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
-      handleAs="json"  withCredentials?="{{globals.credentialrequired == 'true'}}" >
+      handleAs="json"  
+      withCredentials?="{{globals.credentialrequired == 'true'}}" >
     </core-ajax>
 
   </template>
@@ -55,6 +56,7 @@
     },
     
     errorHandler: function(event){
+      console.log(event);
       if(this.toast){
         this.toast.text="There was a problem loading "+this.fdtype+" data.";
         this.toast.show();
