@@ -20,9 +20,18 @@
     <fd-rest-element-service fdtype="info/framework" fditems="{{infoXML}}" toast="{{toast}}">
     </fd-rest-element-service>
       <div layout vertical center>
-        Freedomotic {{info.FRAMEWORK_MAJOR["#text"]}}.{{info.FRAMEWORK_MINOR["#text"]}}.{{info.FRAMEWORK_BUILD["#text"]}}
+        Freedomotic {{info.FRAMEWORK_MAJOR["#text"]}}.{{info.FRAMEWORK_MINOR["#text"]}}.{{info.FRAMEWORK_BUILD["#text"]}} 
+        "{{info.FRAMEWORK_VERSION_CODENAME["#text"]}}" 
+        {{info.FRAMEWORK_RELEASE_DATE["#text"]}}
+        ({{info.FRAMEWORK_RELEASE_TYPE["#text"]}})
       </div>
-
+      <div layout vertical center>
+        {{info.FRAMEWORK_AUTHOR["#text"]}}:
+        {{info.PROJECT_MAIL["#text"]}}
+      </div>
+      <div layout vertical center>
+        License: {{info.FRAMEWORK_LICENSE["#text"]}}
+      </div>
   </template>
   <script>
     Polymer({
