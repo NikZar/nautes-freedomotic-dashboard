@@ -65,7 +65,7 @@
             var obj = this.objects[i];
 
             if (obj.uuid === uuid) {
-              console.log("Object List - Asynch update of: "+uuid);
+              console.log("Object List - Asynch update of: " + uuid);
               this.objectUpdating = obj;
               this.objectUpdatingIndex = i;
               this.$.objGetRequest.go();
