@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/xml-to-json.js">
 
 <polymer-element name="nautes-fd-info" attributes="toast">
   <template>
@@ -9,15 +10,23 @@
         display: block;
       }
     </style>
+
+    <fd-rest-element-service fdtype="info/framework" fditems="{{infoXML}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+      Freedomotic {{info.FRAMEWORK_MAJOR}}.{{info.FRAMEWORK_MINOR}}.{{info.FRAMEWORK_BUILD}}
+
   </template>
-
-  <fd-rest-element-service fdtype="info/framework" fditems="{{info}}" toast="{{toast}}">
-  </fd-rest-element-service>
-
-
   <script>
     Polymer({
-
+      info: {},
+      ready: function(){
+        if(this.infoXML.length > 0){
+          console.log(this.infoXML);
+          this.info = xmlToJson(this.infoXML);
+          console.log(this.info);
+        }
+      }
     });
   </script>
 </polymer-element>
