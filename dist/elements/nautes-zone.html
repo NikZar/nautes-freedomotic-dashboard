@@ -1,0 +1,49 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/nautes-zone-object.html">
+
+<polymer-element name="nautes-zone" attributes="zone canvas toast">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #title{
+        position: absolute;
+        z-index: 12;
+        left: {{zone.shape.points[0].x}}px;
+        top: {{zone.shape.points[0].y}}px;
+        background-color: rgba(100, 100, 100, 0.7);
+        color: #fff;
+      }
+    </style>
+    <div id="title">
+      {{zone.name}}
+    </div>
+    <template repeat="{{envObject in zone.objects}}">
+      <nautes-zone-object envObject="{{envObject}}" toast="{{toast}}"></nautes-zone-object>
+    </template>
+  </template>
+  <script>
+    Polymer("nautes-zone",{
+      canvasChanged: function() {
+          var poly = this.zone.shape.points;
+          var canvas = this.canvas;
+          var context = canvas.getContext('2d');
+
+          var ranR = Math.floor(Math.random() * 255);
+          var ranG = Math.floor(Math.random() * 255);
+          var ranB = Math.floor(Math.random() * 255);
+
+          context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.2)";
+          context.beginPath();
+          context.moveTo(poly[0].x, poly[0].y);
+          for( item=1 ; item < poly.length ; item++ ){
+              context.lineTo( poly[item].x , poly[item].y );
+          }
+          context.closePath();
+          context.fill();
+      }
+    });
+  </script>
+</polymer-element>

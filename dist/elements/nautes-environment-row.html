@@ -1,0 +1,66 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/nautes-zone.html">
+
+<polymer-element name="nautes-environment-row" attributes="environment bgColor toast">
+  <template>
+    <style>
+      :host {
+        display: block;
+        color: #444;
+        background: {{bgColor}};
+        -ms-transform: scale({{scaleFactor()}},{{scaleFactor()}}); /* IE 9 */
+        -webkit-transform: scale({{scaleFactor()}},{{scaleFactor()}}); /* Chrome, Safari, Opera */
+        transform: scale({{scaleFactor()}},{{scaleFactor()}});
+        position: relative;
+        font-family: Verdana;
+      }
+      canvas{
+        position: absolute;
+        z-index: 11;
+        height: {{environment.height}}px;
+        width: {{environment.width}}px;
+      }
+    </style>
+    <div layout vertical center>
+      <h2>{{environment.name}}</h2>
+      <div id="container" relative>
+        <canvas id="environmentCanvas" width="{{environment.width}}px" height="{{environment.height}}px"></canvas>
+        <img src="{{getImg(environment)}}" width="{{environment.width}}px" height="{{environment.height}}px"/>
+        <template repeat="{{zone in environment.zones}}">
+          <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
+        </template>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer("nautes-environment-row",{
+      ready: function(){
+          var element = this;
+          element.resize();
+          window.addEventListener('resize', function(event){
+            element.resize();
+          });
+      },
+      resize: function(){
+        var element = this;
+        var scaleFactor = element.scaleFactor();
+        element.style.transform = "scale("+scaleFactor+ ","+scaleFactor+")";
+
+        var verticalOffset = - (element.environment.height * (1 - scaleFactor))/2;
+        element.style.top = verticalOffset+"px";
+      },
+      getImg: function(environment) {
+        var src = 'https://fritz.bestmazzo.it:9113/v3/resources/' + environment.backgroundImage;
+        return src;
+      },
+      
+      scaleFactor: function(){
+        var scaleFactorX =  (window.innerWidth - 100) / this.environment.width;
+        var scaleFactorY =  (window.innerHeight - 150) / this.environment.height;
+        var scaleFactor = Math.min(scaleFactorX,scaleFactorY,1);
+        return scaleFactor;
+      }
+    });
+  </script>
+</polymer-element>
