@@ -1,0 +1,46 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/nautes-environment-row.html">
+
+<fd-rest-element-service id="triggersService"  fdtype="triggers" fditems="{{triggers}}"></fd-rest-element-service>
+
+<polymer-element name="nautes-environment" attributes="bgColor toast">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+        width: 100%;
+        overflow: hidden;
+      }
+    </style>
+
+    <fd-rest-element-service fdtype="environments" fditems="{{environments}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div relative>
+      <template repeat="{{environment in environments}}">
+        <nautes-environment-row bgColor="{{bgColor}}" environment="{{environment}}" toast="{{toast}}">
+        </nautes-environment-row>
+      </template>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-environment",{
+      resize: function(){
+        var maxHeight = window.innerHeight-80;
+        this.style.maxHeight = maxHeight + "px";
+      },
+
+      ready: function(){
+        var element = this;
+        element.resize();
+        window.addEventListener('resize', function(event){
+          element.resize();
+        });
+      }
+    });
+  </script>
+</polymer-element>

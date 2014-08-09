@@ -1,0 +1,47 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="../elements/nautes-globals.html">
+
+<polymer-element name="nautes-settings" attributes="">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      div{
+        line-height: 40px;
+        color: #444;
+        font-family: Verdana;
+      }
+      .label{
+        display: inline-block;
+        height: 62px;
+        vertical-align: top;
+        padding-top: 8px;
+      }
+      .row{
+        width: 50%;
+        margin-top: 20px;
+      }
+    </style>
+
+    <nautes-globals values="{{globals}}"></nautes-globals>
+
+    <div layout vertical center>
+      <div class="row" layout horizonal center start>
+        <div class="label">API URL:&nbsp </div> <paper-input label="{{globals.apiurl}}"></paper-input>
+      </div>
+      <div class="row" layout horizonal center>
+        CREDENTIAL REQUIRED: <paper-toggle-button checked="{{globals.credentialrequired}}"></paper-toggle-button>
+      </div>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+
+    });
+  </script>
+</polymer-element>

@@ -1,0 +1,40 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<polymer-element name="nautes-dashboard-page" attributes="selected selectedBox">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 100%;
+        background: {{selectedBox.color}};
+        color: #fff;
+      }
+
+      #header{
+        background: #444;
+        font-family: Tahoma;
+        text-transform: uppercase;
+        padding-bottom: 10px;
+      }
+    </style>
+
+    <nautes-dashboard-service boxesObjects="{{boxesObjects}}">
+    </nautes-dashboard-service>
+
+    <div id="header">
+      <paper-icon-button icon="arrow-back" on-tap="{{back}}"></paper-icon-button>
+      <div horizontal center-justified layout>
+        {{selectedBox.title}}
+      </div>
+    </div>
+    <content></content>
+  </template>
+  <script>
+    Polymer("nautes-dashboard-page",{
+      back: function() {
+        this.fire('page-back');
+      },
+    });
+  </script>
+</polymer-element>

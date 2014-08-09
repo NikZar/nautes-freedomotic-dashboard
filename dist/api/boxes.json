@@ -1,0 +1,66 @@
+[
+	{
+		"title": "Environment",
+		"description": "This section gives you all the information about your Environment",
+		"img": "home",
+		"url": "test.html",
+		"color": "#eeffee"
+	},
+	{
+		"title": "Actions",
+		"description": "This section lets you perform Actions on the environment objects",
+		"img": "send",
+		"url": "test.html",
+		"color": "#ffeeee"
+	},
+	{
+		"title": "Triggers",
+		"description": "This section lets you define Triggers to handle environment changes",
+		"img": "image:flash-on",
+		"url": "test.html",
+		"color": "#eeeeff"
+	},
+	{
+		"title": "Settings",
+		"description": "This section contains general dashboard Settings",
+		"img": "settings",
+		"url": "test.html",
+		"color": "#eeeeee"
+	},
+	{
+		"title": "Info",
+		"description": "This section contains general usage Information",
+		"img": "info-outline",
+		"url": "test.html",
+		"color": "#aaa"
+	},
+	{
+		"title": "Messages",
+		"description": "This section contains the list of Messages received",
+		"img": "list",
+		"url": "test.html",
+		"color": "#ffb"
+	},
+	{
+		"title": "Objects",
+		"description": "This section contains the list of your Objects",
+		"img": "image:camera",
+		"url": "test.html",
+		"color": "#bef"
+	},
+	{
+		"title": "Family",
+		"description": "This section contains the list of users",
+		"img": "social:people",
+		"url": "test.html",
+		"color": "#ccf"
+	},
+	{
+		"title": "Alerts",
+		"description": "Send an alert to the medical platform",
+		"img": "warning",
+		"url": "test.html",
+		"color": "#fcc"
+	}
+
+]
