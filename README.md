@@ -6,6 +6,6 @@ Here the live preview of the Polymer application hosted on heroku:
 
 http://nautes-dashboard.herokuapp.com/
 
-Since the Fredomotic API instance as a self signed certificate you first have to accept it visiting:
+Since the API instance has a self signed certificate you first have to accept it visiting:
 
 https://fritz.bestmazzo.it:9113
