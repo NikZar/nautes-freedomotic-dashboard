@@ -21,3 +21,5 @@ User | Pass |
 * Now you are good to go:
 
 http://nautes-dashboard.herokuapp.com/
+
+Enjoy! :)
