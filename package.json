@@ -5,7 +5,7 @@
     "coffee-script": "^1.7.1",
     "gzippo": "^0.2.0",
     "express": "^4.8.2",
-    "logger":"*"
+    "morgan":"*"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
