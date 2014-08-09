@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>&lt;my-element&gt;</title>
+
+    <!-- Importing Web Component's Polyfill -->
+    <script src="bower_components/platform/platform.js"></script>
+
+    <!-- Importing Custom Elements -->
+    <link rel="import" href="src/x-websocket.html">
+</head>
+<body>
+
+    <!-- Using Custom Elements -->
+    <x-websocket url="ws://echo.websocket.org"></x-websocket>
+    <script>
+		window.addEventListener('polymer-ready', function(e) {
+			var xws = document.querySelector("x-websocket");
+			console.log("xws:", xws);
+			xws.addEventListener("open", function() {
+				console.log("open");
+				xws.send("Hello world !");
+			});
+			xws.addEventListener("message", function(event) {
+				console.log("message", event.detail.data);
+			});
+		});
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "name": "x-websocket",
+  "version": "0.2.0",
+  "description": "WebComponent WebSocket wrapper.",
+  "authors": [
+    "Elie Rotenberg <elie@rotenberg.io>"
+  ],
+  "license": "MIT",
+  "main": "dist/x-websocket.html",
+  "keywords": [
+    "polymer",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "platform": "Polymer/platform#~0.2.0",
+    "polymer": "Polymer/polymer#~0.2.0"
+  },
+  "homepage": "https://github.com/elierotenberg/x-websocket",
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.0",
+    "commit": "38116087405db7b60af8c46cc1d6afb2354da66f"
+  },
+  "_source": "git://github.com/elierotenberg/x-websocket.git",
+  "_target": "~0.2.0",
+  "_originalSource": "x-websocket"
+}
