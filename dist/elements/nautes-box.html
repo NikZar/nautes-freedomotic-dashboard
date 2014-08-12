@@ -93,7 +93,8 @@
         console.log("tapped!"+this.showDescription);
       },
       boxChanged: function(){
-        this.$.tipContent.innerHTML = this.box.description.chunk(40).join("<br />");
+        var spanContent = this.box.description.chunk(40).join("<br />");
+        this.$.tipContent.innerHTML = "<span style='color:"+this.box.color+"'>"+spanContent+"</span>";
       }
     });
   </script>
