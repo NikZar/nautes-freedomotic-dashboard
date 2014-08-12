@@ -20,8 +20,11 @@
       onMessage: function(event){
         var data = event.detail.data;
         data = data.split("|").pop();
-        data = {uuid: data};
-        this.fire("message", { data: data });
+        if(data.trim() != ""){
+          data = {uuid: data, type: this.wstype};
+          this.fire("message", { data: data });
+        }
+        event.stopPropagation();
       },
       _parse: function(input){
         var statements = input.substring(2, input.length -2).split("; ");
