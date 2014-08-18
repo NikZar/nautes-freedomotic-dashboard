@@ -18,7 +18,7 @@
 
     <core-localstorage
       name="credentialrequired" 
-      value="{{credentialrequired}}"
+      value="{{credentialrequired}}">
     </core-localstorage>
     
     <core-ajax id="ajax" 
@@ -26,7 +26,7 @@
       on-core-error="{{errorHandler}}"
       on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
-      handleAs="json"  
+      handleAs="json"> 
     </core-ajax>
 
   </template>
