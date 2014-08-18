@@ -1,22 +1,34 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/x-websocket/dist/x-websocket.html">
 
-<link rel="import" href="../elements/nautes-globals.html">
-
-<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype">
+<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiurl">
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
-    <nautes-globals values="{{globals}}"></nautes-globals>
 
-    <x-websocket url="wss://{{globals.apiurl}}ws/{{wstype}}" on-message="{{onMessage}}"></x-websocket>
+    <core-localstorage
+      name="apiurl" 
+      value="{{apiurl}}">
+    </core-localstorage>
+
+    <x-websocket id="ws"
+      on-message="{{onMessage}}">
+    </x-websocket>
 
   </template>
   <script>
     Polymer({
+
+      apiurlChanged: function(){
+        if(this.apiurl != undefined){
+          this.$.ws.url = "wss://" + this.apiurl + "ws/" + this.wstype +"/";
+        }
+      },
+
       onMessage: function(event){
         var data = event.detail.data;
         data = data.split("|").pop();
@@ -26,6 +38,7 @@
         }
         event.stopPropagation();
       },
+
       _parse: function(input){
         var statements = input.substring(2, input.length -2).split("; ");
         var output = {};
@@ -40,6 +53,7 @@
         var data = JSON.stringify(output);
         return JSON.parse(data);
       },
+
       _assign: function(obj, keyPath, value){
          var lastKeyIndex = keyPath.length-1;
          for (var i = 0; i < lastKeyIndex; ++i) {
@@ -51,6 +65,7 @@
          }
          obj[keyPath[lastKeyIndex]] = value;
       }
+
     });
   </script>
 </polymer-element>

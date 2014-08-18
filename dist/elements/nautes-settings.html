@@ -1,8 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
-
-<link rel="import" href="../elements/nautes-globals.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 <polymer-element name="nautes-settings" attributes="">
   <template>
@@ -17,31 +17,71 @@
       }
       .label{
         display: inline-block;
-        height: 62px;
+        height: 100px;
         vertical-align: top;
-        padding-top: 8px;
+        padding-top: 48px;
       }
       .row{
         width: 50%;
         margin-top: 20px;
       }
+      .row-fab{
+        width: 40%;
+        margin-top: 20px;
+      }
+      .fab{
+        color: #444;
+        background-color: #9C9;
+      }
     </style>
-
-    <nautes-globals values="{{globals}}"></nautes-globals>
 
     <div layout vertical center>
       <div class="row" layout horizonal center start>
-        <div class="label">API URL:&nbsp </div> <paper-input label="{{globals.apiurl}}"></paper-input>
+        <core-localstorage id="LSapiurl" 
+          name="apiurl" 
+          value="{{apiurl}}">
+        </core-localstorage>
+        <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatingLabel="true" value="{{newAPIUrl}}"></paper-input>
       </div>
       <div class="row" layout horizonal center>
-        CREDENTIAL REQUIRED: <paper-toggle-button checked="{{globals.credentialrequired}}"></paper-toggle-button>
+        <core-localstorage id="LScr" 
+          name="credentialrequired" 
+          value="{{credentialrequired}}">
+        </core-localstorage>
+        CREDENTIAL REQUIRED: <paper-toggle-button checked="{{newCredentialRequired}}"></paper-toggle-button>
       </div>
+      <div class="row-fab" horizontal end-justified layout>
+        <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
+      </div>
+
     </div>
 
   </template>
   <script>
     Polymer({
+      newAPIUrl: "",
+      newCredentialRequired: true,
+      ready: function(){
+        console.log("Local Storage:");
+        for (var key in localStorage) {
+          console.log(key + ':' + localStorage[key]);
+        }
 
+        if(localStorage["credentialrequired"] == "true"){
+          this.newCredentialRequired = true;
+        } else {
+          this.newCredentialRequired = false;
+        }
+
+        console.log(localStorage["credentialrequired"]);
+        console.log(this.newCredentialRequired);
+      },
+      applyChanges: function(){
+        if(this.newAPIUrl != ""){
+          this.$.LSapiurl.value = this.newAPIUrl;
+        }
+        this.$.LScr.value = this.newCredentialRequired;
+      }
     });
   </script>
 </polymer-element>

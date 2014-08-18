@@ -2,8 +2,6 @@
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<link rel="import" href="../elements/nautes-globals.html">
-
 <polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast">
   <template>
     <style>
@@ -12,15 +10,23 @@
     }
     </style>
 
-    <nautes-globals values="{{globals}}"></nautes-globals>
+    <core-localstorage
+      name="apiurl" 
+      value="{{apiurl}}">
+    </core-localstorage>
+
+    <core-localstorage
+      name="credentialrequired" 
+      value="{{credentialrequired}}">
+    </core-localstorage>
     
     <core-ajax id="ajax" 
       on-core-error="{{errorHandler}}"
-      url="https://{{globals.apiurl}}{{fdtype}}/"
+      url="https://{{apiurl}}{{fdtype}}/"
       on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
       handleAs="json"  
-      withCredentials?="{{globals.credentialrequired == 'true'}}" >
+      withCredentials?="{{credentialrequired == 'true'}}" >
     </core-ajax>
 
   </template>
@@ -36,13 +42,13 @@
 
     ready: function(){
       var globals = this.globals;
-      if(globals.apiurl != undefined){
+      if(apiurl != undefined && apiurl != null){
         this.$.ajax.go();
       }
     },
 
     elementsLoaded: function() {
-      console.log(this.fdtype +" : "+ this.$.ajax.response);
+      //console.log(this.fdtype +" : "+ this.$.ajax.response);
 
       // Make a copy of the loaded data
       this.fditems = this.$.ajax.response.slice(0);

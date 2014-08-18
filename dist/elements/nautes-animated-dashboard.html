@@ -17,6 +17,7 @@
 <link rel="import" href="../elements/nautes-globals.html">
 <link rel="import" href="../elements/nautes-settings.html">
 <link rel="import" href="../elements/nautes-fd-info.html">
+<link rel="import" href="../elements/nautes-asynch-messages-list.html">
 
 <polymer-element name="nautes-animated-dashboard" attributes="">
   <template>
@@ -86,6 +87,7 @@
 
       <section name="messages" layout vertical>
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="messages">
+        <nautes-asynch-messages-list bgColor="{{selectedBox.color}}" toast="{{$.toast}}"></nautes-asynch-messages-list>
        </nautes-dashboard-page>
       </section>
 
