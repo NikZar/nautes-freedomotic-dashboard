@@ -1,7 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/google-chart/google-chart.html">
 
-<polymer-element name="nautes-object-row" attributes="bgColor">
+<polymer-element name="nautes-object-row" attributes="bgColor object">
   <template>
     <style>
       :host {
@@ -36,21 +37,44 @@
         background: #444;
         margin-right: 30px;
       }
+
+      #chart{
+        background-color: {{bgColor}};
+      }
     </style>
 
     <div class="object-row" layout horizontal center>
-      <content select="img"></content>
+      <content select="img" on-tap="{{toggleStats}}"></content>
       <div layout vertical center-justified>
         <content select="h2"></content>
         <content></content>
       </div>
+      <template if="{{ showStats }}">
+        <google-chart id="chart"
+          type='line'
+          height='200px'
+          width='600px'
+          data='../api/chart-data.json'>
+        </google-chart>
+      </template>
       <paper-shadow z="1"></paper-shadow>
     </div>
 
   </template>
   <script>
     Polymer({
-
+      showStats: false,
+      toggleStats: function(){
+        this.showStats = !this.showStats;
+      },
+      objectChanged: function(){
+        if(this.object && this.$.chart){
+          this.$.chart.options = {
+            title: this.object.name + " Statistics",
+            curveType: 'function'
+          };
+        }
+      }
     });
   </script>
 </polymer-element>
