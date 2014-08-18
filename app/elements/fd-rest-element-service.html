@@ -1,10 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<link rel="import" href="../elements/nautes-globals.html">
-
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired">
   <template>
     <style>
     :host {
@@ -12,15 +11,22 @@
     }
     </style>
 
-    <nautes-globals values="{{globals}}"></nautes-globals>
+    <core-localstorage
+      name="apiurl" 
+      value="{{apiurl}}">
+    </core-localstorage>
+
+    <core-localstorage
+      name="credentialrequired" 
+      value="{{credentialrequired}}"
+    </core-localstorage>
     
     <core-ajax id="ajax" 
+      auto
       on-core-error="{{errorHandler}}"
-      url="https://{{globals.apiurl}}{{fdtype}}/"
       on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
       handleAs="json"  
-      withCredentials?="{{globals.credentialrequired == 'true'}}" >
     </core-ajax>
 
   </template>
@@ -34,24 +40,22 @@
       this.fditems = [];
     },
 
-    ready: function(){
-      var globals = this.globals;
-      if(globals.apiurl != undefined){
-        this.$.ajax.go();
+    apiurlChanged: function(){
+      if(this.apiurl != undefined){
+        this.$.ajax.url = "https://" + this.apiurl + this.fdtype +"/";
+      }
+    },
+
+    credentialrequiredChanged: function(){
+      if(this.credentialrequired != undefined){
+        this.$.ajax.withCredentials =  JSON.parse(this.credentialrequired);
       }
     },
 
     elementsLoaded: function() {
-      //console.log(this.fdtype +" : "+ this.$.ajax.response);
 
       // Make a copy of the loaded data
       this.fditems = this.$.ajax.response.slice(0);
-      /*
-      for (var i = 0; i < this.fditems.length; i++){
-        console.log("element #"+i);
-        console.log(this.fditems[i]);
-      }
-      */
 
     },
     

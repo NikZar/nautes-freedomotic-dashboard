@@ -1,0 +1,41 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
+<link rel="import" href="../elements/nautes-asynch-messages-row.html">
+
+<polymer-element name="nautes-asynch-messages-list" attributes="bgColor toast">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{addMessage}}">
+    </nautes-fd-websocket-api-service>
+
+    <nautes-fd-websocket-api-service wstype="zonechange" on-message="{{addMessage}}">
+    </nautes-fd-websocket-api-service>
+
+    <nautes-fd-websocket-api-service wstype="pluginchange" on-message="{{addMessage}}">
+    </nautes-fd-websocket-api-service>
+
+    <div layout vertical center>
+      <template repeat="{{message in messages}}">
+        <nautes-asynch-messages-row bgColor="{{bgColor}}" message="{{message}}"></nautes-asynch-messages-row>
+      </template>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      messages: [],
+      created: function() {
+        this.messages = [];
+      },
+      addMessage: function(){
+        console.log("Messages List: Asynch store of " + event.detail.data.type + " data");
+        this.messages.push(event.detail.data);
+      }
+    });
+  </script>
+</polymer-element>

@@ -26,7 +26,6 @@ var tests = [
   'auto-test-keyframe-easing.html',
   'auto-test-length-units.html',
   'auto-test-matrix-transforms.html',
-  'auto-test-motion-path.html',
   'auto-test-non-numeric.html',
   'auto-test-parent.html',
   'auto-test-partial-keyframes.html',
