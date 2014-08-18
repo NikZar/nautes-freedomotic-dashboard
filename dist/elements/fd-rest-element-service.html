@@ -1,8 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired">
   <template>
     <style>
     :host {
@@ -17,21 +18,21 @@
 
     <core-localstorage
       name="credentialrequired" 
-      value="{{credentialrequired}}">
+      value="{{credentialrequired}}"
     </core-localstorage>
     
     <core-ajax id="ajax" 
+      auto
       on-core-error="{{errorHandler}}"
-      url="https://{{apiurl}}{{fdtype}}/"
       on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
       handleAs="json"  
-      withCredentials?="{{credentialrequired == 'true'}}" >
     </core-ajax>
 
   </template>
   <script>
   Polymer('fd-rest-element-service', {
+
     alwaysPrepare: true,
     
     fdtype:'environments',
@@ -40,24 +41,22 @@
       this.fditems = [];
     },
 
-    ready: function(){
-      var globals = this.globals;
-      if(apiurl != undefined && apiurl != null){
-        this.$.ajax.go();
+    apiurlChanged: function(){
+      if(this.apiurl != undefined){
+        this.$.ajax.url = "https://" + this.apiurl + this.fdtype +"/";
+      }
+    },
+
+    credentialrequiredChanged: function(){
+      if(this.credentialrequired != undefined){
+        this.$.ajax.withCredentials =  JSON.parse(this.credentialrequired);
       }
     },
 
     elementsLoaded: function() {
-      //console.log(this.fdtype +" : "+ this.$.ajax.response);
 
       // Make a copy of the loaded data
       this.fditems = this.$.ajax.response.slice(0);
-      /*
-      for (var i = 0; i < this.fditems.length; i++){
-        console.log("element #"+i);
-        console.log(this.fditems[i]);
-      }
-      */
 
     },
     
@@ -68,6 +67,7 @@
         this.toast.show();
       }
     }
+    
   });
   </script>
 </polymer-element>

@@ -18,7 +18,7 @@
 
     <core-localstorage
       name="credentialrequired" 
-      value="{{credentialrequired}}"
+      value="{{credentialrequired}}">
     </core-localstorage>
     
     <core-ajax id="ajax" 
@@ -26,12 +26,13 @@
       on-core-error="{{errorHandler}}"
       on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
-      handleAs="json"  
+      handleAs="json"> 
     </core-ajax>
 
   </template>
   <script>
   Polymer('fd-rest-element-service', {
+
     alwaysPrepare: true,
     
     fdtype:'environments',
@@ -66,6 +67,7 @@
         this.toast.show();
       }
     }
+    
   });
   </script>
 </polymer-element>

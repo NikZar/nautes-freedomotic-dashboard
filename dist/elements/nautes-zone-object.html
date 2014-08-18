@@ -1,10 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 
-<link rel="import" href="../elements/nautes-globals.html">
 <link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
 
-<polymer-element name="nautes-zone-object" attributes="envObject toast">
+<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequired">
   <template>
     <style>
       :host {
@@ -16,57 +16,81 @@
       }
     </style>
 
-    <nautes-globals values="{{globals}}"></nautes-globals>
+    <core-localstorage
+      name="apiurl" 
+      value="{{apiurl}}">
+    </core-localstorage>
+
+    <core-localstorage
+      name="credentialrequired" 
+      value="{{credentialrequired}}">
+    </core-localstorage>
 
     <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{updateObject}}">
     </nautes-fd-websocket-api-service>
 
-    <img id="envObjectImg" on-tap="{{onTap}}" src="{{getImg()}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
+    <img id="envObjectImg" on-tap="{{onTap}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
 
     <core-ajax
       id="objTapRequest"
-      url="https://{{globals.apiurl}}objects/{{envObject.uuid}}/click"
+      url="https://{{apiurl}}objects/{{envObject.uuid}}/click"
       on-core-response="{{handleTapResponse}}"
       on-core-error="{{errorTapHandler}}"
       method="POST"
-      withCredentials>
+      withCredentials="{{credentialrequired}}">
     </core-ajax>
 
     <core-ajax
       id="objGetRequest"
-      url="https://{{globals.apiurl}}objects/{{envObject.uuid}}"
+      url="https://{{apiurl}}objects/{{envObject.uuid}}"
       on-core-response="{{handleGetResponse}}"
       on-core-error="{{errorGetHandler}}"
       method="GET"
       handleAs="json"
-      withCredentials>
+      withCredentials="{{credentialrequired}}">
     </core-ajax>
 
   </template>
   <script>
     Polymer("nautes-zone-object",{
+
+      apiurlChanged: function(){
+        if(this.apiurl != undefined){
+          var srcLC = this.getImg();
+          if(srcLC != undefined){
+            console.log("srcLC: "+srcLC);
+            this.$.envObjectImg.src = srcLC;
+          }
+        }
+      },
+
       errorGetHandler: function(event){
           if(this.toast){
             this.toast.text="There was a problem loading "+this.envObject.name+" data.";
             this.toast.show();
           }
         },
+
       errorTapHandler: function(event){
           if(this.toast){
             this.toast.text="There was a server problem during "+this.envObject.name+" interaction.";
             this.toast.show();
           }
         },
+
       handleGetResponse: function(response){
           this.envObject = response.detail.response;
           this.$.envObjectImg.src = this.getImg();
         },
+
       handleTapResponse: function(response){
           this.$.objGetRequest.go();
         },
+
       onTap: function(){
           this.$.objTapRequest.go();
         },
+
       updateObject: function(event){
           var uuid = event.detail.data.uuid;
           if(uuid !== undefined){
@@ -77,16 +101,20 @@
             }
           }
         },
+
       getImg: function() {
-          var obj = this.envObject;
-          if(obj){
-            var icon = obj.representation[obj.currentRepresentation].icon;
-            if(icon){
-              var src = "https://" + this.globals.apiurl + "resources/" + icon;
+        var obj = this.envObject;
+        if(obj){
+          var icon = obj.representation[obj.currentRepresentation].icon;
+          if(icon){
+            if(this.apiurl != undefined){
+              var src = "https://" + this.apiurl + "resources/" + icon;
               return src;
-            } 
-          }
+            }
+          } 
         }
+      }
+      
     });
   </script>
 </polymer-element>

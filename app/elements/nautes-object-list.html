@@ -55,8 +55,11 @@
 
   <script>
     Polymer("nautes-object-list",{
+
       objectUpdatingIndex: 0,
+
       objectUpdating: {},
+
       getImg: function(obj) {
         var icon = obj.representation[obj.currentRepresentation].icon;
         if(icon != null){
@@ -64,6 +67,7 @@
           return src;
         }
       },
+
       updateObject: function(event){
         var uuid = event.detail.data.uuid;
 
@@ -82,9 +86,11 @@
           }
         }
       },
+
       handleGetResponse: function(response){
           this.objects[this.objectUpdatingIndex] = response.detail.response;
       }
+      
     });
   </script>
 </polymer-element>

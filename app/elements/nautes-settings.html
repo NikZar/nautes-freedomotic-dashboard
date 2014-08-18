@@ -53,14 +53,16 @@
       <div class="row-fab" horizontal end-justified layout>
         <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
       </div>
-
     </div>
 
   </template>
   <script>
     Polymer({
+
       newAPIUrl: "",
+
       newCredentialRequired: true,
+
       ready: function(){
         if(localStorage["credentialrequired"] == "true"){
           this.newCredentialRequired = true;
@@ -68,6 +70,7 @@
           this.newCredentialRequired = false;
         }
       },
+
       applyChanges: function(){
         if(this.newAPIUrl != ""){
           this.$.LSapiurl.value = this.newAPIUrl;
@@ -76,6 +79,7 @@
         this.$.LScr.save();
         location.reload();
       }
+
     });
   </script>
 </polymer-element>

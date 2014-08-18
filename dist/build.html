@@ -5040,7 +5040,8 @@ To style the background, text and hover color, apply the `background` and
         console.log("tapped!"+this.showDescription);
       },
       boxChanged: function(){
-        this.$.tipContent.innerHTML = this.box.description.chunk(40).join("<br />");
+        var spanContent = this.box.description.chunk(40).join("<br />");
+        this.$.tipContent.innerHTML = "<span style='color:"+this.box.color+"'>"+spanContent+"</span>";
       }
     });
   </script>
@@ -5086,23 +5087,26 @@ To style the background, text and hover color, apply the `background` and
           position: relative;
           margin: 2px;
       }
+      .column{
+        min-width: 210px;
+      }
     </style>
 
   <nautes-dashboard-service boxesobjects="{{boxesObjects}}">
   </nautes-dashboard-service>
 
   <div id="container" horizontal="" layout="">
-          <div flex="" vertical="" layout="">
+          <div class="column" flex="" vertical="" layout="">
             <nautes-box target="{{boxesObjects.environment.title}}" box="{{boxesObjects.environment}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="environment"></nautes-box>
             <nautes-box target="{{boxesObjects.alerts.title}}" box="{{boxesObjects.alerts}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="alerts"></nautes-box>
             <nautes-box target="{{boxesObjects.info.title}}" box="{{boxesObjects.info}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="info"></nautes-box>
           </div>
-          <div flex="" vertical="" layout="">
+          <div class="column" flex="" vertical="" layout="">
             <nautes-box target="{{boxesObjects.family.title}}" box="{{boxesObjects.family}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="family"></nautes-box>
             <nautes-box target="{{boxesObjects.actions.title}}" box="{{boxesObjects.actions}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="actions"></nautes-box>
             <nautes-box target="{{boxesObjects.settings.title}}" box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="settings"></nautes-box>
           </div>
-          <div flex="" vertical="" layout="">
+          <div class="column" flex="" vertical="" layout="">
             <nautes-box target="{{boxesObjects.objects.title}}" box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="objects"></nautes-box>
             <nautes-box target="{{boxesObjects.messages.title}}" box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="messages"></nautes-box>
             <nautes-box target="{{boxesObjects.triggers.title}}" box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="triggers"></nautes-box>
@@ -6835,6 +6839,135 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<!--
+Element access to localStorage.  The "name" property
+is the key to the data ("value" property) stored in localStorage.
+
+`core-localstorage` automatically saves the value to localStorage when
+value is changed.  Note that if value is an object auto-save will be
+triggered only when value is a different instance.
+
+    <core-localstorage name="my-app-storage" value="{{value}}"></core-localstorage>
+
+@group Polymer Core Elements
+@element core-localstorage
+@blurb Element access to localStorage.
+@url github.io
+@categories Data
+-->
+
+
+
+<polymer-element name="core-localstorage" attributes="name value useRaw autoSaveDisabled" hidden assetpath="../app/bower_components/core-localstorage/">
+<script>
+
+  Polymer('core-localstorage', {
+    
+    /**
+     * Fired when a value is loaded from localStorage.
+     * @event core-localstorage-load
+     */
+     
+    /**
+     * The key to the data stored in localStorage.
+     *
+     * @attribute name
+     * @type string
+     * @default null
+     */
+    name: '',
+    
+    /**
+     * The data associated with the specified name.
+     *
+     * @attribute value
+     * @type object
+     * @default null
+     */
+    value: null,
+    
+    /**
+     * If true, the value is stored and retrieved without JSON processing.
+     *
+     * @attribute useRaw
+     * @type boolean
+     * @default false
+     */
+    useRaw: false,
+    
+    /**
+     * If true, auto save is disabled.
+     *
+     * @attribute autoSaveDisabled
+     * @type boolean
+     * @default false
+     */
+    autoSaveDisabled: false,
+    
+    attached: function() {
+      // wait for bindings are all setup
+      this.async('load');
+    },
+    
+    valueChanged: function() {
+      if (this.loaded && !this.autoSaveDisabled) {
+        this.save();
+      }
+    },
+    
+    load: function() {
+      var v = localStorage.getItem(this.name);
+      if (this.useRaw) {
+        this.value = v;
+      } else {
+        // localStorage has a flaw that makes it difficult to determine
+        // if a key actually exists or not (getItem returns null if the
+        // key doesn't exist, which is not distinguishable from a stored
+        // null value)
+        // however, if not `useRaw`, an (unparsed) null value unambiguously
+        // signals that there is no value in storage (a stored null value would
+        // be escaped, i.e. "null")
+        // in this case we save any non-null current (default) value
+        if (v === null) {
+          if (this.value !== null) {
+            this.save();
+          }
+        } else {
+          try {
+            v = JSON.parse(v);
+          } catch(x) {
+          }
+          this.value = v;
+        }
+      }
+      this.loaded = true;
+      this.asyncFire('core-localstorage-load');
+    },
+    
+    /** 
+     * Saves the value to localStorage.
+     *
+     * @method save
+     */
+    save: function() {
+      var v = this.useRaw ? this.value : JSON.stringify(this.value);
+      localStorage.setItem(this.name, v);
+    }
+    
+  });
+
+</script>
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
 
 
 <polymer-element name="core-key-helper" assetpath="../app/bower_components/core-overlay/">
@@ -8332,31 +8465,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<polymer-element name="nautes-globals" attributes="values" assetpath="../app/elements/">
-  <script>
-  (function() {
-    var values = {};
-
-    Polymer("nautes-globals", {
-       ready: function() {
-         this.values = values;
-         for (var i = 0; i < this.attributes.length; ++i) {
-           var attr = this.attributes[i];
-           values[attr.nodeName] = attr.value;
-         }
-       }
-    });
-  })();
-  </script>
-</polymer-element>
 
 
 
-
-
-
-
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast" assetpath="../app/elements/">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired" assetpath="../app/elements/">
   <template>
     <style>
     :host {
@@ -8364,12 +8476,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
     </style>
 
-    <nautes-globals values="{{globals}}"></nautes-globals>
-    
-    <core-ajax id="ajax" on-core-error="{{errorHandler}}" url="https://{{globals.apiurl}}{{fdtype}}/" on-core-response="{{elementsLoaded}}" response="{{fditems}}" handleas="json" withcredentials?="{{globals.credentialrequired == &apos;true&apos;}}">
-    </core-ajax>
+    <core-localstorage name="apiurl" value="{{apiurl}}">
+    </core-localstorage>
 
-  </template>
+    <core-localstorage name="credentialrequired" value="{{credentialrequired}}" <="" core-localstorage="">
+    
+    <core-ajax id="ajax" auto="" on-core-error="{{errorHandler}}" on-core-response="{{elementsLoaded}}" response="{{fditems}}" handleas="json" <="" core-ajax="">
+
+  </core-ajax></core-localstorage></template>
   <script>
   Polymer('fd-rest-element-service', {
     alwaysPrepare: true,
@@ -8380,24 +8494,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       this.fditems = [];
     },
 
-    ready: function(){
-      var globals = this.globals;
-      if(globals.apiurl != undefined){
-        this.$.ajax.go();
+    apiurlChanged: function(){
+      if(this.apiurl != undefined){
+        this.$.ajax.url = "https://" + this.apiurl + this.fdtype +"/";
+      }
+    },
+
+    credentialrequiredChanged: function(){
+      if(this.credentialrequired != undefined){
+        this.$.ajax.withCredentials =  JSON.parse(this.credentialrequired);
       }
     },
 
     elementsLoaded: function() {
-      console.log(this.fdtype +" : "+ this.$.ajax.response);
 
       // Make a copy of the loaded data
       this.fditems = this.$.ajax.response.slice(0);
-      /*
-      for (var i = 0; i < this.fditems.length; i++){
-        console.log("element #"+i);
-        console.log(this.fditems[i]);
-      }
-      */
 
     },
     
@@ -8608,27 +8720,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-
-<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype" assetpath="../app/elements/">
+<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiurl" assetpath="../app/elements/">
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
-    <nautes-globals values="{{globals}}"></nautes-globals>
 
-    <x-websocket url="wss://{{globals.apiurl}}ws/{{wstype}}" on-message="{{onMessage}}"></x-websocket>
+    <core-localstorage name="apiurl" value="{{apiurl}}">
+    </core-localstorage>
+
+    <x-websocket id="ws" on-message="{{onMessage}}">
+    </x-websocket>
 
   </template>
   <script>
     Polymer({
+
+      apiurlChanged: function(){
+        if(this.apiurl != undefined){
+          this.$.ws.url = "wss://" + this.apiurl + "ws/" + this.wstype +"/";
+        }
+      },
+
       onMessage: function(event){
         var data = event.detail.data;
         data = data.split("|").pop();
-        data = {uuid: data};
-        this.fire("message", { data: data });
+        if(data.trim() != ""){
+          data = {uuid: data, type: this.wstype};
+          this.fire("message", { data: data });
+        }
+        event.stopPropagation();
       },
+
       _parse: function(input){
         var statements = input.substring(2, input.length -2).split("; ");
         var output = {};
@@ -8643,6 +8768,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var data = JSON.stringify(output);
         return JSON.parse(data);
       },
+
       _assign: function(obj, keyPath, value){
          var lastKeyIndex = keyPath.length-1;
          for (var i = 0; i < lastKeyIndex; ++i) {
@@ -8654,6 +8780,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          }
          obj[keyPath[lastKeyIndex]] = value;
       }
+
     });
   </script>
 </polymer-element>
@@ -8674,7 +8801,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <nautes-globals values="{{globals}}"></nautes-globals>
+    <core-localstorage name="apiurl" value="{{apiurl}}">
+    </core-localstorage>
+
+    <core-localstorage name="credentialrequired" value="{{credentialrequired}}">
+    </core-localstorage>
 
     <fd-rest-element-service fdtype="objects" fditems="{{objects}}" toast="{{toast}}">
     </fd-rest-element-service>
@@ -8682,7 +8813,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{updateObject}}">
     </nautes-fd-websocket-api-service>
 
-    <core-ajax id="objGetRequest" url="https://{{globals.apiurl}}objects/{{objectUpdating.uuid}}" on-core-response="{{handleGetResponse}}" on-core-error="{{errorGetHandler}}" method="GET" handleas="json" withcredentials="">
+    <core-ajax id="objGetRequest" url="https://{{apiurl}}objects/{{objectUpdating.uuid}}" on-core-response="{{handleGetResponse}}" on-core-error="{{errorGetHandler}}" method="GET" handleas="json" withcredentials="{{credentialrequired}}">
     </core-ajax>
 
     <div layout="" vertical="" center="">
@@ -8705,7 +8836,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       getImg: function(obj) {
         var icon = obj.representation[obj.currentRepresentation].icon;
         if(icon != null){
-          var src = 'https://fritz.bestmazzo.it:9113/v3/resources/' + icon ;
+          var src = 'https://'+this.apiurl+'resources/' + icon ;
           return src;
         }
       },
@@ -8848,7 +8979,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<polymer-element name="nautes-zone-object" attributes="envObject toast" assetpath="../app/elements/">
+<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequired" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -8860,44 +8991,64 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <nautes-globals values="{{globals}}"></nautes-globals>
+    <core-localstorage name="apiurl" value="{{apiurl}}">
+    </core-localstorage>
+
+    <core-localstorage name="credentialrequired" value="{{credentialrequired}}">
+    </core-localstorage>
 
     <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{updateObject}}">
     </nautes-fd-websocket-api-service>
 
-    <img id="envObjectImg" on-tap="{{onTap}}" src="{{getImg()}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
+    <img id="envObjectImg" on-tap="{{onTap}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
 
-    <core-ajax id="objTapRequest" url="https://{{globals.apiurl}}objects/{{envObject.uuid}}/click" on-core-response="{{handleTapResponse}}" on-core-error="{{errorTapHandler}}" method="POST" withcredentials="">
+    <core-ajax id="objTapRequest" url="https://{{apiurl}}objects/{{envObject.uuid}}/click" on-core-response="{{handleTapResponse}}" on-core-error="{{errorTapHandler}}" method="POST" withcredentials="{{credentialrequired}}">
     </core-ajax>
 
-    <core-ajax id="objGetRequest" url="https://{{globals.apiurl}}objects/{{envObject.uuid}}" on-core-response="{{handleGetResponse}}" on-core-error="{{errorGetHandler}}" method="GET" handleas="json" withcredentials="">
+    <core-ajax id="objGetRequest" url="https://{{apiurl}}objects/{{envObject.uuid}}" on-core-response="{{handleGetResponse}}" on-core-error="{{errorGetHandler}}" method="GET" handleas="json" withcredentials="{{credentialrequired}}">
     </core-ajax>
 
   </template>
   <script>
     Polymer("nautes-zone-object",{
+
+      apiurlChanged: function(){
+        if(this.apiurl != undefined){
+          var srcLC = this.getImg();
+          if(srcLC != undefined){
+            console.log("srcLC: "+srcLC);
+            this.$.envObjectImg.src = srcLC;
+          }
+        }
+      },
+
       errorGetHandler: function(event){
           if(this.toast){
             this.toast.text="There was a problem loading "+this.envObject.name+" data.";
             this.toast.show();
           }
         },
+
       errorTapHandler: function(event){
           if(this.toast){
             this.toast.text="There was a server problem during "+this.envObject.name+" interaction.";
             this.toast.show();
           }
         },
+
       handleGetResponse: function(response){
           this.envObject = response.detail.response;
           this.$.envObjectImg.src = this.getImg();
         },
+
       handleTapResponse: function(response){
           this.$.objGetRequest.go();
         },
+
       onTap: function(){
           this.$.objTapRequest.go();
         },
+
       updateObject: function(event){
           var uuid = event.detail.data.uuid;
           if(uuid !== undefined){
@@ -8908,16 +9059,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           }
         },
+
       getImg: function() {
-          var obj = this.envObject;
-          if(obj){
-            var icon = obj.representation[obj.currentRepresentation].icon;
-            if(icon){
-              var src = "https://" + this.globals.apiurl + "resources/" + icon;
+        var obj = this.envObject;
+        if(obj){
+          var icon = obj.representation[obj.currentRepresentation].icon;
+          if(icon){
+            if(this.apiurl != undefined){
+              var src = "https://" + this.apiurl + "resources/" + icon;
               return src;
-            } 
-          }
+            }
+          } 
         }
+      }
     });
   </script>
 </polymer-element>
@@ -9083,6 +9237,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       }
     });
+  </script>
+</polymer-element>
+
+
+
+<polymer-element name="nautes-globals" attributes="values" assetpath="../app/elements/">
+  <script>
+  (function() {
+    var values = {};
+
+    Polymer("nautes-globals", {
+       ready: function() {
+         this.values = values;
+         for (var i = 0; i < this.attributes.length; ++i) {
+           var attr = this.attributes[i];
+           values[attr.nodeName] = attr.value;
+         }
+       }
+    });
+  })();
   </script>
 </polymer-element>
 
@@ -10630,6 +10804,89 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </script>
 </polymer-element>
 
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`<paper-fab>` is a floating action button with an icon. It comes in two sizes: regular
+size and a smaller size by applying the class `mini`.
+
+Example:
+
+    <paper-fab icon="favorite"></paper-fab>
+    <paper-fab class="mini"></paper-fab>
+
+@group Paper Elements
+@element paper-fab
+@homepage github.io
+@extends paper-icon-button
+-->
+
+
+
+
+<polymer-element name="paper-fab" extends="paper-icon-button" assetpath="../app/bower_components/paper-fab/">
+
+  <template>
+
+    <style>:host {
+  box-sizing: border-box;
+  width: 56px;
+  height: 56px;
+  background: #d23f31;
+  border-radius: 50%;
+  fill: #fff;
+}
+
+:host(.mini) {
+  width: 40px;
+  height: 40px;
+}
+
+:host /deep/ #focusBg {
+  display: none;
+}
+
+:host /deep/ #icon {
+  display: block;
+  margin: 16px;
+}
+
+:host(.mini) /deep/ #icon {
+  margin: 8px;
+}
+</style>
+
+    <shadow></shadow>
+
+  </template>
+
+  <script>
+    Polymer('paper-fab', {
+
+      publish: {
+
+        /**
+         * See [`<paper-button>`](../paper-button).
+         *
+         * @attribute raisedButton
+         * @type boolean
+         * @default true
+         */
+        raisedButton: {value: true, reflect: true}
+
+      }
+
+    });
+  </script>
+</polymer-element>
+
 
 
 
@@ -10649,31 +10906,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       .label{
         display: inline-block;
-        height: 62px;
+        height: 100px;
         vertical-align: top;
-        padding-top: 8px;
+        padding-top: 48px;
       }
       .row{
         width: 50%;
         margin-top: 20px;
       }
+      .row-fab{
+        width: 40%;
+        margin-top: 20px;
+      }
+      .fab{
+        color: #444;
+        background-color: #9C9;
+      }
     </style>
-
-    <nautes-globals values="{{globals}}"></nautes-globals>
 
     <div layout="" vertical="" center="">
       <div class="row" layout="" horizonal="" center="" start="">
-        <div class="label">API URL:&nbsp </div> <paper-input label="{{globals.apiurl}}"></paper-input>
+        <core-localstorage id="LSapiurl" name="apiurl" value="{{apiurl}}">
+        </core-localstorage>
+        <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatinglabel="true" value="{{newAPIUrl}}"></paper-input>
       </div>
       <div class="row" layout="" horizonal="" center="">
-        CREDENTIAL REQUIRED: <paper-toggle-button checked="{{globals.credentialrequired}}"></paper-toggle-button>
+        <core-localstorage id="LScr" name="credentialrequired" value="{{credentialrequired}}">
+        </core-localstorage>
+        CREDENTIAL REQUIRED: <paper-toggle-button checked="{{newCredentialRequired}}"></paper-toggle-button>
       </div>
+      <div class="row-fab" horizontal="" end-justified="" layout="">
+        <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
+      </div>
+
     </div>
 
   </template>
   <script>
     Polymer({
-
+      newAPIUrl: "",
+      newCredentialRequired: true,
+      ready: function(){
+        if(localStorage["credentialrequired"] == "true"){
+          this.newCredentialRequired = true;
+        } else {
+          this.newCredentialRequired = false;
+        }
+      },
+      applyChanges: function(){
+        if(this.newAPIUrl != ""){
+          this.$.LSapiurl.value = this.newAPIUrl;
+        }
+        this.$.LScr.value = this.newCredentialRequired;
+        this.$.LScr.save();
+        location.reload();
+      }
     });
   </script>
 </polymer-element>
@@ -10789,6 +11076,108 @@ function xmlToJson(xml) {
 
 
 
+<polymer-element name="nautes-asynch-messages-row" attributes="bgColor message" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        background-color: {{bgColor}};
+        width: 100%;
+        font-size: 1.2rem;
+        font-weight: 300;
+      }
+      .message-row{
+        padding: 40px;
+        font-family: Tahoma;
+        color: #444;
+      }
+      .icon{
+        margin-right: 30px;
+        color: #444;
+        width: 70px;
+        height: 70px;
+      }
+    </style>
+    <template if="{{message.type == &apos;objectchange&apos;}}">
+      <div class="message-row" layout="" horizontal="" center="">
+        <core-icon class="icon" icon="image:camera"></core-icon>
+        Object Change Message: {{message | stringify}}
+      </div>
+    </template>
+    <template if="{{message.type == &apos;zonechange&apos;}}">
+      <div class="message-row" layout="" horizontal="" center="">
+        <core-icon class="icon" icon="home"></core-icon>
+        Zone Change Message: {{message | stringify}}
+      </div>
+    </template>
+    <template if="{{message.type == &apos;pluginchange&apos;}}">
+      <div class="message-row" layout="" horizontal="" center="">
+        <core-icon class="icon" icon="extension"></core-icon>
+        Plugin Change Message: {{message | stringify}}
+      </div>
+    </template>
+
+    <paper-shadow z="1"></paper-shadow>
+  </template>
+
+  <script>
+    Polymer({
+      stringify: function(message) {
+        return JSON.stringify(message);
+      }
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+<polymer-element name="nautes-asynch-messages-list" attributes="bgColor toast" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{addMessage}}">
+    </nautes-fd-websocket-api-service>
+
+    <nautes-fd-websocket-api-service wstype="zonechange" on-message="{{addMessage}}">
+    </nautes-fd-websocket-api-service>
+
+    <nautes-fd-websocket-api-service wstype="pluginchange" on-message="{{addMessage}}">
+    </nautes-fd-websocket-api-service>
+
+    <div layout="" vertical="" center="">
+      <template repeat="{{message in messages}}">
+        <nautes-asynch-messages-row bgcolor="{{bgColor}}" message="{{message}}"></nautes-asynch-messages-row>
+      </template>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      messages: [],
+      created: function() {
+        this.messages = [];
+      },
+      addMessage: function(){
+        console.log("Messages List: Asynch store of " + event.detail.data.type + " data");
+        this.messages.push(event.detail.data);
+      }
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
 
 
 
@@ -10872,6 +11261,7 @@ function xmlToJson(xml) {
 
       <section name="messages" layout="" vertical="">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="messages">
+        <nautes-asynch-messages-list bgcolor="{{selectedBox.color}}" toast="{{$.toast}}"></nautes-asynch-messages-list>
        </nautes-dashboard-page>
       </section>
 
@@ -10914,6 +11304,8 @@ function xmlToJson(xml) {
     });
   </script>
 </polymer-element>
+
+
 
 
 

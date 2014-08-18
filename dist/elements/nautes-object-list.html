@@ -1,9 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 
 <link rel="import" href="../elements/nautes-object-row.html">
 <link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
-<link rel="import" href="../elements/nautes-globals.html">
 
 <polymer-element name="nautes-object-list" attributes="bgColor toast">
   <template>
@@ -14,7 +14,15 @@
       }
     </style>
 
-    <nautes-globals values="{{globals}}"></nautes-globals>
+    <core-localstorage
+      name="apiurl" 
+      value="{{apiurl}}">
+    </core-localstorage>
+
+    <core-localstorage
+      name="credentialrequired" 
+      value="{{credentialrequired}}">
+    </core-localstorage>
 
     <fd-rest-element-service fdtype="objects" fditems="{{objects}}" toast={{toast}}>
     </fd-rest-element-service>
@@ -24,12 +32,12 @@
 
     <core-ajax
       id="objGetRequest"
-      url="https://{{globals.apiurl}}objects/{{objectUpdating.uuid}}"
+      url="https://{{apiurl}}objects/{{objectUpdating.uuid}}"
       on-core-response="{{handleGetResponse}}"
       on-core-error="{{errorGetHandler}}"
       method="GET"
       handleAs="json"
-      withCredentials>
+      withCredentials="{{credentialrequired}}">
     </core-ajax>
 
     <div layout vertical center>
@@ -47,15 +55,19 @@
 
   <script>
     Polymer("nautes-object-list",{
+
       objectUpdatingIndex: 0,
+
       objectUpdating: {},
+
       getImg: function(obj) {
         var icon = obj.representation[obj.currentRepresentation].icon;
         if(icon != null){
-          var src = 'https://fritz.bestmazzo.it:9113/v3/resources/' + icon ;
+          var src = 'https://'+this.apiurl+'resources/' + icon ;
           return src;
         }
       },
+
       updateObject: function(event){
         var uuid = event.detail.data.uuid;
 
@@ -74,9 +86,11 @@
           }
         }
       },
+
       handleGetResponse: function(response){
           this.objects[this.objectUpdatingIndex] = response.detail.response;
       }
+      
     });
   </script>
 </polymer-element>
