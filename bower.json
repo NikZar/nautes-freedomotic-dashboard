@@ -6,7 +6,8 @@
     "paper-elements": "Polymer/paper-elements#~0.3.3",
     "polymer": "Polymer/polymer#~0.3.3",
     "flatiron-director": "https://github.com/PolymerLabs/flatiron-director.git#~0.3.0",
-    "x-websocket": "~0.2.0"
+    "x-websocket": "~0.2.0",
+    "google-chart": "~0.0.1"
   },
   "devDependencies": {},
   "resolutions": {
