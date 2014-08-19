@@ -10,6 +10,7 @@
 <polymer-element name="nautes-box" attributes="box tooltip">
   <template>
     <style>
+
     :host {
       display: block;
       background-color: {{box.color}};
@@ -19,16 +20,19 @@
       position: relative;
       z-index: 2;
     }
+
     core-icon{
       color: #444;
     }
+
     paper-ripple {
       color: #aaaaff;
     }
+
     core-tooltip{
       size: 200;
     }
-    /* Style #my-button blue with white text and darker blue ink. */
+
     #my-button {
         margin: 10px;
         font-family: Verdana;
@@ -36,27 +40,33 @@
         color: #444;
         min-width: 150px;
     }
+
     #left-icon{
       position: absolute;
       top: 5px;
       right: 5px;
     }
+
     #description{
       display: inline-block;
       width: 200px;
       height: 200px;
     }
+
     #tipContent{
       line-height: 14px;
     }
+
     .icon{
       width: 140px;
       height: 140px;
     }
+
     .info-icon{
       width: 30px;
       height: 30px;
     }
+
     </style>
     <div layout vertical center center-justified fit>
       <core-icon icon="{{box.img}}" class="icon"></core-icon>

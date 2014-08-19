@@ -49,7 +49,7 @@
 
     credentialrequiredChanged: function(){
       if(this.credentialrequired != undefined){
-        this.$.ajax.withCredentials =  JSON.parse(this.credentialrequired);
+        this.$.ajax.withCredentials =  this.credentialrequired;
       }
     },
 
