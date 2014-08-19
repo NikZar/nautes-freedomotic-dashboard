@@ -6,9 +6,8 @@
     <style>
       :host {
         display: block;
-        height: 100%;
-        background: {{selectedBox.color}};
         color: #fff;
+        z-index: 4;
       }
 
       #header{
@@ -16,6 +15,7 @@
         font-family: Tahoma;
         text-transform: uppercase;
         padding-bottom: 10px;
+        z-index: 99 !IMPORTANT;
       }
     </style>
 
@@ -35,6 +35,12 @@
       back: function() {
         this.fire('page-back');
       },
+      selectedBoxChanged: function(){
+        if(this.selectedBox){
+          this.style.backgroundColor = this.selectedBox.color;
+          this.style.minHeight = window.innerHeight + "px";
+        }
+      }
     });
   </script>
 </polymer-element>

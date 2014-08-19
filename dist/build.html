@@ -9377,20 +9377,20 @@ Data can be provided in one of three ways:
     <style>
       :host {
         display: block;
-        background-color: {{bgColor}};
+        background-color: {{ bgColor }};
       }
     </style>
 
-    <core-localstorage name="apiurl" value="{{apiurl}}">
+    <core-localstorage name="apiurl" value="{{ apiurl }}">
     </core-localstorage>
 
-    <core-localstorage name="credentialrequired" value="{{credentialrequired}}">
+    <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
     </core-localstorage>
 
-    <fd-rest-element-service fdtype="objects" fditems="{{objects}}" toast="{{toast}}">
+    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast="{{" }}="">
     </fd-rest-element-service>
 
-    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{updateObject}}">
+    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
     </nautes-fd-websocket-api-service>
 
     <core-ajax id="objGetRequest" url="https://{{apiurl}}objects/{{objectUpdating.uuid}}" on-core-response="{{handleGetResponse}}" on-core-error="{{errorGetHandler}}" method="GET" handleas="json" withcredentials="{{credentialrequired}}">
@@ -9419,7 +9419,7 @@ Data can be provided in one of three ways:
       getImg: function(obj) {
         var icon = obj.representation[obj.currentRepresentation].icon;
         if(icon != null){
-          var src = 'https://'+this.apiurl+'resources/' + icon ;
+          var src = 'https://'+ this.apiurl +'resources/' + icon ;
           return src;
         }
       },
@@ -9716,7 +9716,8 @@ Data can be provided in one of three ways:
 
 
 
-<polymer-element name="nautes-environment-row" attributes="environment bgColor toast" assetpath="../app/elements/">
+
+<polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiurl" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -9736,11 +9737,15 @@ Data can be provided in one of three ways:
         width: {{environment.width}}px;
       }
     </style>
+    
+    <core-localstorage name="apiurl" value="{{ apiurl }}">
+    </core-localstorage>
+
     <div layout="" vertical="" center="">
       <h2>{{environment.name}}</h2>
       <div id="container" relative="">
         <canvas id="environmentCanvas" width="{{environment.width}}px" height="{{environment.height}}px"></canvas>
-        <img src="{{getImg(environment)}}" width="{{environment.width}}px" height="{{environment.height}}px">
+        <img id="environmentImg" width="{{environment.width}}px" height="{{environment.height}}px">
         <template repeat="{{zone in environment.zones}}">
           <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
         </template>
@@ -9749,13 +9754,24 @@ Data can be provided in one of three ways:
   </template>
   <script>
     Polymer("nautes-environment-row",{
-      ready: function(){
-          var element = this;
-          element.resize();
-          window.addEventListener('resize', function(event){
-            element.resize();
-          });
+
+      apiurlChanged: function(){
+        if(this.apiurl != undefined){
+          var src = this.getImg();
+          if(src != undefined){
+            this.$.environmentImg.src = src;
+          }
+        }
       },
+
+      ready: function(){
+        var element = this;
+        element.resize();
+        window.addEventListener('resize', function(event){
+          element.resize();
+        });
+      },
+
       resize: function(){
         var element = this;
         var scaleFactor = element.scaleFactor();
@@ -9764,8 +9780,9 @@ Data can be provided in one of three ways:
         var verticalOffset = - (element.environment.height * (1 - scaleFactor))/2;
         element.style.top = verticalOffset+"px";
       },
-      getImg: function(environment) {
-        var src = 'https://fritz.bestmazzo.it:9113/v3/resources/' + environment.backgroundImage;
+
+      getImg: function() {
+        var src = "https://"+ this.apiurl + 'resources/' + this.environment.backgroundImage;
         return src;
       },
       
@@ -9775,6 +9792,7 @@ Data can be provided in one of three ways:
         var scaleFactor = Math.min(scaleFactorX,scaleFactorY,1);
         return scaleFactor;
       }
+
     });
   </script>
 </polymer-element>
