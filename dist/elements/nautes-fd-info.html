@@ -14,11 +14,15 @@
         font-family: Verdana;
         font-size: 20px;
         padding-top: 20px;
+        text-align: center;
       }
     </style>
 
     <fd-rest-element-service fdtype="info/framework" fditems="{{infoXML}}" toast="{{toast}}">
     </fd-rest-element-service>
+      <div layout vertical center>
+        Nautes Freedomotic Dashboard 0.0.1
+      </div>
       <div layout vertical center>
         Freedomotic {{info.FRAMEWORK_MAJOR["#text"]}}.{{info.FRAMEWORK_MINOR["#text"]}}.{{info.FRAMEWORK_BUILD["#text"]}} 
         "{{info.FRAMEWORK_VERSION_CODENAME["#text"]}}" 
