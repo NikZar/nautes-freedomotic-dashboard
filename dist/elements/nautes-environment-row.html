@@ -19,8 +19,6 @@
       canvas{
         position: absolute;
         z-index: 11;
-        height: {{environment.height}}px;
-        width: {{environment.width}}px;
       }
     </style>
     
@@ -43,11 +41,26 @@
   <script>
     Polymer("nautes-environment-row",{
 
+      scaleFactor: 1.0,
+
+      scaleFactorChanged: function(){
+        if(this.scaleFactor){
+          var scaleStr = "scale("+this.scaleFactor+ ","+this.scaleFactor+")";
+          element.style.transform = scaleStr;
+          element.style.WebkitTransform = scaleStr;
+          element.style.msTransform = scaleStr;
+
+          var verticalOffset = - (element.environment.height * (1 - scaleFactor))/2 + 30;
+          element.style.top = verticalOffset+"px";
+        }
+      },
+
       apiurlChanged: function(){
         if(this.apiurl != undefined){
           var src = this.getImg();
           if(src != undefined){
             this.$.environmentImg.src = src;
+            this.style.WebkitTransform = "scale(0.5,0.5)";
           }
         }
       },
@@ -62,11 +75,7 @@
 
       resize: function(){
         var element = this;
-        var scaleFactor = element.scaleFactor();
-        element.style.transform = "scale("+scaleFactor+ ","+scaleFactor+")";
-
-        var verticalOffset = - (element.environment.height * (1 - scaleFactor))/2;
-        element.style.top = verticalOffset+"px";
+        this.scaleFactor = element.getScaleFactor();
       },
 
       getImg: function() {
@@ -74,7 +83,7 @@
         return src;
       },
       
-      scaleFactor: function(){
+      getScaleFactor: function(){
         var scaleFactorX =  (window.innerWidth - 100) / this.environment.width;
         var scaleFactorY =  (window.innerHeight - 150) / this.environment.height;
         var scaleFactor = Math.min(scaleFactorX,scaleFactorY,1);

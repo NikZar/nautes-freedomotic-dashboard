@@ -11,8 +11,6 @@
         display: block;
         position: absolute;
         z-index: 1000;
-        left: {{ envObject.representation[0].offset.x }}px;
-        top: {{ envObject.representation[0].offset.y }}px;
       }
     </style>
 
@@ -54,6 +52,14 @@
   <script>
     Polymer("nautes-zone-object",{
 
+      envObjectChanged: function(){
+        if(this.envObject){
+          this.$.envObjectImg.src = this.getImg();
+          this.style.left = this.envObject.representation[0].offset.x + "px";
+          this.style.top = this.envObject.representation[0].offset.y + "px";
+        }
+      },
+
       apiurlChanged: function(){
         if(this.apiurl != undefined){
           var src = this.getImg();
@@ -79,7 +85,6 @@
 
       handleGetResponse: function(response){
           this.envObject = response.detail.response;
-          this.$.envObjectImg.src = this.getImg();
         },
 
       handleTapResponse: function(response){
