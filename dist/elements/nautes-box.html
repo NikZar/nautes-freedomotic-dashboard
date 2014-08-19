@@ -12,13 +12,12 @@
     <style>
 
     :host {
-      display: inline-block;
-      background-color: {{box.color}};
+      display: block;
       margin: 4px;
       min-width: 200px !IMPORTANT;
       min-height: 200px !IMPORTANT;
       position: relative;
-      z-index: 2;
+      z-index: 1;
     }
 
     core-icon{
@@ -26,6 +25,7 @@
     }
 
     paper-ripple {
+      z-index: 1;
       color: #aaaaff;
     }
 
@@ -100,11 +100,11 @@
       },
       doFlip: function(){
         this.showDescription = !this.showDescription;
-        console.log("tapped!"+this.showDescription);
       },
       boxChanged: function(){
         var spanContent = this.box.description.chunk(40).join("<br />");
         this.$.tipContent.innerHTML = "<span style='color:"+this.box.color+"'>"+spanContent+"</span>";
+        this.style.backgroundColor = this.box.color;
       }
     });
   </script>
