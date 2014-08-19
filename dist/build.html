@@ -9425,17 +9425,12 @@ Data can be provided in one of three ways:
         display: block;
         color: #444;
         background: {{bgColor}};
-        -ms-transform: scale({{scaleFactor()}},{{scaleFactor()}}); /* IE 9 */
-        -webkit-transform: scale({{scaleFactor()}},{{scaleFactor()}}); /* Chrome, Safari, Opera */
-        transform: scale({{scaleFactor()}},{{scaleFactor()}});
         position: relative;
         font-family: Verdana;
       }
       canvas{
         position: absolute;
         z-index: 11;
-        height: {{environment.height}}px;
-        width: {{environment.width}}px;
       }
     </style>
     
@@ -9456,9 +9451,18 @@ Data can be provided in one of three ways:
   <script>
     Polymer("nautes-environment-row",{
 
+      scaleFactor: 1.0,
 
       scaleFactorChanged: function(){
+        if(this.scaleFactor){
+          var scaleStr = "scale("+this.scaleFactor+ ","+this.scaleFactor+")";
+          this.style.transform = scaleStr;
+          this.style.WebkitTransform = scaleStr;
+          this.style.msTransform = scaleStr;
 
+          var verticalOffset = - (this.environment.height * (1 - this.scaleFactor))/2 + 20;
+          this.style.top = verticalOffset+"px";
+        }
       },
 
       apiurlChanged: function(){
@@ -9466,7 +9470,6 @@ Data can be provided in one of three ways:
           var src = this.getImg();
           if(src != undefined){
             this.$.environmentImg.src = src;
-            this.style.WebkitTransform = "scale(0.5,0.5)";
           }
         }
       },
@@ -9481,13 +9484,7 @@ Data can be provided in one of three ways:
 
       resize: function(){
         var element = this;
-        var scaleFactor = element.scaleFactor();
-        element.style.transform = "scale("+scaleFactor+ ","+scaleFactor+")";
-        element.style.WebkitTransform = "scale("+scaleFactor+ ","+scaleFactor+")";
-        element.style.msTransform = "scale("+scaleFactor+ ","+scaleFactor+")";
-
-        var verticalOffset = - (element.environment.height * (1 - scaleFactor))/2;
-        element.style.top = verticalOffset+"px";
+        this.scaleFactor = element.getScaleFactor();
       },
 
       getImg: function() {
@@ -9495,7 +9492,7 @@ Data can be provided in one of three ways:
         return src;
       },
       
-      scaleFactor: function(){
+      getScaleFactor: function(){
         var scaleFactorX =  (window.innerWidth - 100) / this.environment.width;
         var scaleFactorY =  (window.innerHeight - 150) / this.environment.height;
         var scaleFactor = Math.min(scaleFactorX,scaleFactorY,1);

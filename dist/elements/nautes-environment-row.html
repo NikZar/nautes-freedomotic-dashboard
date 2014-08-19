@@ -10,9 +10,6 @@
         display: block;
         color: #444;
         background: {{bgColor}};
-        -ms-transform: scale({{scaleFactor()}},{{scaleFactor()}}); /* IE 9 */
-        -webkit-transform: scale({{scaleFactor()}},{{scaleFactor()}}); /* Chrome, Safari, Opera */
-        transform: scale({{scaleFactor()}},{{scaleFactor()}});
         position: relative;
         font-family: Verdana;
       }
@@ -46,12 +43,12 @@
       scaleFactorChanged: function(){
         if(this.scaleFactor){
           var scaleStr = "scale("+this.scaleFactor+ ","+this.scaleFactor+")";
-          element.style.transform = scaleStr;
-          element.style.WebkitTransform = scaleStr;
-          element.style.msTransform = scaleStr;
+          this.style.transform = scaleStr;
+          this.style.WebkitTransform = scaleStr;
+          this.style.msTransform = scaleStr;
 
-          var verticalOffset = - (element.environment.height * (1 - scaleFactor))/2 + 30;
-          element.style.top = verticalOffset+"px";
+          var verticalOffset = - (this.environment.height * (1 - this.scaleFactor))/2 + 20;
+          this.style.top = verticalOffset+"px";
         }
       },
 
@@ -60,7 +57,6 @@
           var src = this.getImg();
           if(src != undefined){
             this.$.environmentImg.src = src;
-            this.style.WebkitTransform = "scale(0.5,0.5)";
           }
         }
       },
