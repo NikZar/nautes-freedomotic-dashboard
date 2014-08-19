@@ -45,6 +45,10 @@
         border-radius: 10px;
         padding-left: -15px;
       }
+
+      #cart{
+        width: {{fullWidth()}}px;
+      }
     </style>
 
     <div class="object-row" layout vertical>
@@ -63,7 +67,7 @@
           <google-chart id="chart"
             type='line'
             height='200px'
-            width='{{fullWidth()}}'
+            width='{{fullWidth()}}px'
             options = '{"backgroundColor": "transparent"}'
             data='../api/chart-data.json'>
           </google-chart>

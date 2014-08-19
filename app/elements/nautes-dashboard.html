@@ -4,22 +4,26 @@
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.html">
 <link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.css">
+<link rel="import" href="../bower_components/core-media-query/core-media-query.html">
 
 <link rel="import" href="../elements/nautes-dashboard-service.html">
 <link rel="import" href="../elements/nautes-box.html">
 
 
-<polymer-element name="nautes-dashboard" attributes="selected selectedBox">
+<polymer-element name="nautes-dashboard" attributes="selected selectedBox smallQuery">
   <template>
     <style>
+
       :host {
         display: block;
         width: 100%;
         height: 100%;
       }
+
       core-header-panel {
         height: 100%;
       }
+
       core-toolbar{
           background-color: #ccc;
           font-family: Verdana;
@@ -28,42 +32,139 @@
       div{
           display: block;
       }
+
       #container{
           background: #444;
           height: 100%;
       }
+
+      #smallcontainer{
+          background: #444;
+      }
+
       .top,
       .middle,
       .bottom{
           position: relative;
           margin: 2px;
       }
+
       .column{
         min-width: 210px;
       }
+
+      .smallrow{
+        width: 95%;
+        min-width: 200px;
+      }
+
     </style>
 
-  <nautes-dashboard-service boxesObjects="{{boxesObjects}}">
-  </nautes-dashboard-service>
+    <nautes-dashboard-service boxesObjects="{{boxesObjects}}">
+    </nautes-dashboard-service>
 
-  <div id="container" horizontal layout>
-          <div class="column" flex vertical layout>
-            <nautes-box target="{{boxesObjects.environment.title}}" box="{{boxesObjects.environment}}" on-tap="{{boxTap}}" flex two hero hero-id="environment"></nautes-box>
-            <nautes-box target="{{boxesObjects.alerts.title}}" box="{{boxesObjects.alerts}}" on-tap="{{boxTap}}" flex hero hero-id="alerts"></nautes-box>
-            <nautes-box target="{{boxesObjects.info.title}}"  box="{{boxesObjects.info}}" on-tap="{{boxTap}}" flex hero hero-id="info"></nautes-box>
-          </div>
-          <div class="column" flex vertical layout>
-            <nautes-box target="{{boxesObjects.family.title}}"  box="{{boxesObjects.family}}" on-tap="{{boxTap}}" flex hero hero-id="family"></nautes-box>
-            <nautes-box target="{{boxesObjects.actions.title}}"  box="{{boxesObjects.actions}}" on-tap="{{boxTap}}" flex two hero hero-id="actions"></nautes-box>
-            <nautes-box target="{{boxesObjects.settings.title}}"  box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" flex hero hero-id="settings"></nautes-box>
-          </div>
-          <div class="column" flex vertical layout>
-            <nautes-box target="{{boxesObjects.objects.title}}"  box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" flex hero hero-id="objects"></nautes-box>
-            <nautes-box target="{{boxesObjects.messages.title}}"  box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" flex hero hero-id="messages"></nautes-box>
-            <nautes-box target="{{boxesObjects.triggers.title}}"  box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" flex two hero hero-id="triggers"></nautes-box>
-          </div>
+    <core-media-query
+      query="{{smallQuery}}"
+      queryMatches="{{smallScreen}}">
+    </core-media-query>
+  
+    <template if="{{smallScreen}}">
+      <div id="smallcontainer" layout vertical align center>
+
+        <nautes-box 
+          target="{{boxesObjects.objects.title}}"  
+          box="{{boxesObjects.objects}}" 
+          on-tap="{{boxTap}}" 
+          hero hero-id="objects"
+          class="smallrow">
+        </nautes-box>
+
+        <nautes-box 
+          target="{{boxesObjects.environment.title}}" 
+          box="{{boxesObjects.environment}}" 
+          on-tap="{{boxTap}}"
+          hero hero-id="environment"
+          class="smallrow">
+        </nautes-box>
+        
+        <nautes-box 
+          target="{{boxesObjects.triggers.title}}"  
+          box="{{boxesObjects.triggers}}" 
+          on-tap="{{boxTap}}" 
+          hero hero-id="triggers"
+          class="smallrow">
+        </nautes-box>
+
+        <nautes-box 
+          target="{{boxesObjects.messages.title}}"  
+          box="{{boxesObjects.messages}}" 
+          on-tap="{{boxTap}}" 
+          hero hero-id="messages"
+          class="smallrow">
+        </nautes-box>
+
+        <nautes-box 
+          target="{{boxesObjects.family.title}}"  
+          box="{{boxesObjects.family}}" 
+          on-tap="{{boxTap}}" 
+          hero hero-id="family"
+          class="smallrow">
+        </nautes-box>
+        
+        <nautes-box 
+          target="{{boxesObjects.actions.title}}"  
+          box="{{boxesObjects.actions}}" 
+          on-tap="{{boxTap}}" 
+          hero hero-id="actions"
+          class="smallrow">
+        </nautes-box>
+
+        <nautes-box 
+          target="{{boxesObjects.alerts.title}}" 
+          box="{{boxesObjects.alerts}}" 
+          on-tap="{{boxTap}}" 
+          hero hero-id="alerts"
+          class="smallrow">
+        </nautes-box>
+
+        <nautes-box 
+          target="{{boxesObjects.settings.title}}"  
+          box="{{boxesObjects.settings}}" 
+          on-tap="{{boxTap}}" 
+          hero hero-id="settings"
+          class="smallrow">
+        </nautes-box>
+
+        <nautes-box 
+          target="{{boxesObjects.info.title}}"  
+          box="{{boxesObjects.info}}" 
+          on-tap="{{boxTap}}" 
+          hero hero-id="info"
+          class="smallrow">
+        </nautes-box>
+
+      </div>
+    </template>
+  
+    <template if="{{!smallScreen}}">
+      <div id="container" horizontal layout>
+        <div class="column" flex vertical layout>
+          <nautes-box target="{{boxesObjects.environment.title}}" box="{{boxesObjects.environment}}" on-tap="{{boxTap}}" flex two hero hero-id="environment"></nautes-box>
+          <nautes-box target="{{boxesObjects.alerts.title}}" box="{{boxesObjects.alerts}}" on-tap="{{boxTap}}" flex hero hero-id="alerts"></nautes-box>
+          <nautes-box target="{{boxesObjects.info.title}}"  box="{{boxesObjects.info}}" on-tap="{{boxTap}}" flex hero hero-id="info"></nautes-box>
         </div>
-
+        <div class="column" flex vertical layout>
+          <nautes-box target="{{boxesObjects.family.title}}"  box="{{boxesObjects.family}}" on-tap="{{boxTap}}" flex hero hero-id="family"></nautes-box>
+          <nautes-box target="{{boxesObjects.actions.title}}"  box="{{boxesObjects.actions}}" on-tap="{{boxTap}}" flex two hero hero-id="actions"></nautes-box>
+          <nautes-box target="{{boxesObjects.settings.title}}"  box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" flex hero hero-id="settings"></nautes-box>
+        </div>
+        <div class="column" flex vertical layout>
+          <nautes-box target="{{boxesObjects.objects.title}}"  box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" flex hero hero-id="objects"></nautes-box>
+          <nautes-box target="{{boxesObjects.messages.title}}"  box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" flex hero hero-id="messages"></nautes-box>
+          <nautes-box target="{{boxesObjects.triggers.title}}"  box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" flex two hero hero-id="triggers"></nautes-box>
+        </div>
+      </div>
+    </template>
   </template>
   <script>
     Polymer("nautes-dashboard",{

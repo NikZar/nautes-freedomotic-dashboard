@@ -11,43 +11,43 @@
         display: block;
         position: absolute;
         z-index: 1000;
-        left: {{envObject.representation[0].offset.x}}px;
-        top: {{envObject.representation[0].offset.y}}px;
+        left: {{ envObject.representation[0].offset.x }}px;
+        top: {{ envObject.representation[0].offset.y }}px;
       }
     </style>
 
     <core-localstorage
       name="apiurl" 
-      value="{{apiurl}}">
+      value="{{ apiurl }}">
     </core-localstorage>
 
     <core-localstorage
       name="credentialrequired" 
-      value="{{credentialrequired}}">
+      value="{{ credentialrequired }}">
     </core-localstorage>
 
-    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{updateObject}}">
+    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
     </nautes-fd-websocket-api-service>
 
-    <img id="envObjectImg" on-tap="{{onTap}}" width="50" height="50" alt="{{envObject.name}}" title="{{envObject.name}}">
+    <img id="envObjectImg" on-tap="{{onTap}}" width="50" height="50" alt="{{ envObject.name }}" title="{{envObject.name}}" />
 
     <core-ajax
       id="objTapRequest"
-      url="https://{{apiurl}}objects/{{envObject.uuid}}/click"
-      on-core-response="{{handleTapResponse}}"
-      on-core-error="{{errorTapHandler}}"
+      url="https://{{ apiurl }}objects/{{ envObject.uuid }}/click"
+      on-core-response="{{ handleTapResponse }}"
+      on-core-error="{{ errorTapHandler }}"
       method="POST"
-      withCredentials="{{credentialrequired}}">
+      withCredentials="{{ credentialrequired }}">
     </core-ajax>
 
     <core-ajax
       id="objGetRequest"
-      url="https://{{apiurl}}objects/{{envObject.uuid}}"
-      on-core-response="{{handleGetResponse}}"
-      on-core-error="{{errorGetHandler}}"
+      url="https://{{ apiurl }}objects/{{ envObject.uuid }}"
+      on-core-response="{{ handleGetResponse }}"
+      on-core-error="{{ errorGetHandler }}"
       method="GET"
       handleAs="json"
-      withCredentials="{{credentialrequired}}">
+      withCredentials="{{ credentialrequired }}">
     </core-ajax>
 
   </template>
@@ -56,24 +56,23 @@
 
       apiurlChanged: function(){
         if(this.apiurl != undefined){
-          var srcLC = this.getImg();
-          if(srcLC != undefined){
-            console.log("srcLC: "+srcLC);
-            this.$.envObjectImg.src = srcLC;
+          var src = this.getImg();
+          if(src != undefined){
+            this.$.envObjectImg.src = src;
           }
         }
       },
 
       errorGetHandler: function(event){
           if(this.toast){
-            this.toast.text="There was a problem loading "+this.envObject.name+" data.";
+            this.toast.text="There was a problem loading " + this.envObject.name + " data.";
             this.toast.show();
           }
         },
 
       errorTapHandler: function(event){
           if(this.toast){
-            this.toast.text="There was a server problem during "+this.envObject.name+" interaction.";
+            this.toast.text="There was a server problem during " + this.envObject.name + " interaction.";
             this.toast.show();
           }
         },
