@@ -11,8 +11,6 @@
       #title{
         position: absolute;
         z-index: 12;
-        left: {{zone.shape.points[0].x}}px;
-        top: {{zone.shape.points[0].y}}px;
         background-color: rgba(100, 100, 100, 0.7);
         color: #fff;
       }
@@ -26,6 +24,13 @@
   </template>
   <script>
     Polymer("nautes-zone",{
+      zoneChanged: function(){
+        if(this.zone){
+          this.$.title.style.left = this.zone.shape.points[0].x +"px";
+          this.$.title.style.top = this.zone.shape.points[0].y +"px";
+        }
+      },
+
       canvasChanged: function() {
           var poly = this.zone.shape.points;
           var canvas = this.canvas;
@@ -44,6 +49,7 @@
           context.closePath();
           context.fill();
       }
+
     });
   </script>
 </polymer-element>
