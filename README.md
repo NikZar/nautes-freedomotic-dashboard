@@ -22,4 +22,8 @@ User | Pass |
 
 http://nautes-dashboard.herokuapp.com/
 
+* Open the Settings section to enable credentials and set this API url:
+
+fritz.bestmazzo.it:9113/v3/
+
 * Enjoy! :)
