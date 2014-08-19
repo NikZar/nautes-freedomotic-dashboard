@@ -30,4 +30,5 @@ fritz.bestmazzo.it:9113/v3/
 
 =============================
 
-PS: Safari usually caches pages, to test the latest deployed version be sure to clear the cache data
+PS: Safari usually caches pages. 
+To test the latest deployed version be sure to clear the cache data before doing the above steps.
