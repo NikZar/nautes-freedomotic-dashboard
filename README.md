@@ -27,3 +27,7 @@ http://nautes-dashboard.herokuapp.com/
 fritz.bestmazzo.it:9113/v3/
 
 * Enjoy! :)
+
+=============================
+
+PS: Safari usually caches pages, to test the latest deployed version be sure to clear the cache data
