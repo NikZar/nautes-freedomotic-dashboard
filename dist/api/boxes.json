@@ -60,7 +60,7 @@
 		"description": "Send an alert to the medical platform",
 		"img": "warning",
 		"url": "test.html",
-		"color": "#faa"
+		"color": "#fcc"
 	}
 
 ]

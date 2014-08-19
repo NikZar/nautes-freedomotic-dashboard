@@ -2937,6 +2937,94 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!--
 /**
  * @group Polymer Core Elements
+ * @element core-media-query
+ * @status beta
+ * @homepage github.io
+ *
+ * core-media-query can be used to data bind to a CSS media query.
+ * The "query" property is a bare CSS media query.
+ * The "queryMatches" property will be a boolean representing if the page matches that media query.
+ *
+ * core-media-query uses media query listeners to dynamically update the "queryMatches" property.
+ * A "core-media-change" event also fires when queryMatches changes.
+ *
+ * Example:
+ *
+ *      <core-media-query query="max-width: 640px" queryMatches="{{phoneScreen}}"></core-media-query>
+ *
+ */
+
+ /**
+  * Fired when the media query state changes
+  *
+  * @event core-media-change
+  */
+-->
+
+
+<polymer-element name="core-media-query" attributes="query queryMatches" assetpath="../app/bower_components/core-media-query/">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+  <script>
+    Polymer('core-media-query', {
+
+      /**
+       * The Boolean return value of the media query
+       *
+       * @attribute queryMatches
+       * @type Boolean
+       * @default false
+       */
+      queryMatches: false,
+
+      /**
+       * The CSS media query to evaulate
+       *
+       * @attribute query
+       * @type string
+       * @default ''
+       */
+      query: '',
+      ready: function() {
+        this._mqHandler = this.queryHandler.bind(this);
+        this._mq = null;
+      },
+      queryChanged: function() {
+        if (this._mq) {
+          this._mq.removeListener(this._mqHandler);
+        }
+        var query = this.query;
+        if (query[0] !== '(') {
+          query = '(' + this.query + ')';
+        }
+        this._mq = window.matchMedia(query);
+        this._mq.addListener(this._mqHandler);
+        this.queryHandler(this._mq);
+      },
+      queryHandler: function(mq) {
+        this.queryMatches = mq.matches;
+        this.asyncFire('core-media-change', mq);
+      }
+    });
+  </script>
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--
+/**
+ * @group Polymer Core Elements
  *
  * core-xhr can be used to perform XMLHttpRequests.
  *
@@ -4957,8 +5045,9 @@ To style the background, text and hover color, apply the `background` and
 <polymer-element name="nautes-box" attributes="box tooltip" assetpath="../app/elements/">
   <template>
     <style>
+
     :host {
-      display: block;
+      display: inline-block;
       background-color: {{box.color}};
       margin: 4px;
       min-width: 200px !IMPORTANT;
@@ -4966,16 +5055,19 @@ To style the background, text and hover color, apply the `background` and
       position: relative;
       z-index: 2;
     }
+
     core-icon{
       color: #444;
     }
+
     paper-ripple {
       color: #aaaaff;
     }
+
     core-tooltip{
       size: 200;
     }
-    /* Style #my-button blue with white text and darker blue ink. */
+
     #my-button {
         margin: 10px;
         font-family: Verdana;
@@ -4983,27 +5075,33 @@ To style the background, text and hover color, apply the `background` and
         color: #444;
         min-width: 150px;
     }
+
     #left-icon{
       position: absolute;
       top: 5px;
       right: 5px;
     }
+
     #description{
       display: inline-block;
       width: 200px;
       height: 200px;
     }
+
     #tipContent{
       line-height: 14px;
     }
+
     .icon{
       width: 140px;
       height: 140px;
     }
+
     .info-icon{
       width: 30px;
       height: 30px;
     }
+
     </style>
     <div layout="" vertical="" center="" center-justified="" fit="">
       <core-icon icon="{{box.img}}" class="icon"></core-icon>
@@ -5058,17 +5156,21 @@ To style the background, text and hover color, apply the `background` and
 
 
 
-<polymer-element name="nautes-dashboard" attributes="selected selectedBox" assetpath="../app/elements/">
+
+<polymer-element name="nautes-dashboard" attributes="selected selectedBox smallQuery" assetpath="../app/elements/">
   <template>
     <style>
+
       :host {
         display: block;
         width: 100%;
         height: 100%;
       }
+
       core-header-panel {
         height: 100%;
       }
+
       core-toolbar{
           background-color: #ccc;
           font-family: Verdana;
@@ -5077,42 +5179,92 @@ To style the background, text and hover color, apply the `background` and
       div{
           display: block;
       }
+
       #container{
           background: #444;
           height: 100%;
       }
+
+      #smallcontainer{
+          background: #444;
+      }
+
       .top,
       .middle,
       .bottom{
           position: relative;
           margin: 2px;
       }
+
       .column{
         min-width: 210px;
       }
+
+      .smallrow{
+        width: 95%;
+        min-width: 200px;
+      }
+
     </style>
 
-  <nautes-dashboard-service boxesobjects="{{boxesObjects}}">
-  </nautes-dashboard-service>
+    <nautes-dashboard-service boxesobjects="{{boxesObjects}}">
+    </nautes-dashboard-service>
 
-  <div id="container" horizontal="" layout="">
-          <div class="column" flex="" vertical="" layout="">
-            <nautes-box target="{{boxesObjects.environment.title}}" box="{{boxesObjects.environment}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="environment"></nautes-box>
-            <nautes-box target="{{boxesObjects.alerts.title}}" box="{{boxesObjects.alerts}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="alerts"></nautes-box>
-            <nautes-box target="{{boxesObjects.info.title}}" box="{{boxesObjects.info}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="info"></nautes-box>
-          </div>
-          <div class="column" flex="" vertical="" layout="">
-            <nautes-box target="{{boxesObjects.family.title}}" box="{{boxesObjects.family}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="family"></nautes-box>
-            <nautes-box target="{{boxesObjects.actions.title}}" box="{{boxesObjects.actions}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="actions"></nautes-box>
-            <nautes-box target="{{boxesObjects.settings.title}}" box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="settings"></nautes-box>
-          </div>
-          <div class="column" flex="" vertical="" layout="">
-            <nautes-box target="{{boxesObjects.objects.title}}" box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="objects"></nautes-box>
-            <nautes-box target="{{boxesObjects.messages.title}}" box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="messages"></nautes-box>
-            <nautes-box target="{{boxesObjects.triggers.title}}" box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="triggers"></nautes-box>
-          </div>
+    <core-media-query query="{{smallQuery}}" querymatches="{{smallScreen}}">
+    </core-media-query>
+  
+    <template if="{{smallScreen}}">
+      <div id="smallcontainer" layout="" vertical="" align="" center="">
+
+        <nautes-box target="{{boxesObjects.objects.title}}" box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" hero="" hero-id="objects" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.environment.title}}" box="{{boxesObjects.environment}}" on-tap="{{boxTap}}" hero="" hero-id="environment" class="smallrow">
+        </nautes-box>
+        
+        <nautes-box target="{{boxesObjects.triggers.title}}" box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" hero="" hero-id="triggers" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.messages.title}}" box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" hero="" hero-id="messages" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.family.title}}" box="{{boxesObjects.family}}" on-tap="{{boxTap}}" hero="" hero-id="family" class="smallrow">
+        </nautes-box>
+        
+        <nautes-box target="{{boxesObjects.actions.title}}" box="{{boxesObjects.actions}}" on-tap="{{boxTap}}" hero="" hero-id="actions" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.alerts.title}}" box="{{boxesObjects.alerts}}" on-tap="{{boxTap}}" hero="" hero-id="alerts" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.settings.title}}" box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" hero="" hero-id="settings" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.info.title}}" box="{{boxesObjects.info}}" on-tap="{{boxTap}}" hero="" hero-id="info" class="smallrow">
+        </nautes-box>
+
+      </div>
+    </template>
+  
+    <template if="{{!smallScreen}}">
+      <div id="container" horizontal="" layout="">
+        <div class="column" flex="" vertical="" layout="">
+          <nautes-box target="{{boxesObjects.environment.title}}" box="{{boxesObjects.environment}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="environment"></nautes-box>
+          <nautes-box target="{{boxesObjects.alerts.title}}" box="{{boxesObjects.alerts}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="alerts"></nautes-box>
+          <nautes-box target="{{boxesObjects.info.title}}" box="{{boxesObjects.info}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="info"></nautes-box>
         </div>
-
+        <div class="column" flex="" vertical="" layout="">
+          <nautes-box target="{{boxesObjects.family.title}}" box="{{boxesObjects.family}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="family"></nautes-box>
+          <nautes-box target="{{boxesObjects.actions.title}}" box="{{boxesObjects.actions}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="actions"></nautes-box>
+          <nautes-box target="{{boxesObjects.settings.title}}" box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="settings"></nautes-box>
+        </div>
+        <div class="column" flex="" vertical="" layout="">
+          <nautes-box target="{{boxesObjects.objects.title}}" box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="objects"></nautes-box>
+          <nautes-box target="{{boxesObjects.messages.title}}" box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="messages"></nautes-box>
+          <nautes-box target="{{boxesObjects.triggers.title}}" box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="triggers"></nautes-box>
+        </div>
+      </div>
+    </template>
   </template>
   <script>
     Polymer("nautes-dashboard",{
@@ -8044,94 +8196,6 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<!--
-/**
- * @group Polymer Core Elements
- * @element core-media-query
- * @status beta
- * @homepage github.io
- *
- * core-media-query can be used to data bind to a CSS media query.
- * The "query" property is a bare CSS media query.
- * The "queryMatches" property will be a boolean representing if the page matches that media query.
- *
- * core-media-query uses media query listeners to dynamically update the "queryMatches" property.
- * A "core-media-change" event also fires when queryMatches changes.
- *
- * Example:
- *
- *      <core-media-query query="max-width: 640px" queryMatches="{{phoneScreen}}"></core-media-query>
- *
- */
-
- /**
-  * Fired when the media query state changes
-  *
-  * @event core-media-change
-  */
--->
-
-
-<polymer-element name="core-media-query" attributes="query queryMatches" assetpath="../app/bower_components/core-media-query/">
-  <template>
-    <style>
-      :host {
-        display: none;
-      }
-    </style>
-  </template>
-  <script>
-    Polymer('core-media-query', {
-
-      /**
-       * The Boolean return value of the media query
-       *
-       * @attribute queryMatches
-       * @type Boolean
-       * @default false
-       */
-      queryMatches: false,
-
-      /**
-       * The CSS media query to evaulate
-       *
-       * @attribute query
-       * @type string
-       * @default ''
-       */
-      query: '',
-      ready: function() {
-        this._mqHandler = this.queryHandler.bind(this);
-        this._mq = null;
-      },
-      queryChanged: function() {
-        if (this._mq) {
-          this._mq.removeListener(this._mqHandler);
-        }
-        var query = this.query;
-        if (query[0] !== '(') {
-          query = '(' + this.query + ')';
-        }
-        this._mq = window.matchMedia(query);
-        this._mq.addListener(this._mqHandler);
-        this.queryHandler(this._mq);
-      },
-      queryHandler: function(mq) {
-        this.queryMatches = mq.matches;
-        this.asyncFire('core-media-change', mq);
-      }
-    });
-  </script>
-</polymer-element>
-
-<!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 
 <!--
 `paper-toast` provides lightweight feedback about an operation in a small popup 
@@ -9039,6 +9103,10 @@ Data can be provided in one of three ways:
         border-radius: 10px;
         padding-left: -15px;
       }
+
+      #cart{
+        width: {{fullWidth()}}px;
+      }
     </style>
 
     <div class="object-row" layout="" vertical="">
@@ -9054,7 +9122,7 @@ Data can be provided in one of three ways:
       </div>
       <template if="{{ showStats }}">
         <div class="chart-container" layout="" horizontal="" center="" center-justified="">
-          <google-chart id="chart" type="line" height="200px" width="{{fullWidth()}}" options="{&quot;backgroundColor&quot;: &quot;transparent&quot;}" data="../api/chart-data.json">
+          <google-chart id="chart" type="line" height="200px" width="{{fullWidth()}}px" options="{&quot;backgroundColor&quot;: &quot;transparent&quot;}" data="../api/chart-data.json">
           </google-chart>
         </div>
       </template>
@@ -9755,26 +9823,6 @@ Data can be provided in one of three ways:
         });
       }
     });
-  </script>
-</polymer-element>
-
-
-
-<polymer-element name="nautes-globals" attributes="values" assetpath="../app/elements/">
-  <script>
-  (function() {
-    var values = {};
-
-    Polymer("nautes-globals", {
-       ready: function() {
-         this.values = values;
-         for (var i = 0; i < this.attributes.length; ++i) {
-           var attr = this.attributes[i];
-           values[attr.nodeName] = attr.value;
-         }
-       }
-    });
-  })();
   </script>
 </polymer-element>
 
@@ -11429,7 +11477,6 @@ Example:
         padding-top: 48px;
       }
       .row{
-        width: 50%;
         margin-top: 20px;
       }
       .row-fab{
@@ -11440,6 +11487,9 @@ Example:
         color: #444;
         background-color: #9C9;
       }
+      paper-input{
+        width: 250px;
+      }
     </style>
 
     <div layout="" vertical="" center="">
@@ -11448,7 +11498,7 @@ Example:
         </core-localstorage>
         <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatinglabel="true" value="{{newAPIUrl}}"></paper-input>
       </div>
-      <div class="row" layout="" horizonal="" center="">
+      <div class="row" layout="" horizonal="" center="" start="">
         <core-localstorage id="LScr" name="credentialrequired" value="{{credentialrequired}}">
         </core-localstorage>
         CREDENTIAL REQUIRED: <paper-toggle-button checked="{{newCredentialRequired}}"></paper-toggle-button>
@@ -11543,11 +11593,15 @@ function xmlToJson(xml) {
         font-family: Verdana;
         font-size: 20px;
         padding-top: 20px;
+        text-align: center;
       }
     </style>
 
     <fd-rest-element-service fdtype="info/framework" fditems="{{infoXML}}" toast="{{toast}}">
     </fd-rest-element-service>
+      <div layout="" vertical="" center="">
+        Nautes Freedomotic Dashboard 0.0.1
+      </div>
       <div layout="" vertical="" center="">
         Freedomotic {{info.FRAMEWORK_MAJOR["#text"]}}.{{info.FRAMEWORK_MINOR["#text"]}}.{{info.FRAMEWORK_BUILD["#text"]}} 
         "{{info.FRAMEWORK_VERSION_CODENAME["#text"]}}" 
@@ -11714,7 +11768,6 @@ function xmlToJson(xml) {
 
 
 
-
 <polymer-element name="nautes-animated-dashboard" attributes="" assetpath="../app/elements/">
   <template>
     <style>
@@ -11745,12 +11798,9 @@ function xmlToJson(xml) {
     <paper-toast id="toast" text="There was a problem loading data.">
     </paper-toast>
 
-    <nautes-globals apiurl="fritz.bestmazzo.it:9113/v3/" credentialrequired="true">
-    </nautes-globals>
-
     <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition">
       
-      <nautes-dashboard name="dashboard" selected="{{selected}}" selectedbox="{{selectedBox}}" hero=""></nautes-dashboard>
+      <nautes-dashboard name="dashboard" selected="{{selected}}" selectedbox="{{selectedBox}}" smallquery="max-width: 640px" hero=""></nautes-dashboard>
       
       <section name="environment" on-page-back="{{back}}" layout="" vertical="">
        <nautes-dashboard-page selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="environment" cross-fade="">
@@ -11824,6 +11874,26 @@ function xmlToJson(xml) {
         this.selectedBox = null;
       }
     });
+  </script>
+</polymer-element>
+
+
+
+<polymer-element name="nautes-globals" attributes="values" assetpath="../app/elements/">
+  <script>
+  (function() {
+    var values = {};
+
+    Polymer("nautes-globals", {
+       ready: function() {
+         this.values = values;
+         for (var i = 0; i < this.attributes.length; ++i) {
+           var attr = this.attributes[i];
+           values[attr.nodeName] = attr.value;
+         }
+       }
+    });
+  })();
   </script>
 </polymer-element>
 

@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 
 <link rel="import" href="../elements/nautes-zone.html">
 
@@ -22,6 +23,12 @@
         width: {{environment.width}}px;
       }
     </style>
+    
+    <core-localstorage
+      name="apiurl" 
+      value="{{ apiurl }}">
+    </core-localstorage>
+
     <div layout vertical center>
       <h2>{{environment.name}}</h2>
       <div id="container" relative>
@@ -51,7 +58,7 @@
         element.style.top = verticalOffset+"px";
       },
       getImg: function(environment) {
-        var src = 'https://fritz.bestmazzo.it:9113/v3/resources/' + environment.backgroundImage;
+        var src = "https://"+ this.apiurl + 'resources/' + environment.backgroundImage;
         return src;
       },
       
