@@ -10,7 +10,7 @@
 <link rel="import" href="../elements/nautes-box.html">
 
 
-<polymer-element name="nautes-dashboard" attributes="selected selectedBox">
+<polymer-element name="nautes-dashboard" attributes="selected selectedBox smallQuery">
   <template>
     <style>
 
@@ -55,6 +55,7 @@
 
       .smallrow{
         width: 95%;
+        min-width: 200px;
       }
 
     </style>
@@ -63,7 +64,7 @@
     </nautes-dashboard-service>
 
     <core-media-query
-      query="max-width: 500px"
+      query="{{smallQuery}}"
       queryMatches="{{smallScreen}}">
     </core-media-query>
   

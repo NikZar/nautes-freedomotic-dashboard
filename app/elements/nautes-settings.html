@@ -22,7 +22,6 @@
         padding-top: 48px;
       }
       .row{
-        width: 50%;
         margin-top: 20px;
       }
       .row-fab{
@@ -32,6 +31,9 @@
       .fab{
         color: #444;
         background-color: #9C9;
+      }
+      paper-input{
+        width: 250px;
       }
     </style>
 
@@ -43,7 +45,7 @@
         </core-localstorage>
         <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatingLabel="true" value="{{newAPIUrl}}"></paper-input>
       </div>
-      <div class="row" layout horizonal center>
+      <div class="row" layout horizonal center start>
         <core-localstorage id="LScr" 
           name="credentialrequired" 
           value="{{credentialrequired}}">
