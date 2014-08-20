@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/x-websocket/dist/x-websocket.html">
 
-<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiprotocolws apiurl">
+<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiurl ssl">
   <template>
     <style>
       :host {
@@ -11,8 +11,8 @@
     </style>
 
     <core-localstorage
-      name="apiprotocolws" 
-      value="{{ apiprotocolws }}">
+      name="ssl" 
+      value="{{ ssl }}">
     </core-localstorage>
 
     <core-localstorage
@@ -29,10 +29,9 @@
     Polymer({
 
       reloadUrl: function(){
-        if(this.apiprotocolws && this.apiurl){
-          console.log("connecting...");
-          this.$.ws.url = this.apiprotocolws + "://" + this.apiurl + "ws/" + this.wstype +"/";
-          console.log(this.$.ws.url);
+        if(this.ssl != undefined && this.apiurl){
+          this.$.ws.url = (this.ssl ? "wss" : "ws") + "://" + this.apiurl + "ws/" + this.wstype +"/";
+          console.log("ws connecting..." + this.$.ws.url);
         }
       },
 

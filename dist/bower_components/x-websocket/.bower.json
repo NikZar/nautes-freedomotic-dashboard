@@ -29,6 +29,5 @@
   },
   "_source": "git://github.com/elierotenberg/x-websocket.git",
   "_target": "~0.2.0",
-  "_originalSource": "x-websocket",
-  "_direct": true
+  "_originalSource": "x-websocket"
 }

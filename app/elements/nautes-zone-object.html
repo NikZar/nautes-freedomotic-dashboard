@@ -4,7 +4,7 @@
 
 <link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
 
-<polymer-element name="nautes-zone-object" attributes="envObject toast apiprotocol apiurl credentialrequired">
+<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequir ssl">
   <template>
     <style>
       :host {
@@ -15,8 +15,8 @@
     </style>
 
     <core-localstorage
-      name="apiprotocol" 
-      value="{{ apiprotocol }}">
+      name="ssl" 
+      value="{{ ssl }}">
     </core-localstorage>
 
     <core-localstorage
@@ -36,7 +36,6 @@
 
     <core-ajax
       id="objTapRequest"
-      url="{{ apiprotocol }}://{{ apiurl }}objects/{{ envObject.uuid }}/click"
       on-core-response="{{ handleTapResponse }}"
       on-core-error="{{ errorTapHandler }}"
       method="POST"
@@ -45,7 +44,6 @@
 
     <core-ajax
       id="objGetRequest"
-      url="{{ apiprotocol }}://{{ apiurl }}objects/{{ envObject.uuid }}"
       on-core-response="{{ handleGetResponse }}"
       on-core-error="{{ errorGetHandler }}"
       method="GET"
@@ -57,10 +55,19 @@
   <script>
     Polymer("nautes-zone-object",{
 
+      reloadUrl: function(){
+        if(this.ssl != undefined && this.apiurl && this.envObject.uuid){
+          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid + "/click";
+          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid;
+        }
+      },
+
       setImg: function(){
-        var src = this.getImg();
-        if(src){
-          this.$.envObjectImg.src = src;
+        if(this.ssl != undefined && this.apiurl){
+          var src = this.getImg();
+          if(src){
+            this.$.envObjectImg.src = src;
+          }
         }
       },
 
@@ -72,16 +79,14 @@
         }
       },
 
-      apiprotocolChanged: function(){
-        if(this.apiprotocol){
+      sslChanged: function(){
           this.setImg();
-        }
+          this.reloadUrl();
       },
 
       apiurlChanged: function(){
-        if(this.apiurl){
           this.setImg();
-        }
+          this.reloadUrl();
       },
 
       errorGetHandler: function(event){
@@ -112,7 +117,7 @@
 
       updateObject: function(event){
           var uuid = event.detail.data.uuid;
-          if(uuid !== undefined){
+          if(uuid){
             var obj = this.envObject;
             if (obj.uuid === uuid) {
               console.log("Environment Zone - Asynch update of: "+uuid);
@@ -126,10 +131,8 @@
         if(obj){
           var icon = obj.representation[obj.currentRepresentation].icon;
           if(icon){
-            if(this.apiurl && this.apiprotocol){
-              var src = this.apiprotocol + "://" + this.apiurl + "resources/" + icon;
-              return src;
-            }
+            var src = (this.ssl ? "https" : "http") + "://" + this.apiurl + "resources/" + icon;
+            return src;
           } 
         }
       }

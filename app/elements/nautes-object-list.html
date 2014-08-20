@@ -15,8 +15,8 @@
     </style>
 
     <core-localstorage
-      name="apiprotocol" 
-      value="{{ apiprotocol }}">
+      name="ssl" 
+      value="{{ ssl }}">
     </core-localstorage>
 
 
@@ -38,7 +38,6 @@
 
     <core-ajax
       id="objGetRequest"
-      url="{{ apiprotocol }}://{{ apiurl }}objects/{{ objectUpdating.uuid }}"
       on-core-response="{{handleGetResponse}}"
       on-core-error="{{errorGetHandler}}"
       method="GET"
@@ -66,10 +65,24 @@
 
       objectUpdating: {},
 
+      reloadUrl: function(){
+        if(this.ssl != undefined && this.apiurl && this.objectUpdating.uuid){
+          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.objectUpdating.uuid;
+        }
+      },
+
+      sslChanged: function(){
+        this.reloadUrl();
+      },
+
+      apiurlChanged: function(){
+        this.reloadUrl();
+      },
+
       getImg: function(obj) {
         var icon = obj.representation[obj.currentRepresentation].icon;
         if(icon != null){
-          var src = this.apiprotocol + '://' + this.apiurl + 'resources/' + icon ;
+          var src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + icon ;
           return src;
         }
       },
@@ -86,6 +99,7 @@
               console.log("Object List - Asynch update of: " + uuid);
               this.objectUpdating = obj;
               this.objectUpdatingIndex = i;
+              this.reloadUrl();
               this.$.objGetRequest.go();
             }
 
