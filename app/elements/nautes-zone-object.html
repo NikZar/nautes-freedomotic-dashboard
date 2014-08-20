@@ -4,7 +4,7 @@
 
 <link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
 
-<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequired">
+<polymer-element name="nautes-zone-object" attributes="envObject toast apiprotocol apiurl credentialrequired">
   <template>
     <style>
       :host {
@@ -13,6 +13,11 @@
         z-index: 1000;
       }
     </style>
+
+    <core-localstorage
+      name="apiprotocol" 
+      value="{{ apiprotocol }}">
+    </core-localstorage>
 
     <core-localstorage
       name="apiurl" 
@@ -31,7 +36,7 @@
 
     <core-ajax
       id="objTapRequest"
-      url="https://{{ apiurl }}objects/{{ envObject.uuid }}/click"
+      url="{{ apiprotocol }}://{{ apiurl }}objects/{{ envObject.uuid }}/click"
       on-core-response="{{ handleTapResponse }}"
       on-core-error="{{ errorTapHandler }}"
       method="POST"
@@ -40,7 +45,7 @@
 
     <core-ajax
       id="objGetRequest"
-      url="https://{{ apiurl }}objects/{{ envObject.uuid }}"
+      url="{{ apiprotocol }}://{{ apiurl }}objects/{{ envObject.uuid }}"
       on-core-response="{{ handleGetResponse }}"
       on-core-error="{{ errorGetHandler }}"
       method="GET"
@@ -52,20 +57,30 @@
   <script>
     Polymer("nautes-zone-object",{
 
+      setImg: function(){
+        var src = this.getImg();
+        if(src){
+          this.$.envObjectImg.src = src;
+        }
+      },
+
       envObjectChanged: function(){
         if(this.envObject){
-          this.$.envObjectImg.src = this.getImg();
+          this.setImg();
           this.style.left = this.envObject.representation[0].offset.x + "px";
           this.style.top = this.envObject.representation[0].offset.y + "px";
         }
       },
 
+      apiprotocolChanged: function(){
+        if(this.apiprotocol){
+          this.setImg();
+        }
+      },
+
       apiurlChanged: function(){
-        if(this.apiurl != undefined){
-          var src = this.getImg();
-          if(src != undefined){
-            this.$.envObjectImg.src = src;
-          }
+        if(this.apiurl){
+          this.setImg();
         }
       },
 
@@ -111,8 +126,8 @@
         if(obj){
           var icon = obj.representation[obj.currentRepresentation].icon;
           if(icon){
-            if(this.apiurl != undefined){
-              var src = "https://" + this.apiurl + "resources/" + icon;
+            if(this.apiurl && this.apiprotocol){
+              var src = this.apiprotocol + "://" + this.apiurl + "resources/" + icon;
               return src;
             }
           } 
