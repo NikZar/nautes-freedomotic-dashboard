@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-trigger-row.html">
@@ -10,11 +11,19 @@
         display: block;
         background-color: {{bgColor}};
       }
+      .fab{
+        color: #444;
+        background-color: #9C9;
+      }
     </style>
 
     <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}">
     </fd-rest-element-service>
 
+    <div layout horizontal center>
+      <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}" layout horizontal end>
+      </paper-fab>
+    </div>
     <div layout vertical center>
       <template repeat="{{trigger in triggers}}">
         <nautes-trigger-row bgColor="{{bgColor}}" trigger="{{trigger}}">

@@ -4,7 +4,7 @@
 
 <link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
 
-<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequired">
+<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl protocol credentialrequired">
   <template>
     <style>
       :host {
@@ -13,6 +13,11 @@
         z-index: 1000;
       }
     </style>
+
+    <core-localstorage
+      name="protocol" 
+      value="{{ protocol }}">
+    </core-localstorage>
 
     <core-localstorage
       name="apiurl" 
@@ -54,18 +59,22 @@
 
       envObjectChanged: function(){
         if(this.envObject){
-          this.$.envObjectImg.src = this.getImg();
+          this.setImg();
           this.style.left = this.envObject.representation[0].offset.x + "px";
           this.style.top = this.envObject.representation[0].offset.y + "px";
         }
       },
 
+      setImg: function(){
+        var src = this.getImg();
+        if(src){
+          this.$.envObjectImg.src = src;
+        }
+      },
+
       apiurlChanged: function(){
-        if(this.apiurl != undefined){
-          var src = this.getImg();
-          if(src != undefined){
-            this.$.envObjectImg.src = src;
-          }
+        if(this.apiurl){
+          this.setImg();
         }
       },
 
@@ -112,7 +121,7 @@
           var icon = obj.representation[obj.currentRepresentation].icon;
           if(icon){
             if(this.apiurl != undefined){
-              var src = "https://" + this.apiurl + "resources/" + icon;
+              var src = this.protocol + "://" + this.apiurl + "resources/" + icon;
               return src;
             }
           } 

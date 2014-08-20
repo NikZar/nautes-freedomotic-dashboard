@@ -15,6 +15,11 @@
     </style>
 
     <core-localstorage
+      name="protocol" 
+      value="{{ protocol }}">
+    </core-localstorage>
+
+    <core-localstorage
       name="apiurl" 
       value="{{ apiurl }}">
     </core-localstorage>
@@ -63,7 +68,7 @@
       getImg: function(obj) {
         var icon = obj.representation[obj.currentRepresentation].icon;
         if(icon != null){
-          var src = 'https://'+ this.apiurl +'resources/' + icon ;
+          var src = this.protocol + '://' + this.apiurl + 'resources/' + icon ;
           return src;
         }
       },
