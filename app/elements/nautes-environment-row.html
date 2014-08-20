@@ -3,7 +3,7 @@
 
 <link rel="import" href="../elements/nautes-zone.html">
 
-<polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiprotocol apiurl">
+<polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiurl ssl">
   <template>
     <style>
       :host {
@@ -20,8 +20,8 @@
     </style>
     
     <core-localstorage
-      name="apiprotocol" 
-      value="{{ apiprotocol }}">
+      name="ssl" 
+      value="{{ ssl }}">
     </core-localstorage>
 
     <core-localstorage
@@ -58,22 +58,20 @@
       },
 
       setEnvImg: function(){
-        var src = this.getImg();
-        if(src){
-          this.$.environmentImg.src = src;
+        if(this.ssl != undefined && this.apiurl){
+          var src = this.getImg();
+          if(src){
+            this.$.environmentImg.src = src;
+          }
         }
       },
 
-      apiprotocolChanged: function(){
-        if(this.apiprotocol){
-          this.setEnvImg();
-        }
+      sslChanged: function(){
+        this.setEnvImg();
       },
 
       apiurlChanged: function(){
-        if(this.apiurl){
-          this.setEnvImg();
-        }
+        this.setEnvImg();
       },
 
       ready: function(){
@@ -90,10 +88,8 @@
       },
 
       getImg: function() {
-        if(this.apiurl && this.apiprotocol){
-          var src = this.apiprotocol + "://" + this.apiurl + 'resources/' + this.environment.backgroundImage;
-          return src;
-        }
+        var src =  (this.ssl ? "https" : "http") + "://" + this.apiurl + 'resources/' + this.environment.backgroundImage;
+        return src;
       },
       
       getScaleFactor: function(){

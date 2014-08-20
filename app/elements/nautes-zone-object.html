@@ -4,7 +4,7 @@
 
 <link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
 
-<polymer-element name="nautes-zone-object" attributes="envObject toast apiprotocol apiurl credentialrequired">
+<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequir ssl">
   <template>
     <style>
       :host {
@@ -15,8 +15,8 @@
     </style>
 
     <core-localstorage
-      name="apiprotocol" 
-      value="{{ apiprotocol }}">
+      name="ssl" 
+      value="{{ ssl }}">
     </core-localstorage>
 
     <core-localstorage
@@ -57,10 +57,16 @@
   <script>
     Polymer("nautes-zone-object",{
 
+      reloadUrl: function(){
+
+      },
+
       setImg: function(){
-        var src = this.getImg();
-        if(src){
-          this.$.envObjectImg.src = src;
+        if(this.ssl != undefined && this.apiurl){
+          var src = this.getImg();
+          if(src){
+            this.$.envObjectImg.src = src;
+          }
         }
       },
 
@@ -72,16 +78,12 @@
         }
       },
 
-      apiprotocolChanged: function(){
-        if(this.apiprotocol){
+      sslChanged: function(){
           this.setImg();
-        }
       },
 
       apiurlChanged: function(){
-        if(this.apiurl){
           this.setImg();
-        }
       },
 
       errorGetHandler: function(event){
@@ -112,7 +114,7 @@
 
       updateObject: function(event){
           var uuid = event.detail.data.uuid;
-          if(uuid !== undefined){
+          if(uuid){
             var obj = this.envObject;
             if (obj.uuid === uuid) {
               console.log("Environment Zone - Asynch update of: "+uuid);
@@ -126,8 +128,9 @@
         if(obj){
           var icon = obj.representation[obj.currentRepresentation].icon;
           if(icon){
-            if(this.apiurl && this.apiprotocol){
-              var src = this.apiprotocol + "://" + this.apiurl + "resources/" + icon;
+            if(this.apiurl && this.ssl){
+              console.log(this.ssl);
+              var src = (this.ssl ? "https" : "http") + "://" + this.apiurl + "resources/" + icon;
               return src;
             }
           } 

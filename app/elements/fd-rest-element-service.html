@@ -3,18 +3,13 @@
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl apiprotocol credentialrequired">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl">
   <template>
     <style>
     :host {
       display: block;
     }
     </style>
-
-    <core-localstorage
-      name="apiprotocol" 
-      value="{{apiprotocol}}">
-    </core-localstorage>
 
     <core-localstorage
       name="apiurl" 
@@ -24,6 +19,11 @@
     <core-localstorage
       name="credentialrequired" 
       value="{{credentialrequired}}">
+    </core-localstorage>
+
+    <core-localstorage
+      name="ssl" 
+      value="{{ssl}}">
     </core-localstorage>
     
     <core-ajax id="ajax" 
@@ -47,23 +47,22 @@
     },
 
     reloadUrl: function(){
-      this.$.ajax.url = this.apiprotocol +"://"+ this.apiurl + this.fdtype +"/";
+      if(this.ssl != undefined && this.apiurl){
+        console.log(this.ssl);
+        this.$.ajax.url = (this.ssl ? "https" : "http") +"://"+ this.apiurl + this.fdtype +"/";
+      }
     },
 
-    protocolChanged: function(){
-      if(this.apiprotocol){
+    sslChanged: function(){
         this.reloadUrl();
-      }
     },
 
     apiurlChanged: function(){
-      if(this.apiurl != undefined){
         this.reloadUrl();
-      }
     },
 
     credentialrequiredChanged: function(){
-      if(this.credentialrequired != undefined){
+      if(this.credentialrequired){
         this.$.ajax.withCredentials =  this.credentialrequired;
       }
     },
