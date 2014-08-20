@@ -99,6 +99,7 @@
               console.log("Object List - Asynch update of: " + uuid);
               this.objectUpdating = obj;
               this.objectUpdatingIndex = i;
+              this.reloadUrl();
               this.$.objGetRequest.go();
             }
 
