@@ -15,6 +15,12 @@
     </style>
 
     <core-localstorage
+      name="apiprotocol" 
+      value="{{ apiprotocol }}">
+    </core-localstorage>
+
+
+    <core-localstorage
       name="apiurl" 
       value="{{ apiurl }}">
     </core-localstorage>
@@ -32,7 +38,7 @@
 
     <core-ajax
       id="objGetRequest"
-      url="https://{{apiurl}}objects/{{objectUpdating.uuid}}"
+      url="{{ apiprotocol }}://{{ apiurl }}objects/{{ objectUpdating.uuid }}"
       on-core-response="{{handleGetResponse}}"
       on-core-error="{{errorGetHandler}}"
       method="GET"
@@ -63,7 +69,7 @@
       getImg: function(obj) {
         var icon = obj.representation[obj.currentRepresentation].icon;
         if(icon != null){
-          var src = 'https://'+ this.apiurl +'resources/' + icon ;
+          var src = this.apiprotocol + '://' + this.apiurl + 'resources/' + icon ;
           return src;
         }
       },
@@ -71,7 +77,7 @@
       updateObject: function(event){
         var uuid = event.detail.data.uuid;
 
-        if(uuid !== undefined){
+        if(uuid){
         
           for (var i = 0; i < this.objects.length; i++) {
             var obj = this.objects[i];

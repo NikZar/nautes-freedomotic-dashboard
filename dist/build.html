@@ -4196,6 +4196,7 @@ To style the background, text and hover color, apply the `background` and
 
     core-tooltip{
       size: 200;
+      z-index: 2;
     }
 
     #my-button {
@@ -8222,13 +8223,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired" assetpath="../app/elements/">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl apiprotocol credentialrequired" assetpath="../app/elements/">
   <template>
     <style>
     :host {
       display: block;
     }
     </style>
+
+    <core-localstorage name="apiprotocol" value="{{apiprotocol}}">
+    </core-localstorage>
 
     <core-localstorage name="apiurl" value="{{apiurl}}">
     </core-localstorage>
@@ -8251,9 +8255,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       this.fditems = [];
     },
 
+    reloadUrl: function(){
+      this.$.ajax.url = this.apiprotocol +"://"+ this.apiurl + this.fdtype +"/";
+    },
+
+    protocolChanged: function(){
+      if(this.apiprotocol){
+        this.reloadUrl();
+      }
+    },
+
     apiurlChanged: function(){
       if(this.apiurl != undefined){
-        this.$.ajax.url = "https://" + this.apiurl + this.fdtype +"/";
+        this.reloadUrl();
       }
     },
 
@@ -8990,13 +9004,16 @@ Data can be provided in one of three ways:
 
 
 
-<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiurl" assetpath="../app/elements/">
+<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiprotocolws apiurl" assetpath="../app/elements/">
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
+
+    <core-localstorage name="apiprotocolws" value="{{ apiprotocolws }}">
+    </core-localstorage>
 
     <core-localstorage name="apiurl" value="{{apiurl}}">
     </core-localstorage>
@@ -9008,10 +9025,20 @@ Data can be provided in one of three ways:
   <script>
     Polymer({
 
-      apiurlChanged: function(){
-        if(this.apiurl != undefined){
-          this.$.ws.url = "wss://" + this.apiurl + "ws/" + this.wstype +"/";
+      reloadUrl: function(){
+        if(this.apiprotocolws && this.apiurl){
+          console.log("connecting...");
+          this.$.ws.url = this.apiprotocolws + "://" + this.apiurl + "ws/" + this.wstype +"/";
+          console.log(this.$.ws.url);
         }
+      },
+
+      apiprotocolwsChanged: function(){
+        this.reloadUrl();
+      },
+
+      apiurlChanged: function(){
+        this.reloadUrl();
       },
 
       onMessage: function(event){
@@ -9071,6 +9098,10 @@ Data can be provided in one of three ways:
       }
     </style>
 
+    <core-localstorage name="apiprotocol" value="{{ apiprotocol }}">
+    </core-localstorage>
+
+
     <core-localstorage name="apiurl" value="{{ apiurl }}">
     </core-localstorage>
 
@@ -9083,7 +9114,7 @@ Data can be provided in one of three ways:
     <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
     </nautes-fd-websocket-api-service>
 
-    <core-ajax id="objGetRequest" url="https://{{apiurl}}objects/{{objectUpdating.uuid}}" on-core-response="{{handleGetResponse}}" on-core-error="{{errorGetHandler}}" method="GET" handleas="json" withcredentials="{{credentialrequired}}">
+    <core-ajax id="objGetRequest" url="{{ apiprotocol }}://{{ apiurl }}objects/{{ objectUpdating.uuid }}" on-core-response="{{handleGetResponse}}" on-core-error="{{errorGetHandler}}" method="GET" handleas="json" withcredentials="{{credentialrequired}}">
     </core-ajax>
 
     <div layout="" vertical="" center="">
@@ -9109,7 +9140,7 @@ Data can be provided in one of three ways:
       getImg: function(obj) {
         var icon = obj.representation[obj.currentRepresentation].icon;
         if(icon != null){
-          var src = 'https://'+ this.apiurl +'resources/' + icon ;
+          var src = this.apiprotocol + '://' + this.apiurl + 'resources/' + icon ;
           return src;
         }
       },
@@ -9117,7 +9148,7 @@ Data can be provided in one of three ways:
       updateObject: function(event){
         var uuid = event.detail.data.uuid;
 
-        if(uuid !== undefined){
+        if(uuid){
         
           for (var i = 0; i < this.objects.length; i++) {
             var obj = this.objects[i];
@@ -9255,7 +9286,7 @@ Data can be provided in one of three ways:
 
 
 
-<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequired" assetpath="../app/elements/">
+<polymer-element name="nautes-zone-object" attributes="envObject toast apiprotocol apiurl credentialrequired" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -9264,6 +9295,9 @@ Data can be provided in one of three ways:
         z-index: 1000;
       }
     </style>
+
+    <core-localstorage name="apiprotocol" value="{{ apiprotocol }}">
+    </core-localstorage>
 
     <core-localstorage name="apiurl" value="{{ apiurl }}">
     </core-localstorage>
@@ -9276,30 +9310,40 @@ Data can be provided in one of three ways:
 
     <img id="envObjectImg" on-tap="{{onTap}}" width="50" height="50" alt="{{ envObject.name }}" title="{{envObject.name}}">
 
-    <core-ajax id="objTapRequest" url="https://{{ apiurl }}objects/{{ envObject.uuid }}/click" on-core-response="{{ handleTapResponse }}" on-core-error="{{ errorTapHandler }}" method="POST" withcredentials="{{ credentialrequired }}">
+    <core-ajax id="objTapRequest" url="{{ apiprotocol }}://{{ apiurl }}objects/{{ envObject.uuid }}/click" on-core-response="{{ handleTapResponse }}" on-core-error="{{ errorTapHandler }}" method="POST" withcredentials="{{ credentialrequired }}">
     </core-ajax>
 
-    <core-ajax id="objGetRequest" url="https://{{ apiurl }}objects/{{ envObject.uuid }}" on-core-response="{{ handleGetResponse }}" on-core-error="{{ errorGetHandler }}" method="GET" handleas="json" withcredentials="{{ credentialrequired }}">
+    <core-ajax id="objGetRequest" url="{{ apiprotocol }}://{{ apiurl }}objects/{{ envObject.uuid }}" on-core-response="{{ handleGetResponse }}" on-core-error="{{ errorGetHandler }}" method="GET" handleas="json" withcredentials="{{ credentialrequired }}">
     </core-ajax>
 
   </template>
   <script>
     Polymer("nautes-zone-object",{
 
+      setImg: function(){
+        var src = this.getImg();
+        if(src){
+          this.$.envObjectImg.src = src;
+        }
+      },
+
       envObjectChanged: function(){
         if(this.envObject){
-          this.$.envObjectImg.src = this.getImg();
+          this.setImg();
           this.style.left = this.envObject.representation[0].offset.x + "px";
           this.style.top = this.envObject.representation[0].offset.y + "px";
         }
       },
 
+      apiprotocolChanged: function(){
+        if(this.apiprotocol){
+          this.setImg();
+        }
+      },
+
       apiurlChanged: function(){
-        if(this.apiurl != undefined){
-          var src = this.getImg();
-          if(src != undefined){
-            this.$.envObjectImg.src = src;
-          }
+        if(this.apiurl){
+          this.setImg();
         }
       },
 
@@ -9345,8 +9389,8 @@ Data can be provided in one of three ways:
         if(obj){
           var icon = obj.representation[obj.currentRepresentation].icon;
           if(icon){
-            if(this.apiurl != undefined){
-              var src = "https://" + this.apiurl + "resources/" + icon;
+            if(this.apiurl && this.apiprotocol){
+              var src = this.apiprotocol + "://" + this.apiurl + "resources/" + icon;
               return src;
             }
           } 
@@ -9418,7 +9462,7 @@ Data can be provided in one of three ways:
 
 
 
-<polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiurl" assetpath="../app/elements/">
+<polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiprotocol apiurl" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -9434,6 +9478,9 @@ Data can be provided in one of three ways:
       }
     </style>
     
+    <core-localstorage name="apiprotocol" value="{{ apiprotocol }}">
+    </core-localstorage>
+
     <core-localstorage name="apiurl" value="{{ apiurl }}">
     </core-localstorage>
 
@@ -9465,12 +9512,22 @@ Data can be provided in one of three ways:
         }
       },
 
+      setEnvImg: function(){
+        var src = this.getImg();
+        if(src){
+          this.$.environmentImg.src = src;
+        }
+      },
+
+      apiprotocolChanged: function(){
+        if(this.apiprotocol){
+          this.setEnvImg();
+        }
+      },
+
       apiurlChanged: function(){
-        if(this.apiurl != undefined){
-          var src = this.getImg();
-          if(src != undefined){
-            this.$.environmentImg.src = src;
-          }
+        if(this.apiurl){
+          this.setEnvImg();
         }
       },
 
@@ -9488,8 +9545,10 @@ Data can be provided in one of three ways:
       },
 
       getImg: function() {
-        var src = "https://"+ this.apiurl + 'resources/' + this.environment.backgroundImage;
-        return src;
+        if(this.apiurl && this.apiprotocol){
+          var src = this.apiprotocol + "://" + this.apiurl + 'resources/' + this.environment.backgroundImage;
+          return src;
+        }
       },
       
       getScaleFactor: function(){
@@ -11217,24 +11276,44 @@ Example:
     </style>
 
     <div layout="" vertical="" center="">
+
+      <div class="row" layout="" horizonal="" center="" start="">
+        <core-localstorage id="LSapiprotocol" name="apiprotocol" value="{{ apiprotocol }}">
+        </core-localstorage>
+        <div class="label">API Protocol:&nbsp </div> <paper-input label="{{ apiprotocol }}" floatinglabel="true" value="{{newAPIProtocol}}"></paper-input>
+      </div>
+
+      <div class="row" layout="" horizonal="" center="" start="">
+        <core-localstorage id="LSapiprotocolws" name="apiprotocolws" value="{{ apiprotocolws }}">
+        </core-localstorage>
+        <div class="label">API Protocol WS:&nbsp </div> <paper-input label="{{ apiprotocolws }}" floatinglabel="true" value="{{newAPIProtocolWS}}"></paper-input>
+      </div>
+
       <div class="row" layout="" horizonal="" center="" start="">
         <core-localstorage id="LSapiurl" name="apiurl" value="{{apiurl}}">
         </core-localstorage>
         <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatinglabel="true" value="{{newAPIUrl}}"></paper-input>
       </div>
+
       <div class="row" layout="" horizonal="" center="" start="">
         <core-localstorage id="LScr" name="credentialrequired" value="{{credentialrequired}}">
         </core-localstorage>
         CREDENTIAL REQUIRED: <paper-toggle-button checked="{{newCredentialRequired}}"></paper-toggle-button>
       </div>
+
       <div class="row-fab" horizontal="" end-justified="" layout="">
         <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
       </div>
+
     </div>
 
   </template>
   <script>
     Polymer({
+
+      newAPIProtocol: "",
+
+      newAPIProtocolWS: "",
 
       newAPIUrl: "",
 
@@ -11249,12 +11328,22 @@ Example:
       },
 
       applyChanges: function(){
+
+        if(this.newAPIProtocol != ""){
+          this.$.LSapiprotocol.value = this.newAPIProtocol;
+        }
+
+        if(this.newAPIProtocolWS != ""){
+          this.$.LSapiprotocolws.value = this.newAPIProtocolWS;
+        }
+
         if(this.newAPIUrl != ""){
           this.$.LSapiurl.value = this.newAPIUrl;
         }
+
         this.$.LScr.value = this.newCredentialRequired;
-        this.$.LScr.save();
-        location.reload();
+        
+        window.setTimeout(function(){location.reload();}, 500);
       }
 
     });

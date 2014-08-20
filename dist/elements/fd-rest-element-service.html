@@ -3,13 +3,18 @@
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl apiprotocol credentialrequired">
   <template>
     <style>
     :host {
       display: block;
     }
     </style>
+
+    <core-localstorage
+      name="apiprotocol" 
+      value="{{apiprotocol}}">
+    </core-localstorage>
 
     <core-localstorage
       name="apiurl" 
@@ -41,9 +46,19 @@
       this.fditems = [];
     },
 
+    reloadUrl: function(){
+      this.$.ajax.url = this.apiprotocol +"://"+ this.apiurl + this.fdtype +"/";
+    },
+
+    protocolChanged: function(){
+      if(this.apiprotocol){
+        this.reloadUrl();
+      }
+    },
+
     apiurlChanged: function(){
       if(this.apiurl != undefined){
-        this.$.ajax.url = "https://" + this.apiurl + this.fdtype +"/";
+        this.reloadUrl();
       }
     },
 

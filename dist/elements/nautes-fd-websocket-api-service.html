@@ -2,13 +2,18 @@
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/x-websocket/dist/x-websocket.html">
 
-<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiurl">
+<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiprotocolws apiurl">
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
+
+    <core-localstorage
+      name="apiprotocolws" 
+      value="{{ apiprotocolws }}">
+    </core-localstorage>
 
     <core-localstorage
       name="apiurl" 
@@ -23,10 +28,20 @@
   <script>
     Polymer({
 
-      apiurlChanged: function(){
-        if(this.apiurl != undefined){
-          this.$.ws.url = "wss://" + this.apiurl + "ws/" + this.wstype +"/";
+      reloadUrl: function(){
+        if(this.apiprotocolws && this.apiurl){
+          console.log("connecting...");
+          this.$.ws.url = this.apiprotocolws + "://" + this.apiurl + "ws/" + this.wstype +"/";
+          console.log(this.$.ws.url);
         }
+      },
+
+      apiprotocolwsChanged: function(){
+        this.reloadUrl();
+      },
+
+      apiurlChanged: function(){
+        this.reloadUrl();
       },
 
       onMessage: function(event){
