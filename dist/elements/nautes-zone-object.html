@@ -131,7 +131,6 @@
         if(obj){
           var icon = obj.representation[obj.currentRepresentation].icon;
           if(icon){
-            console.log(this.ssl);
             var src = (this.ssl ? "https" : "http") + "://" + this.apiurl + "resources/" + icon;
             return src;
           } 
