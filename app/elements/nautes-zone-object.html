@@ -72,6 +72,12 @@
         }
       },
 
+      protocolChanged: function(){
+        if(this.protocol){
+          this.setImg();
+        }
+      },
+
       apiurlChanged: function(){
         if(this.apiurl){
           this.setImg();
