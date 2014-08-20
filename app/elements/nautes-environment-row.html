@@ -3,7 +3,7 @@
 
 <link rel="import" href="../elements/nautes-zone.html">
 
-<polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiurl">
+<polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiprotocol apiurl">
   <template>
     <style>
       :host {
@@ -19,6 +19,11 @@
       }
     </style>
     
+    <core-localstorage
+      name="apiprotocol" 
+      value="{{ apiprotocol }}">
+    </core-localstorage>
+
     <core-localstorage
       name="apiurl" 
       value="{{ apiurl }}">
@@ -52,12 +57,22 @@
         }
       },
 
+      setEnvImg: function(){
+        var src = this.getImg();
+        if(src){
+          this.$.environmentImg.src = src;
+        }
+      },
+
+      apiprotocolChanged: function(){
+        if(this.apiprotocol){
+          this.setEnvImg();
+        }
+      },
+
       apiurlChanged: function(){
-        if(this.apiurl != undefined){
-          var src = this.getImg();
-          if(src != undefined){
-            this.$.environmentImg.src = src;
-          }
+        if(this.apiurl){
+          this.setEnvImg();
         }
       },
 
@@ -75,8 +90,10 @@
       },
 
       getImg: function() {
-        var src = "https://"+ this.apiurl + 'resources/' + this.environment.backgroundImage;
-        return src;
+        if(this.apiurl && this.apiprotocol){
+          var src = this.apiprotocol + "://" + this.apiurl + 'resources/' + this.environment.backgroundImage;
+          return src;
+        }
       },
       
       getScaleFactor: function(){

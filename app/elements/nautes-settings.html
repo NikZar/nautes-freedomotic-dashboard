@@ -48,6 +48,14 @@
       </div>
 
       <div class="row" layout horizonal center start>
+        <core-localstorage id="LSapiprotocolws" 
+          name="apiprotocolws" 
+          value="{{ apiprotocolws }}">
+        </core-localstorage>
+        <div class="label">API Protocol WS:&nbsp </div> <paper-input label="{{ apiprotocolws }}" floatingLabel="true" value="{{newAPIProtocolWS}}"></paper-input>
+      </div>
+
+      <div class="row" layout horizonal center start>
         <core-localstorage id="LSapiurl" 
           name="apiurl" 
           value="{{apiurl}}">
@@ -75,6 +83,8 @@
 
       newAPIProtocol: "",
 
+      newAPIProtocolWS: "",
+
       newAPIUrl: "",
 
       newCredentialRequired: true,
@@ -88,8 +98,13 @@
       },
 
       applyChanges: function(){
+
         if(this.newAPIProtocol != ""){
           this.$.LSapiprotocol.value = this.newAPIProtocol;
+        }
+
+        if(this.newAPIProtocolWS != ""){
+          this.$.LSapiprotocolws.value = this.newAPIProtocolWS;
         }
 
         if(this.newAPIUrl != ""){
