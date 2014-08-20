@@ -29,10 +29,9 @@
     Polymer({
 
       reloadUrl: function(){
-        if(this.ssl && this.apiurl){
-          console.log("ws connecting...");
+        if(this.ssl != undefined && this.apiurl){
           this.$.ws.url = (this.ssl ? "wss" : "ws") + "://" + this.apiurl + "ws/" + this.wstype +"/";
-          console.log(this.$.ws.url);
+          console.log("ws connecting..." + this.$.ws.url);
         }
       },
 

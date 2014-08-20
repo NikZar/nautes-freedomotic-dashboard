@@ -36,7 +36,6 @@
 
     <core-ajax
       id="objTapRequest"
-      url="{{ apiprotocol }}://{{ apiurl }}objects/{{ envObject.uuid }}/click"
       on-core-response="{{ handleTapResponse }}"
       on-core-error="{{ errorTapHandler }}"
       method="POST"
@@ -45,7 +44,6 @@
 
     <core-ajax
       id="objGetRequest"
-      url="{{ apiprotocol }}://{{ apiurl }}objects/{{ envObject.uuid }}"
       on-core-response="{{ handleGetResponse }}"
       on-core-error="{{ errorGetHandler }}"
       method="GET"
@@ -58,7 +56,10 @@
     Polymer("nautes-zone-object",{
 
       reloadUrl: function(){
-
+        if(this.ssl != undefined && this.apiurl && this.envObject.uuid){
+          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid + "/click";
+          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid;
+        }
       },
 
       setImg: function(){
@@ -80,10 +81,12 @@
 
       sslChanged: function(){
           this.setImg();
+          this.reloadUrl();
       },
 
       apiurlChanged: function(){
           this.setImg();
+          this.reloadUrl();
       },
 
       errorGetHandler: function(event){
@@ -128,11 +131,9 @@
         if(obj){
           var icon = obj.representation[obj.currentRepresentation].icon;
           if(icon){
-            if(this.apiurl && this.ssl){
-              console.log(this.ssl);
-              var src = (this.ssl ? "https" : "http") + "://" + this.apiurl + "resources/" + icon;
-              return src;
-            }
+            console.log(this.ssl);
+            var src = (this.ssl ? "https" : "http") + "://" + this.apiurl + "resources/" + icon;
+            return src;
           } 
         }
       }

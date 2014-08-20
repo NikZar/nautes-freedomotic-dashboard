@@ -48,7 +48,6 @@
 
     reloadUrl: function(){
       if(this.ssl != undefined && this.apiurl){
-        console.log(this.ssl);
         this.$.ajax.url = (this.ssl ? "https" : "http") +"://"+ this.apiurl + this.fdtype +"/";
       }
     },
@@ -68,7 +67,6 @@
     },
 
     elementsLoaded: function() {
-
       // Make a copy of the loaded data
       this.fditems = this.$.ajax.response.slice(0);
 
