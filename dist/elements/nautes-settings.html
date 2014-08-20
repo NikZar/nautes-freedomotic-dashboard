@@ -40,22 +40,6 @@
     <div layout vertical center>
 
       <div class="row" layout horizonal center start>
-        <core-localstorage id="LSapiprotocol" 
-          name="apiprotocol" 
-          value="{{ apiprotocol }}">
-        </core-localstorage>
-        <div class="label">API Protocol:&nbsp </div> <paper-input label="{{ apiprotocol }}" floatingLabel="true" value="{{newAPIProtocol}}"></paper-input>
-      </div>
-
-      <div class="row" layout horizonal center start>
-        <core-localstorage id="LSapiprotocolws" 
-          name="apiprotocolws" 
-          value="{{ apiprotocolws }}">
-        </core-localstorage>
-        <div class="label">API Protocol WS:&nbsp </div> <paper-input label="{{ apiprotocolws }}" floatingLabel="true" value="{{newAPIProtocolWS}}"></paper-input>
-      </div>
-
-      <div class="row" layout horizonal center start>
         <core-localstorage id="LSapiurl" 
           name="apiurl" 
           value="{{apiurl}}">
@@ -71,6 +55,14 @@
         CREDENTIAL REQUIRED: <paper-toggle-button checked="{{newCredentialRequired}}"></paper-toggle-button>
       </div>
 
+      <div class="row" layout horizonal center start>
+        <core-localstorage id="LSssl" 
+          name="ssl" 
+          value="{{ssl}}">
+        </core-localstorage>
+        SSL: <paper-toggle-button checked="{{newSSL}}"></paper-toggle-button>
+      </div>
+
       <div class="row-fab" horizontal end-justified layout>
         <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
       </div>
@@ -81,31 +73,29 @@
   <script>
     Polymer({
 
-      newAPIProtocol: "",
-
-      newAPIProtocolWS: "",
-
       newAPIUrl: "",
 
       newCredentialRequired: true,
 
+      newSSL: true,
+
       ready: function(){
+
         if(localStorage["credentialrequired"] == "true"){
           this.newCredentialRequired = true;
         } else {
           this.newCredentialRequired = false;
         }
+
+        if(localStorage["ssl"] == "true"){
+          this.newSSL = true;
+        } else {
+          this.newSSL = false;
+        }
+
       },
 
       applyChanges: function(){
-
-        if(this.newAPIProtocol != ""){
-          this.$.LSapiprotocol.value = this.newAPIProtocol;
-        }
-
-        if(this.newAPIProtocolWS != ""){
-          this.$.LSapiprotocolws.value = this.newAPIProtocolWS;
-        }
 
         if(this.newAPIUrl != ""){
           this.$.LSapiurl.value = this.newAPIUrl;
@@ -113,6 +103,8 @@
 
         this.$.LScr.value = this.newCredentialRequired;
         
+        this.$.LSssl.value = this.newSSL;
+
         window.setTimeout(function(){location.reload();}, 500);
       }
 
