@@ -38,6 +38,15 @@
     </style>
 
     <div layout vertical center>
+
+      <div class="row" layout horizonal center start>
+        <core-localstorage id="LSapiprotocol" 
+          name="apiprotocol" 
+          value="{{ apiprotocol }}">
+        </core-localstorage>
+        <div class="label">API Protocol:&nbsp </div> <paper-input label="{{ apiprotocol }}" floatingLabel="true" value="{{newAPIProtocol}}"></paper-input>
+      </div>
+
       <div class="row" layout horizonal center start>
         <core-localstorage id="LSapiurl" 
           name="apiurl" 
@@ -45,6 +54,7 @@
         </core-localstorage>
         <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatingLabel="true" value="{{newAPIUrl}}"></paper-input>
       </div>
+
       <div class="row" layout horizonal center start>
         <core-localstorage id="LScr" 
           name="credentialrequired" 
@@ -52,14 +62,18 @@
         </core-localstorage>
         CREDENTIAL REQUIRED: <paper-toggle-button checked="{{newCredentialRequired}}"></paper-toggle-button>
       </div>
+
       <div class="row-fab" horizontal end-justified layout>
         <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
       </div>
+
     </div>
 
   </template>
   <script>
     Polymer({
+
+      newAPIProtocol: "",
 
       newAPIUrl: "",
 
@@ -74,12 +88,17 @@
       },
 
       applyChanges: function(){
+        if(this.newAPIProtocol != ""){
+          this.$.LSapiprotocol.value = this.newAPIProtocol;
+        }
+
         if(this.newAPIUrl != ""){
           this.$.LSapiurl.value = this.newAPIUrl;
         }
+
         this.$.LScr.value = this.newCredentialRequired;
-        this.$.LScr.save();
-        location.reload();
+        
+        window.setTimeout(function(){location.reload();}, 500);
       }
 
     });
