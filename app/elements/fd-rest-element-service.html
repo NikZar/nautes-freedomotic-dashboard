@@ -41,6 +41,8 @@
     alwaysPrepare: true,
     
     fdtype:'environments',
+
+    fditems: [],
     
     created: function() {
       this.fditems = [];
@@ -67,9 +69,7 @@
     },
 
     elementsLoaded: function() {
-      // Make a copy of the loaded data
-      this.fditems = this.$.ajax.response.slice(0);
-
+      console.log("Loaded " + this.fdtype + " data:", this.fditems);
     },
     
     errorHandler: function(event){
