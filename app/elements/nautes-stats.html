@@ -29,17 +29,19 @@
 
     <div layout vertical center>
 
-      <div unresolved class="chart-container" layout horizontal center center-justified>
+      <!--<div unresolved class="chart-container" layout horizontal center center-justified>
         <google-chart id="chart"
           height='200px'
           width='1000px'
         </google-chart>
-      </div>
+      </div>-->
 
-      <template repeat="{graph in graphsArray}">
+      <template repeat="{{graph in graphsArray}}">
         <google-chart
           height='200px'
           width='1000px'
+          type="area"
+          options = '{"title": "{{graph.title}}","backgroundColor": "transparent"}'
           cols="{{graph.cols}}"
           rows="{{graph.rows}}"
         </google-chart>
@@ -57,22 +59,8 @@
 
       graphsArray: [],
 
-      reloadUrl: function(){
-        if(this.ssl != undefined && this.apiurl){
-          this.$.statsRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run";
-          console.log(this.$.statsRequest.url);
-        }
-      },
-
-      sslChanged: function(){
-        this.reloadUrl();
-      },
-
-      apiurlChanged: function(){
-        this.reloadUrl();
-      },
-
       statsChanged: function(){
+        /*
         if(this.stats && this.stats.properties && this.stats.properties.tuples){
 
           var tuples = this.stats.properties.tuples.tuples;
@@ -107,7 +95,7 @@
           this.$.chart.rows = chartData;
           this.$.chart.options = { backgroundColor: "transparent" };
           this.$.chart.drawChart();
-        }
+        }*/
 
         if(this.stats && this.stats.properties && this.stats.properties.tuples){
           var tuples = this.stats.properties.tuples.tuples;
@@ -120,6 +108,7 @@
             if(!(tuple.uuid in this.graphs)){
               console.log("New obj: "+tuple.uuid);
               this.graphs[tuple.uuid] = {};
+              this.graphs[tuple.uuid].title = tuple.name;
               this.graphs[tuple.uuid].cols =  [{label:"Date", type:"date"}, {label:"On/Off", type:"number"}];
               this.graphs[tuple.uuid].rows =  [];
             }
