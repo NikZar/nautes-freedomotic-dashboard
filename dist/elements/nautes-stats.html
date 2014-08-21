@@ -1,0 +1,81 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
+<link rel="import" href="../bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+
+<polymer-element name="nautes-stats" attributes="ssl apiurl">
+  <template>
+
+    <style>
+
+      :host {
+        display: block;
+        color: #777;
+      }
+
+      .row-fab{
+        margin-top: 30px;
+      }
+
+    </style>
+
+    <core-localstorage
+      name="ssl" 
+      value="{{ ssl }}">
+    </core-localstorage>
+
+    <core-localstorage
+      name="apiurl" 
+      value="{{ apiurl }}">
+    </core-localstorage>
+
+    <core-localstorage
+      name="credentialrequired" 
+      value="{{ credentialrequired }}">
+    </core-localstorage>
+
+    <core-ajax
+      id="statsRequest"
+      on-core-response="{{ handleStatsResponse }}"
+      on-core-error="{{ errorTapHandler }}"
+      method="POST"
+      withCredentials="{{ credentialrequired }}">
+    </core-ajax>
+
+    <div class="row-fab" horizontal center-justified layout>
+      <paper-fab class="fab" icon="arrow-forward" on-tap="{{go}}"></paper-fab>
+    </div>
+    <div>{{data}}</div>
+  </template>
+
+  <script>
+    Polymer("nautes-stats",{
+
+      data: "Data Received ('-' separated): ",
+
+      reloadUrl: function(){
+        if(this.ssl != undefined && this.apiurl){
+          this.$.statsRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run";
+          console.log(this.$.statsRequest.url);
+        }
+      },
+
+      sslChanged: function(){
+        this.reloadUrl();
+      },
+
+      apiurlChanged: function(){
+        this.reloadUrl();
+      },
+
+      handleStatsResponse: function(response){
+        console.log(response);
+        this.data += JSON.stringify(response.detail) + " - ";
+      },
+
+      go: function(){
+        this.$.statsRequest.go();
+      }
+    });
+  </script>
+</polymer-element>
