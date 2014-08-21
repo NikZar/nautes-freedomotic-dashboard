@@ -17,7 +17,6 @@
 <link rel="import" href="../elements/nautes-settings.html">
 <link rel="import" href="../elements/nautes-fd-info.html">
 <link rel="import" href="../elements/nautes-asynch-messages-list.html">
-<link rel="import" href="../elements/nautes-stats.html">
 
 <polymer-element name="nautes-animated-dashboard" attributes="selected">
   <template>
@@ -88,9 +87,8 @@
        </nautes-dashboard-page>
       </section>
 
-      <section name="actions">
-       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="actions">
-        <nautes-stats></nautes-stats>
+      <section name="automations">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="automations">
        </nautes-dashboard-page>
       </section>
 
