@@ -36,7 +36,7 @@
         </google-chart>
       </div>
 
-      <template repeat="{graph in graphs}">
+      <template repeat="{graph in graphsArray}">
         <google-chart
           height='200px'
           width='1000px'
@@ -54,6 +54,8 @@
   <script>
     Polymer("nautes-stats",{
       graphs: {},
+
+      graphsArray: [],
 
       reloadUrl: function(){
         if(this.ssl != undefined && this.apiurl){
@@ -110,6 +112,7 @@
         if(this.stats && this.stats.properties && this.stats.properties.tuples){
           var tuples = this.stats.properties.tuples.tuples;
           this.graphs = {};
+          this.graphsArray = [];
 
           for (var i=0; i<tuples.length; i++) {
             var tuple = tuples[i];
@@ -140,8 +143,12 @@
                 return b[0]-a[0];
               });
 
+              this.graphsArray.push(graph);
             }
           }
+
+          console.log("GO",this.graphs);
+          console.log("GA",this.graphsArray);
 
         }
       },
