@@ -1,81 +1,81 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
-<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
-<polymer-element name="nautes-stats" attributes="ssl apiurl">
+
+<link rel="import" href="../elements/fd-rest-element-service.html">
+
+<polymer-element name="nautes-stats" attributes="stats graphs graphsArray">
   <template>
 
     <style>
-
       :host {
-        display: block;
-        color: #777;
+        display: none;
       }
-
-      .row-fab{
-        margin-top: 30px;
-      }
-
     </style>
 
-    <core-localstorage
-      name="ssl" 
-      value="{{ ssl }}">
-    </core-localstorage>
+    <fd-rest-element-service fdtype="commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run" fditems="{{ stats }}" toast={{ toast }} method="POST">
+    </fd-rest-element-service>
 
-    <core-localstorage
-      name="apiurl" 
-      value="{{ apiurl }}">
-    </core-localstorage>
-
-    <core-localstorage
-      name="credentialrequired" 
-      value="{{ credentialrequired }}">
-    </core-localstorage>
-
-    <core-ajax
-      id="statsRequest"
-      on-core-response="{{ handleStatsResponse }}"
-      on-core-error="{{ errorTapHandler }}"
-      method="POST"
-      withCredentials="{{ credentialrequired }}">
-    </core-ajax>
-
-    <div class="row-fab" horizontal center-justified layout>
-      <paper-fab class="fab" icon="arrow-forward" on-tap="{{go}}"></paper-fab>
-    </div>
-    <div>{{data}}</div>
   </template>
 
   <script>
     Polymer("nautes-stats",{
 
-      data: "Data Received ('-' separated): ",
+      graphs: {},
 
-      reloadUrl: function(){
-        if(this.ssl != undefined && this.apiurl){
-          this.$.statsRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run";
-          console.log(this.$.statsRequest.url);
+      graphsArray: [],
+
+      statsChanged: function(){
+
+        if(this.stats && this.stats.properties && this.stats.properties.tuples){
+          var tuples = this.stats.properties.tuples.tuples;
+          this.graphs = {};
+          this.graphsArray = [];
+
+          for (var i=0; i<tuples.length; i++) {
+            var tuple = tuples[i];
+            var graph = null;
+            if(!(tuple.uuid in this.graphs)){
+              this.graphs[tuple.uuid] = {};
+              this.graphs[tuple.uuid].title = tuple.name;
+              this.graphs[tuple.uuid].cols =  [{label:"Date", type:"date"}, {label:"On/Off", type:"number"}];
+              this.graphs[tuple.uuid].rows =  [];
+            }
+            graph = this.graphs[tuple.uuid];
+
+            var strdate = tuple.datetime.replace("CEST","");
+            var milliseconds = Date.parse(strdate);
+            var date = new Date(milliseconds);
+
+            var value = (JSON.parse(tuple.behaviorValue) ? 1 : 0);
+
+            graph.rows.push([date, value]);
+
+          }
+
+          for(var uuid in this.graphs){
+            if(this.graphs.hasOwnProperty(uuid)){
+              var graph = this.graphs[uuid];
+
+              graph.rows = graph.rows.sort(function(a, b){
+                return b[0]-a[0];
+              });
+
+              this.graphsArray.push(graph);
+            }
+          }
+
         }
       },
 
-      sslChanged: function(){
-        this.reloadUrl();
-      },
-
-      apiurlChanged: function(){
-        this.reloadUrl();
-      },
-
       handleStatsResponse: function(response){
-        console.log(response);
-        this.data += JSON.stringify(response.detail) + " - ";
+        console.log(response.detail.response);
       },
 
       go: function(){
         this.$.statsRequest.go();
-      }
+      },
+
     });
   </script>
 </polymer-element>

@@ -1,0 +1,19 @@
+{
+  "name": "polymer-github-card",
+  "version": "0.0.1",
+  "description": "My awesome polymer-github-card Element",
+  "license": "MIT",
+  "main": "dist/polymer-github-card.html",
+  "keywords": [
+    "polymer",
+    "web-components"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "polymer": "~0.3.3"
+  }
+}

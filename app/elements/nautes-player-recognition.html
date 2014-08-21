@@ -1,0 +1,75 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/voice-elements/dist/voice-recognition.html">
+<link rel="import" href="../bower_components/voice-elements/dist/voice-player.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/core-icons/av-icons.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+
+<polymer-element name="nautes-player-recognition" attributes="">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #result{
+        margin-top: 10px;
+        text-transform: uppercase;
+        text-align: center;
+        font-family: Verdana;
+        font-size: 1.5em;
+      }
+
+      .voice-elements{
+        margin-top: 10px;
+        background-color: rgba(255, 255, 255, 0.4);
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        border-radius: 10px;
+        padding: 30px;
+        width: 400px;
+        color: #444;
+      }
+
+      .fab{
+        margin: 10px;
+        background-color: #9f9;
+        color: #444;
+      }
+
+    </style>
+
+    <div class="voice-elements" layout vertical center>
+
+      <voice-recognition id="recognition" on-result="{{displayRecognition}}"></voice-recognition>
+      <voice-player id="player" accent="it-IT" text="{{textVE}}"></voice-player>
+
+      <div horizontal center-justified layout>
+        <paper-fab class="fab" icon="av:mic" on-tap="{{startRecognition}}"></paper-fab>
+        <paper-fab class="fab" icon="av:play-arrow" on-tap="{{speak}}"></paper-fab>
+      </div>
+
+      <div id="result" horizontal center-justified layout>{{textVE}}</div>
+
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-player-recognition",{
+
+      textVE: "Nautes è fantastica!",
+
+      startRecognition: function(){
+        this.$.recognition.start();
+      },
+
+      displayRecognition: function(event){
+        this.textVE = event.detail.result;
+      },
+
+      speak: function(){
+        this.$.player.speak();
+      }
+
+    });
+  </script>
+</polymer-element>

@@ -8250,6 +8250,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     alwaysPrepare: true,
     
     fdtype:'environments',
+
+    fditems: [],
     
     created: function() {
       this.fditems = [];
@@ -8276,9 +8278,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     elementsLoaded: function() {
-      // Make a copy of the loaded data
-      this.fditems = this.$.ajax.response.slice(0);
-
+      console.log("Loaded " + this.fdtype + " data:", this.fditems);
     },
     
     errorHandler: function(event){
@@ -9025,7 +9025,6 @@ Data can be provided in one of three ways:
       reloadUrl: function(){
         if(this.ssl != undefined && this.apiurl){
           this.$.ws.url = (this.ssl ? "wss" : "ws") + "://" + this.apiurl + "ws/" + this.wstype +"/";
-          console.log("ws connecting..." + this.$.ws.url);
         }
       },
 
@@ -9077,6 +9076,8 @@ Data can be provided in one of three ways:
     });
   </script>
 </polymer-element>
+
+
 
 
 
@@ -9297,7 +9298,7 @@ Data can be provided in one of three ways:
 
 
 
-<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequir ssl" assetpath="../app/elements/">
+<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequired ssl" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -11410,29 +11411,34 @@ function xmlToJson(xml) {
       div{
         color: #444;
         font-family: Verdana;
-        font-size: 20px;
+        font-size: 1.0em;
         padding-top: 20px;
         text-align: center;
       }
     </style>
 
-    <fd-rest-element-service fdtype="info/framework" fditems="{{infoXML}}" toast="{{toast}}">
+    <fd-rest-element-service fdtype="system/info/framework" fditems="{{info}}" toast="{{toast}}">
     </fd-rest-element-service>
       <div layout="" vertical="" center="">
-        Nautes Freedomotic Dashboard 0.0.2 (Beta)
+        Nautes Freedomotic Dashboard 0.0.3 (Beta)
       </div>
       <div layout="" vertical="" center="">
-        Freedomotic {{info.FRAMEWORK_MAJOR["#text"]}}.{{info.FRAMEWORK_MINOR["#text"]}}.{{info.FRAMEWORK_BUILD["#text"]}} 
-        "{{info.FRAMEWORK_VERSION_CODENAME["#text"]}}" 
-        {{info.FRAMEWORK_RELEASE_DATE["#text"]}}
-        ({{info.FRAMEWORK_RELEASE_TYPE["#text"]}})
+        Niko Zarzani : niko.zarzani@nautes.com
       </div>
       <div layout="" vertical="" center="">
-        {{info.FRAMEWORK_AUTHOR["#text"]}}:
-        {{info.PROJECT_MAIL["#text"]}}
+        <hr>
       </div>
       <div layout="" vertical="" center="">
-        License: {{info.FRAMEWORK_LICENSE["#text"]}}
+        Freedomotic {{info.FRAMEWORK_MAJOR}}.{{info.FRAMEWORK_MINOR}}.{{info.FRAMEWORK_BUILD}} 
+        "{{info.FRAMEWORK_VERSION_CODENAME}}" 
+        {{info.FRAMEWORK_RELEASE_DATE}}
+        ({{info.FRAMEWORK_RELEASE_TYPE}})
+      </div>
+      <div layout="" vertical="" center="">
+        {{info.FRAMEWORK_AUTHOR}} : {{info.PROJECT_MAIL}}
+      </div>
+      <div layout="" vertical="" center="">
+        License: {{info.FRAMEWORK_LICENSE}}
       </div>
   </template>
   <script>
@@ -11572,6 +11578,71 @@ function xmlToJson(xml) {
 
 
 
+<polymer-element name="nautes-stats" attributes="ssl apiurl" assetpath="../app/elements/">
+  <template>
+
+    <style>
+
+      :host {
+        display: block;
+        color: #777;
+      }
+
+      .row-fab{
+        margin-top: 30px;
+      }
+
+    </style>
+
+    <core-localstorage name="ssl" value="{{ ssl }}">
+    </core-localstorage>
+
+    <core-localstorage name="apiurl" value="{{ apiurl }}">
+    </core-localstorage>
+
+    <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
+    </core-localstorage>
+
+    <core-ajax id="statsRequest" on-core-response="{{ handleStatsResponse }}" on-core-error="{{ errorTapHandler }}" method="POST" withcredentials="{{ credentialrequired }}">
+    </core-ajax>
+
+    <div class="row-fab" horizontal="" center-justified="" layout="">
+      <paper-fab class="fab" icon="arrow-forward" on-tap="{{go}}"></paper-fab>
+    </div>
+    <div>{{data}}</div>
+  </template>
+
+  <script>
+    Polymer("nautes-stats",{
+
+      data: "Data Received ('-' separated): ",
+
+      reloadUrl: function(){
+        if(this.ssl != undefined && this.apiurl){
+          this.$.statsRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run";
+          console.log(this.$.statsRequest.url);
+        }
+      },
+
+      sslChanged: function(){
+        this.reloadUrl();
+      },
+
+      apiurlChanged: function(){
+        this.reloadUrl();
+      },
+
+      handleStatsResponse: function(response){
+        console.log(response);
+        this.data += JSON.stringify(response.detail) + " - ";
+      },
+
+      go: function(){
+        this.$.statsRequest.go();
+      }
+    });
+  </script>
+</polymer-element>
 
 
 
@@ -11587,7 +11658,14 @@ function xmlToJson(xml) {
 
 
 
-<polymer-element name="nautes-animated-dashboard" attributes="" assetpath="../app/elements/">
+
+
+
+
+
+
+
+<polymer-element name="nautes-animated-dashboard" attributes="selected" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -11658,6 +11736,7 @@ function xmlToJson(xml) {
 
       <section name="actions">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="actions">
+        <nautes-stats></nautes-stats>
        </nautes-dashboard-page>
       </section>
 
@@ -11726,6 +11805,7 @@ function xmlToJson(xml) {
   })();
   </script>
 </polymer-element>
+
 
 
 

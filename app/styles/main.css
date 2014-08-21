@@ -4,3 +4,7 @@ html, body {
   color:black;
   background-color: #404040;
 }
+
+body {
+    font-size: 100%;
+}

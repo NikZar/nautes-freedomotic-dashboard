@@ -1,8 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
 <link rel="import" href="../bower_components/google-chart/google-chart.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
-<polymer-element name="nautes-object-row" attributes="bgColor object">
+<polymer-element name="nautes-object-row" attributes="bgColor object graph">
   <template>
     <style>
       :host {
@@ -46,9 +48,6 @@
         padding-left: -15px;
       }
 
-      #cart{
-        width: {{fullWidth()}}px;
-      }
     </style>
 
     <div class="object-row" layout vertical>
@@ -57,19 +56,22 @@
         <div layout vertical center-justified>
           <content select="h2"></content>
           <content></content>
-          <core-icon-button icon="drive-fusiontable" on-tap="{{toggleStats}}">
-            {{label}}
-          </core-icon-button>
+          <template if="{{ graph }}">
+            <core-icon-button icon="drive-fusiontable" on-tap="{{toggleStats}}">
+              {{label}}
+            </core-icon-button>
+          </template>
         </div>
       </div>
       <template if="{{ showStats }}">
         <div unresolved class="chart-container" layout horizontal center center-justified>
           <google-chart id="chart"
-            type='line'
             height='200px'
             width='{{fullWidth()}}px'
+            type="area"
             options = '{"backgroundColor": "transparent"}'
-            data='../api/chart-data.json'>
+            cols="{{graph.cols}}"
+            rows="{{graph.rows}}">
           </google-chart>
         </div>
       </template>
@@ -78,9 +80,12 @@
 
   </template>
   <script>
-    Polymer({
+    Polymer("nautes-object-row",{
+
       showStats: false,
+
       label: "SHOW STATS",
+
       toggleStats: function(){
         this.showStats = !this.showStats;
         if(this.showStats){
@@ -89,20 +94,11 @@
           this.label = "SHOW STATS";
         }
       },
+
       fullWidth: function(){
         return window.innerWidth - 80;
-      },
-      objectChanged: function(){
-        if(this.object && this.$.chart){
-          this.$.chart.options = {
-            title: this.object.name + " Statistics",
-            curveType: 'function',
-            backgroundColor: "transparent",
-            is3D: true,
-            legend : { position : 'bottom' }
-          };
-        }
       }
+
     });
   </script>
 </polymer-element>

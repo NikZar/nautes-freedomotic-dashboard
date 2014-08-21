@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl method">
   <template>
     <style>
     :host {
@@ -31,7 +31,8 @@
       on-core-error="{{errorHandler}}"
       on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
-      handleAs="json"> 
+      handleAs="json"
+      method="{{method}}">
     </core-ajax>
 
   </template>
@@ -41,6 +42,10 @@
     alwaysPrepare: true,
     
     fdtype:'environments',
+
+    fditems: [],
+
+    method: "GET",
     
     created: function() {
       this.fditems = [];
@@ -67,9 +72,7 @@
     },
 
     elementsLoaded: function() {
-      // Make a copy of the loaded data
-      this.fditems = this.$.ajax.response.slice(0);
-
+      console.log("Loaded " + this.fdtype + " data:", this.fditems);
     },
     
     errorHandler: function(event){

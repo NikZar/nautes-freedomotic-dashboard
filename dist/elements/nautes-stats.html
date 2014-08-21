@@ -1,9 +1,12 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
-<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/core-icons/av-icons.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
 
-<polymer-element name="nautes-stats" attributes="ssl apiurl">
+
+<link rel="import" href="../elements/fd-rest-element-service.html">
+
+<polymer-element name="nautes-stats" attributes="stats">
   <template>
 
     <style>
@@ -13,69 +16,140 @@
         color: #777;
       }
 
-      .row-fab{
-        margin-top: 30px;
+      .fab{
+        margin: 10px;
+        background-color: #9f9;
+        color: #444;
       }
-
+      
     </style>
 
-    <core-localstorage
-      name="ssl" 
-      value="{{ ssl }}">
-    </core-localstorage>
+    <fd-rest-element-service fdtype="commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run" fditems="{{ stats }}" toast={{ toast }} method="POST">
+    </fd-rest-element-service>
 
-    <core-localstorage
-      name="apiurl" 
-      value="{{ apiurl }}">
-    </core-localstorage>
+    <div layout vertical center>
 
-    <core-localstorage
-      name="credentialrequired" 
-      value="{{ credentialrequired }}">
-    </core-localstorage>
+      <!--<div unresolved class="chart-container" layout horizontal center center-justified>
+        <google-chart id="chart"
+          height='200px'
+          width='1000px'
+        </google-chart>
+      </div>-->
 
-    <core-ajax
-      id="statsRequest"
-      on-core-response="{{ handleStatsResponse }}"
-      on-core-error="{{ errorTapHandler }}"
-      method="POST"
-      withCredentials="{{ credentialrequired }}">
-    </core-ajax>
-
-    <div class="row-fab" horizontal center-justified layout>
-      <paper-fab class="fab" icon="arrow-forward" on-tap="{{go}}"></paper-fab>
+      <template repeat="{{graph in graphsArray}}">
+        <google-chart
+          height='200px'
+          width='1000px'
+          type="area"
+          options = '{"backgroundColor": "transparent"}'
+          cols="{{graph.cols}}"
+          rows="{{graph.rows}}"
+        </google-chart>
+        <div>{{graph.title}}</div>
+      </template>
     </div>
-    <div>{{data}}</div>
+
+
+
   </template>
 
   <script>
     Polymer("nautes-stats",{
+      graphs: {},
 
-      data: "Data Received ('-' separated): ",
+      graphsArray: [],
 
-      reloadUrl: function(){
-        if(this.ssl != undefined && this.apiurl){
-          this.$.statsRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run";
-          console.log(this.$.statsRequest.url);
+      statsChanged: function(){
+        /*
+        if(this.stats && this.stats.properties && this.stats.properties.tuples){
+
+          var tuples = this.stats.properties.tuples.tuples;
+
+          var chartData = [];
+          var dataIndex = 0;
+          for (var i=0; i<tuples.length; i++) {
+            var tuple = tuples[i];
+            if(tuple.uuid === "21969e70-7e00-4a0d-a13f-a4728240d9d0"){
+
+              var strdate = tuple.datetime.replace("CEST","");
+              var milliseconds = Date.parse(strdate);
+              var date = new Date(milliseconds);
+
+              var value = (JSON.parse(tuple.behaviorValue) ? 1 : 0);
+
+              chartData[dataIndex] = [date, value];
+
+              dataIndex++;
+
+            }
+          }
+
+          chartData = chartData.sort(function(a, b){
+            return b[0]-a[0];
+          });
+
+          console.log(chartData);
+
+          this.$.chart.type = "area";
+          this.$.chart.cols = [{label:"Date", type:"date"}, {label:"On/Off", type:"number"}];
+          this.$.chart.rows = chartData;
+          this.$.chart.options = { backgroundColor: "transparent" };
+          this.$.chart.drawChart();
+        }*/
+
+        if(this.stats && this.stats.properties && this.stats.properties.tuples){
+          var tuples = this.stats.properties.tuples.tuples;
+          this.graphs = {};
+          this.graphsArray = [];
+
+          for (var i=0; i<tuples.length; i++) {
+            var tuple = tuples[i];
+            var graph = null;
+            if(!(tuple.uuid in this.graphs)){
+              console.log("New obj: "+tuple.uuid);
+              this.graphs[tuple.uuid] = {};
+              this.graphs[tuple.uuid].title = tuple.name;
+              this.graphs[tuple.uuid].cols =  [{label:"Date", type:"date"}, {label:"On/Off", type:"number"}];
+              this.graphs[tuple.uuid].rows =  [];
+            }
+            graph = this.graphs[tuple.uuid];
+
+            var strdate = tuple.datetime.replace("CEST","");
+            var milliseconds = Date.parse(strdate);
+            var date = new Date(milliseconds);
+
+            var value = (JSON.parse(tuple.behaviorValue) ? 1 : 0);
+
+            graph.rows.push([date, value]);
+
+          }
+
+          for(var uuid in this.graphs){
+            if(this.graphs.hasOwnProperty(uuid)){
+              var graph = this.graphs[uuid];
+
+              graph.rows = graph.rows.sort(function(a, b){
+                return b[0]-a[0];
+              });
+
+              this.graphsArray.push(graph);
+            }
+          }
+
+          console.log("GO",this.graphs);
+          console.log("GA",this.graphsArray);
+
         }
       },
 
-      sslChanged: function(){
-        this.reloadUrl();
-      },
-
-      apiurlChanged: function(){
-        this.reloadUrl();
-      },
-
       handleStatsResponse: function(response){
-        console.log(response);
-        this.data += JSON.stringify(response.detail) + " - ";
+        console.log(response.detail.response);
       },
 
       go: function(){
         this.$.statsRequest.go();
-      }
+      },
+
     });
   </script>
 </polymer-element>
