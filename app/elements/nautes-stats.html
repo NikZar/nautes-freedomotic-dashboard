@@ -2,6 +2,10 @@
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/voice-elements/dist/voice-recognition.html">
+<link rel="import" href="../bower_components/voice-elements/dist/voice-player.html">
+<link rel="import" href="../bower_components/core-icons/av-icons.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
 
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
@@ -16,10 +20,29 @@
         color: #777;
       }
 
-      .row-fab{
-        margin-top: 30px;
+      #result{
+        margin-top: 10px;
+        text-transform: uppercase;
+        text-align: center;
+        font-family: Verdana;
+        font-size: 1.5em;
       }
 
+      .voice-elements{
+        margin-top: 10px;
+        background-color: rgba(255, 255, 255, 0.4);
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        border-radius: 10px;
+        padding: 30px;
+        width: 400px;
+        color: #444;
+      }
+
+      .fab{
+        margin: 10px;
+        background-color: #9f9;
+        color: #444;
+      }
     </style>
 
     <fd-rest-element-service fdtype="commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run" fditems="{{ stats }}" toast={{ toast }} method="POST">
@@ -60,14 +83,36 @@
       withCredentials="{{ credentialrequired }}">
     </core-ajax>
 
-    <div class="row-fab" horizontal center-justified layout>
-      <paper-fab class="fab" icon="arrow-forward" on-tap="{{go}}"></paper-fab>
+    <div layout vertical center>
+
+      <div class="row-fab" horizontal center-justified layout>
+        <paper-fab class="fab" icon="arrow-forward" on-tap="{{go}}"></paper-fab>
+      </div>
+
+      <div class="voice-elements">
+
+        <voice-recognition id="recognition" on-result="{{displayRecognition}}"></voice-recognition>
+        <voice-player id="player" accent="it-IT" text="{{textVE}}"></voice-player>
+
+        <div horizontal center-justified layout>
+          <paper-fab class="fab" icon="av:mic" on-tap="{{startRecognition}}"></paper-fab>
+          <paper-fab class="fab" icon="av:play-arrow" on-tap="{{speak}}"></paper-fab>
+        </div>
+
+        <div id="result" horizontal center-justified layout>{{textVE}}</div>
+
+      </div>
+
     </div>
+
+
 
   </template>
 
   <script>
     Polymer("nautes-stats",{
+
+      textVE: "Questa dashboard è fantastica",
 
       chartData: [["Date", "Value"]],
 
@@ -115,7 +160,20 @@
 
       go: function(){
         this.$.statsRequest.go();
+      },
+
+      startRecognition: function(){
+        this.$.recognition.start();
+      },
+
+      displayRecognition: function(event){
+        this.textVE = event.detail.result;
+      },
+
+      speak: function(){
+        this.$.player.speak();
       }
+
     });
   </script>
 </polymer-element>

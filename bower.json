@@ -7,7 +7,8 @@
     "polymer": "Polymer/polymer#~0.3.3",
     "flatiron-director": "https://github.com/PolymerLabs/flatiron-director.git#~0.3.0",
     "x-websocket": "~0.2.0",
-    "google-chart": "~0.0.1"
+    "google-chart": "~0.0.1",
+    "voice-elements": "~0.1.3"
   },
   "devDependencies": {},
   "resolutions": {
