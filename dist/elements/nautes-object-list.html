@@ -6,6 +6,7 @@
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-object-row.html">
 <link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
+<link rel="import" href="../elements/nautes-stats.html">
 
 <polymer-element name="nautes-object-list" attributes="bgColor toast">
   <template>
@@ -47,9 +48,12 @@
       withCredentials="{{credentialrequired}}">
     </core-ajax>
 
+
+    <nautes-stats graphs="{{graphs}}"></nautes-stats>
+
     <div layout vertical center>
       <template repeat="{{obj in objects}}">
-        <nautes-object-row bgColor="{{bgColor}}" object="{{obj}}">
+        <nautes-object-row bgColor="{{bgColor}}" object="{{obj}}" graph="{{graphs[obj.uuid]}}">
           <img src="{{getImg(obj)}}" width="50" height="50">
           <h2>{{obj.name}}</h2>
           <p>{{obj.description}}</p>
