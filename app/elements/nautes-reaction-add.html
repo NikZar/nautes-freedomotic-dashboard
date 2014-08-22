@@ -1,0 +1,188 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-drag-drop/core-drag-drop.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+
+<link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/nautes-trigger.html">
+<link rel="import" href="../elements/nautes-command.html">
+
+<polymer-element name="nautes-reaction-add" attributes="bgColor newReaction">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .box {
+        display: inline-block;
+        width: 300px;
+        height: 100px;
+        margin: 16px;
+        overflow-y: scroll;
+      }
+
+      .dropped {
+        position: absolute;
+        border: 1px solid black;
+        width: 5px;
+        height: 5px;
+      }
+
+      #reaction{
+        background-color: rgba(255,255,255,0.3);
+      }
+
+      .trigger {
+        background-color: #fdf;
+      }
+
+      .condition {
+        background-color: #cfc;
+      }
+
+      .command {
+        background-color: #f88;
+      }
+
+      .triggers, .conditions, .commands {
+        font-size: 0.8em;
+        font-family: Tahoma;
+        color: #444;
+        padding: 10px;
+      }
+
+    </style>
+
+    <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <fd-rest-element-service fdtype="commands/user" fditems="{{commands}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+
+    <core-drag-drop on-drag-start="{{dragStartHandler}}"></core-drag-drop>
+
+    <div vertical layout center>
+
+      <div layout horizontal center>
+        <div class="box triggers" style="background-color: #fdf;" draggable="false">
+          <template repeat="{{trigger in triggers}}">
+            <nautes-trigger id="trigger" style="background-color: #fdf;"  trigger="{{trigger}}">{{trigger.name}}</nautes-trigger>
+          </template>
+        </div>
+
+        <div class="box conditions" id="conditions" style="background-color: #cfc;" draggable="false">
+          CONDITION LIST
+        </div>
+
+        <div class="box commands" style="background-color: #f88;" draggable="false">
+          <template repeat="{{command in commands}}">
+            <nautes-command id="command" style="background-color:  #f88;"  command="{{command}}">{{command.name}}</nautes-command>
+          </template>
+        </div>
+      </div>
+
+      <div hidden>
+        <div id="triggerIcon" layout vertical center center-justified>
+          <core-icon class="icon" icon="image:flash-on"></core-icon>
+        </div>
+        <div id="conditionIcon">
+          <core-icon class="icon" icon="send"></core-icon>
+        </div>
+        <div id="commandIcon">
+          <core-icon class="icon" icon="send"></core-icon>
+        </div>
+      </div>
+
+      <br><br>
+
+      <div id="reaction" vertical layout center>
+        <div>NEW REACTION</div>
+        <div layout horizontal center>
+
+          <div id="dropTrigger" class="box trigger" style="border: 3px solid silver; position: relative; width: 300px; height: 300px;" draggable="false">
+            {{newReaction.trigger.name}}
+          </div>
+
+          <div id="dropConditions" class="box condition" style="border: 3px solid silver; position: relative; width: 300px; height: 300px;" draggable="false">
+
+          </div>
+
+          <div id="dropCommands" class="box command" style="border: 3px solid silver; position: relative; width: 300px; height: 300px;" draggable="false">
+            <template repeat="{{commandNR in newReaction.commands}}">
+              <div>{{commandNR.name}}</div>
+            </template>
+          </div>
+
+        <div>
+      </div>
+
+    </div>
+
+  </template>
+  <script>
+
+    Polymer("nautes-reaction-add",{
+
+      newReaction: null,
+
+      created: function(){
+        this.newReaction = {
+          trigger: {}, 
+          conditions: [],
+          commands: []
+        };
+      },
+
+      dragStartHandler: function(e){
+
+        //function executed when dropping element
+        var self = this;
+        var drop = function(dragInfo) {
+          var color = dragInfo.avatar.style.borderColor;
+          var target = dragInfo.event.target;
+          var dropTarget = dragInfo.event.relatedTarget;
+
+          if (dropTarget.id === 'dropTrigger' && target.id==="trigger") {
+            console.log(target.trigger);
+            self.newReaction.trigger = target.trigger;
+          } else if (color && dropTarget.id === 'dropConditions') {
+            var f = dragInfo.framed;
+            var d = document.createElement('div');
+            d.className = 'dropped';
+            d.style.left = f.x - 4 + 'px';
+            d.style.top = f.y - 4 + 'px';
+            d.style.backgroundColor = color;
+            dropTarget.appendChild(d);
+            dropTarget.style.backgroundColor = color;
+          } else if (dropTarget.id === 'dropCommands' && target.id==="command") {
+            self.newReaction.commands.push(target.command);
+          }
+        }
+        
+        //set avatar icon
+        var dragInfo = e.detail;
+        var color = dragInfo.event.target.style.backgroundColor;
+        dragInfo.avatar.style.cssText = 'border: 3px solid ' + color + '; width: 32px; height: 32px; border-radius: 32px; background-color: whitesmoke';
+        var icon = null;
+        var id = dragInfo.event.target.id;
+        if(id === "trigger"){
+          icon = this.$.triggerIcon;
+        } else if(id === "conditions"){
+          icon = this.$.conditionIcon;
+        } else if(id === "command"){
+          icon = this.$.commandIcon;
+        }
+        while (dragInfo.avatar.firstChild) {
+            dragInfo.avatar.removeChild(dragInfo.avatar.firstChild);
+        }
+        dragInfo.avatar.appendChild(icon);
+
+        dragInfo.drag = function() {};
+        dragInfo.drop = drop;
+      }
+
+    });
+  </script>
+</polymer-element>

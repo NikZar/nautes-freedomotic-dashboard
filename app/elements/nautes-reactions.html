@@ -71,12 +71,26 @@
         </nautes-reaction-list>
       </template>
 
+      <template if="{{showAddReaction}}">
+        <nautes-reaction-add bgColor="{{bgColor}}">
+        </nautes-reaction-add>
+      </template>
+
     </div>
 
   </template>
   <script>
     Polymer("nautes-reactions",{
-      showList: true
+      
+      showList: true,
+
+      showAddReaction: false,
+
+      addReaction: function(){
+        this.showList = !this.showList;
+        this.showAddReaction = true;
+      }
+
     });
   </script>
 </polymer-element>
