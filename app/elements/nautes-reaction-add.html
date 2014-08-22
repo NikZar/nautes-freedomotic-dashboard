@@ -86,10 +86,25 @@
 
     </style>
 
-    <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}">
+    <fd-rest-element-service 
+      fdtype="triggers" 
+      fditems="{{triggers}}" 
+      toast="{{toast}}">
     </fd-rest-element-service>
 
-    <fd-rest-element-service fdtype="commands/user" fditems="{{commands}}" toast="{{toast}}">
+    <fd-rest-element-service 
+      fdtype="commands/user" 
+      fditems="{{commands}}" 
+      toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <fd-rest-element-service id="sendReactionService" 
+      auto="false"
+      method="POST" 
+      fdtype="reactions" 
+      fditems="{{commands}}" 
+      toast="{{toast}}"
+      params="{{newReaction}}">
     </fd-rest-element-service>
 
 
@@ -182,7 +197,7 @@
         </div>
         <div>
           <template if="{{canSendReaction}}">
-            <core-icon-button class="reaction" icon="add-box" on-tap="{{addReaction}}">
+            <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
              ADD REACTION
             </core-icon-button>
           </template>
@@ -214,6 +229,10 @@
         } else {
           this.canSendReaction = false;
         }
+      },
+
+      sendReaction: function(){
+        this.$.sendReactionService.go();
       },
 
       dragStartHandler: function(e){
