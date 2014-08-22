@@ -1,0 +1,82 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+
+<link rel="import" href="../elements/nautes-reaction-list.html">
+
+<polymer-element name="nautes-reactions" attributes="bgColor toast">
+  <template>
+    <style>
+      
+      :host {
+        display: block;
+        width: 100%;
+      }
+      
+      .header{
+        background-color: rgba(255,100,100,0.05);
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: #444;
+        width: 100%;
+      }
+
+      core-icon-button{
+        border: 1px solid rgba(64,64,64,0.3);
+      }
+
+      .reaction {
+        margin: 5px;
+        background-color: #fcc;
+      }
+
+      .trigger {
+        margin: 5px;
+        background-color: #fdf;
+      }
+
+      .condition {
+        margin: 5px;
+        background-color: #cfc;
+      }
+
+      .command {
+        margin: 5px;
+        background-color: #f88;
+      }
+
+    </style>
+
+    <div layout vertical center>
+
+      <div class="header" layout vertical center>
+        <div layout horizontal center>
+          <core-icon-button class="reaction" icon="add-box" on-tap="{{addReaction}}">
+            REACTION
+          </core-icon-button>
+          <core-icon-button class="trigger" icon="add-box" on-tap="{{addTrigger}}">
+            TRIGGER
+          </core-icon-button>
+          <core-icon-button class="condition" icon="add-box" on-tap="{{addCondition}}">
+            CONDITION
+          </core-icon-button>
+          <core-icon-button class="command" icon="add-box" on-tap="{{addCommand}}">
+            COMMAND
+          </core-icon-button>
+        </div>
+      </div>
+    
+      <template if="{{showList}}">
+        <nautes-reaction-list bgColor="{{bgColor}}" toast="{{toast}}">
+        </nautes-reaction-list>
+      </template>
+
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-reactions",{
+      showList: true
+    });
+  </script>
+</polymer-element>
