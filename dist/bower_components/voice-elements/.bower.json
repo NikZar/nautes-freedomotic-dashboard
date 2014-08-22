@@ -35,5 +35,6 @@
   },
   "_source": "git://github.com/zenorocha/voice-elements.git",
   "_target": "~0.1.3",
-  "_originalSource": "voice-elements"
+  "_originalSource": "voice-elements",
+  "_direct": true
 }

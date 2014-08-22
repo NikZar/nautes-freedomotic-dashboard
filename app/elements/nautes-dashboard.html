@@ -96,10 +96,10 @@
         </nautes-box>
         
         <nautes-box 
-          target="{{boxesObjects.automations.title}}"  
-          box="{{boxesObjects.automations}}" 
+          target="{{boxesObjects.reactions.title}}"  
+          box="{{boxesObjects.reactions}}" 
           on-tap="{{boxTap}}" 
-          hero hero-id="automations"
+          hero hero-id="reactions"
           class="smallrow">
         </nautes-box>
 
@@ -139,7 +139,7 @@
         </div>
         <div class="column" flex vertical layout>
           <nautes-box target="{{boxesObjects.objects.title}}"  box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" flex hero hero-id="objects"></nautes-box>
-          <nautes-box target="{{boxesObjects.automations.title}}"  box="{{boxesObjects.automations}}" on-tap="{{boxTap}}" flex two hero hero-id="automations"></nautes-box>
+          <nautes-box target="{{boxesObjects.reactions.title}}"  box="{{boxesObjects.reactions}}" on-tap="{{boxTap}}" flex two hero hero-id="reactions"></nautes-box>
           <nautes-box target="{{boxesObjects.settings.title}}"  box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" flex hero hero-id="settings"></nautes-box>
         </div>
         <div class="column" flex vertical layout>
@@ -154,7 +154,7 @@
   <script>
     Polymer("nautes-dashboard",{
       boxTap: function(event, detail, sender){
-        //console.log("Transition to: "+ sender.getAttribute("target"));
+        
         this.selected = sender.getAttribute("target").toLowerCase();
         this.selectedBox = this.boxesObjects[this.selected];
 

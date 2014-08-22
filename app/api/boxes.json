@@ -6,8 +6,8 @@
 		"color": "#eeffee"
 	},
 	{
-		"title": "Automations",
-		"description": "This section lets you define Automations on the environment objects",
+		"title": "Reactions",
+		"description": "This section lets you define Reactions on different triggers",
 		"img": "send",
 		"color": "#ffeeee"
 	},

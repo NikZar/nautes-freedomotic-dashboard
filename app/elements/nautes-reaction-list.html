@@ -1,0 +1,30 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/nautes-reaction-row.html">
+
+<polymer-element name="nautes-reaction-list" attributes="toast bgColor">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+        width: 100%;
+      }
+    </style>
+
+    <fd-rest-element-service fdtype="reactions" fditems="{{reactions}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div layout vertical center>
+      <template repeat="{{reaction in reactions}}">
+        <nautes-reaction-row bgColor="{{bgColor}}" reaction="{{reaction}}">
+        </nautes-reaction-row>
+      </template>
+    </div>    
+  </template>
+  <script>
+    Polymer("nautes-reaction-list",{
+
+    });
+  </script>
+</polymer-element>
