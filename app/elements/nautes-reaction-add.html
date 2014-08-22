@@ -2,24 +2,31 @@
 <link rel="import" href="../bower_components/core-drag-drop/core-drag-drop.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-trigger.html">
+<link rel="import" href="../elements/nautes-condition.html">
 <link rel="import" href="../elements/nautes-command.html">
 
 <polymer-element name="nautes-reaction-add" attributes="bgColor newReaction">
   <template>
     <style>
+
       :host {
         display: block;
+        font-size: 1em;
+        font-family: Verdana;
+        color: #444;
       }
 
       .box {
-        display: inline-block;
-        width: 300px;
-        height: 100px;
-        margin: 16px;
+        width: 320px;
+        height: 200px;
+        margin: 10px;
         overflow-y: scroll;
+        border-radius: 10px;
+        padding: 10px;
       }
 
       .dropped {
@@ -30,26 +37,51 @@
       }
 
       #reaction{
-        background-color: rgba(255,255,255,0.3);
+        background-color: rgba(0,0,0,0.2);
+        border-radius: 10px;
+        padding: 10px;
       }
 
-      .trigger {
+      .reaction{
+        margin: 5px;
+        background-color: #fcc;
+      }
+
+      .triggers {
         background-color: #fdf;
       }
 
-      .condition {
+      .conditions {
         background-color: #cfc;
       }
 
-      .command {
+      .commands {
         background-color: #f88;
       }
 
-      .triggers, .conditions, .commands {
-        font-size: 0.8em;
-        font-family: Tahoma;
-        color: #444;
-        padding: 10px;
+      .drop{
+        width: 300px;
+        background-color: rgba(0,0,0,0.3);
+        border-radius: 10px;
+      }
+
+      .dropicon{
+        height: 50px;
+        width: 50px;
+      }
+
+      .list-title{
+        text-align: center;
+        font-weight: bold;
+        padding: 4px;
+      }
+
+      .new-reaction{
+        color: #fff;
+      }
+
+      core-icon-button{
+        border: 1px solid rgba(64,64,64,0.3);
       }
 
     </style>
@@ -66,20 +98,38 @@
     <div vertical layout center>
 
       <div layout horizontal center>
-        <div class="box triggers" style="background-color: #fdf;" draggable="false">
-          <template repeat="{{trigger in triggers}}">
-            <nautes-trigger id="trigger" style="background-color: #fdf;"  trigger="{{trigger}}">{{trigger.name}}</nautes-trigger>
-          </template>
+
+        <div class="box triggers" draggable="false">
+          <div class="list-title" draggable="false">
+            TRIGGER LIST
+          </div>
+          <div style="background-color: #fdf;" draggable="false" layout vertical center>
+            <template repeat="{{trigger in triggers}}">
+              <nautes-trigger id="trigger" style="background-color: #fdf;"  trigger="{{trigger}}">{{trigger.name}}</nautes-trigger>
+            </template>
+          </div>
         </div>
 
-        <div class="box conditions" id="conditions" style="background-color: #cfc;" draggable="false">
-          CONDITION LIST
+        <div class="box conditions">
+          <div class="list-title" draggable="false">
+            CONDITION LIST
+          </div>
+          <div style="background-color: #cfc;" draggable="false" layout vertical center>
+            <template repeat="{{condition in commands}}">
+              <nautes-condition id="condition" style="background-color: #cfc;"  condition="{{condition}}">{{condition.name}}</nautes-condition>
+            </template>
+          </div>
         </div>
 
-        <div class="box commands" style="background-color: #f88;" draggable="false">
-          <template repeat="{{command in commands}}">
-            <nautes-command id="command" style="background-color:  #f88;"  command="{{command}}">{{command.name}}</nautes-command>
-          </template>
+        <div class="box commands">
+          <div class="list-title" draggable="false">
+            COMMAND LIST
+          </div>
+          <div style="background-color: #f88;" draggable="false" layout vertical center>
+            <template repeat="{{command in commands}}">
+              <nautes-command id="command" style="background-color:  #f88;"  command="{{command}}">{{command.name}}</nautes-command>
+            </template>
+          </div>
         </div>
       </div>
 
@@ -98,24 +148,45 @@
       <br><br>
 
       <div id="reaction" vertical layout center>
-        <div>NEW REACTION</div>
+        <div class="new-reaction">NEW REACTION</div>
         <div layout horizontal center>
 
-          <div id="dropTrigger" class="box trigger" style="border: 3px solid silver; position: relative; width: 300px; height: 300px;" draggable="false">
-            {{newReaction.trigger.name}}
+          <div class="box triggers" draggable="false" layout vertical center>
+            <div>{{newReaction.trigger.name}}</div>
+            <div id="dropTrigger" class="drop" flex layout vertical center center-justified>
+              <div id="dropTrigger">DRAG ONE TRIGGER HERE</div>
+              <core-icon id="dropTrigger" class="dropicon" icon="add"></core-icon>
+            </div>
           </div>
 
-          <div id="dropConditions" class="box condition" style="border: 3px solid silver; position: relative; width: 300px; height: 300px;" draggable="false">
-
+          <div class="box conditions" draggable="false" layout vertical center>
+            <template repeat="{{conditionNR in newReaction.conditions}}">
+              <div>{{conditionNR.name}}</div>
+            </template>
+            <div id="dropConditions" class="drop" flex layout vertical center center-justified>
+              <div id="dropConditions">DRAG CONDITIONS HERE</div>
+              <core-icon id="dropConditions" class="dropicon" icon="add"></core-icon>
+            </div>
           </div>
 
-          <div id="dropCommands" class="box command" style="border: 3px solid silver; position: relative; width: 300px; height: 300px;" draggable="false">
+          <div class="box commands" draggable="false" layout vertical center>
             <template repeat="{{commandNR in newReaction.commands}}">
               <div>{{commandNR.name}}</div>
             </template>
+            <div id="dropCommands" class="drop" flex layout vertical center center-justified>
+              <div id="dropCommands">DRAG COMMANDS HERE</div>
+              <core-icon id="dropCommands" class="dropicon" icon="add"></core-icon>
+            </div>
           </div>
 
+        </div>
         <div>
+          <template if="{{canSendReaction}}">
+            <core-icon-button class="reaction" icon="add-box" on-tap="{{addReaction}}">
+             ADD REACTION
+            </core-icon-button>
+          </template>
+        </div>
       </div>
 
     </div>
@@ -125,6 +196,8 @@
 
     Polymer("nautes-reaction-add",{
 
+      canSendReaction: false,
+
       newReaction: null,
 
       created: function(){
@@ -133,6 +206,14 @@
           conditions: [],
           commands: []
         };
+      },
+
+      checkReaction: function(){
+        if(this.newReaction && this.newReaction.trigger && (this.newReaction.commands.length > 0)){
+          this.canSendReaction = true;
+        } else {
+          this.canSendReaction = false;
+        }
       },
 
       dragStartHandler: function(e){
@@ -145,20 +226,15 @@
           var dropTarget = dragInfo.event.relatedTarget;
 
           if (dropTarget.id === 'dropTrigger' && target.id==="trigger") {
-            console.log(target.trigger);
             self.newReaction.trigger = target.trigger;
-          } else if (color && dropTarget.id === 'dropConditions') {
-            var f = dragInfo.framed;
-            var d = document.createElement('div');
-            d.className = 'dropped';
-            d.style.left = f.x - 4 + 'px';
-            d.style.top = f.y - 4 + 'px';
-            d.style.backgroundColor = color;
-            dropTarget.appendChild(d);
-            dropTarget.style.backgroundColor = color;
+          } else if (dropTarget.id === 'dropConditions' && target.id==="condition") {
+            self.newReaction.conditions.push(target.condition);
           } else if (dropTarget.id === 'dropCommands' && target.id==="command") {
             self.newReaction.commands.push(target.command);
           }
+
+          self.checkReaction();
+
         }
         
         //set avatar icon
@@ -169,7 +245,7 @@
         var id = dragInfo.event.target.id;
         if(id === "trigger"){
           icon = this.$.triggerIcon;
-        } else if(id === "conditions"){
+        } else if(id === "condition"){
           icon = this.$.conditionIcon;
         } else if(id === "command"){
           icon = this.$.commandIcon;
@@ -177,7 +253,9 @@
         while (dragInfo.avatar.firstChild) {
             dragInfo.avatar.removeChild(dragInfo.avatar.firstChild);
         }
-        dragInfo.avatar.appendChild(icon);
+        if(icon){
+          dragInfo.avatar.appendChild(icon);
+        }
 
         dragInfo.drag = function() {};
         dragInfo.drop = drop;
