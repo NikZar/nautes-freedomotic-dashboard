@@ -1,0 +1,56 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+
+<polymer-element name="nautes-radio-select" attributes="selected image options">
+  <template>
+    <style>
+
+      :host {
+        display: block;
+      }
+
+      .icon{
+        width: 59px;
+        height: 59px;
+        color: black;
+      }
+
+      .list{
+        overflow-y: scroll;
+        width: 250px;
+        height: 80px;
+        padding: 10px;
+      }
+
+    </style>
+    <div layout horizontal center>
+
+      <core-icon id="icon" alt="{{channel}}" class="icon" 
+        icon="{{image.icon}}" 
+        src="{{image.src}}">
+      </core-icon>
+
+      <div class="list" layout vertical>
+        <paper-radio-group selected="{{selected}}">
+          <template repeat="{{option in options}}">
+            <paper-radio-button name="{{option.name}}" label="{{option.name}}">
+            </paper-radio-button>
+          </template>
+        </paper-radio-group>
+      </div>
+
+    </div>
+  </template>
+  <script>
+    Polymer("nautes-radio-select",{
+      optionsChanged: function(){
+        if(this.options){
+          console.log("options", this.options);
+        }
+      }
+    });
+  </script>
+</polymer-element>

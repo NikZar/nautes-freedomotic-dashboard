@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl method auto params">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl method auto params body">
   <template>
     <style>
     :host {
@@ -33,7 +33,9 @@
       response="{{fditems}}"
       handleAs="json"
       method="{{method}}"
-      body="{{params}}">
+      contentType="application/json"
+      params="{{params}}"
+      body="{{body}}">
     </core-ajax>
 
   </template>
