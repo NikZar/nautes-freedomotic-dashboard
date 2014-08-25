@@ -96,6 +96,9 @@
         border: 2px solid #444;
       }
 
+      ::-webkit-scrollbar { 
+        display: none; 
+      }
     </style>
 
     <fd-rest-element-service 
@@ -208,15 +211,17 @@
           </div>
 
           <div class="box commands" draggable="false" layout vertical center>
-            <template repeat="{{commandNR in newReaction.commands}}">
+            <template repeat="{{commandNR, i in newReaction.commands}}">
               <div relative>
                 <core-icon class="icon-remove" icon="clear">
                 </core-icon>
                 <nautes-radio-select 
-                  image="{{channelImages[commandNR.receiver]}}" 
                   selected="0"
+                  image="{{channelImages[commandNR.receiver]}}" 
                   selectedOption="{{commandNR}}" 
-                  options="{{sortedCommands[commandNR.receiver]}}">
+                  options="{{sortedCommands[commandNR.receiver]}}"
+                  arrayIndex="{{i}}" 
+                  arrayToSet="{{utilityArray}}">
                 </nautes-radio-select>
               </div>
 
@@ -244,14 +249,6 @@
 
     Polymer("nautes-reaction-add",{
 
-      observe: {
-        "newReaction.trigger.uuid":"log"
-      },
-
-      log: function(){
-        console.log(this.newReaction.trigger.uuid);
-      },
-
       sortedTriggersChanged: function() {
         if(this.sortedTriggers){
           this.triggerChannels = Object.keys(this.sortedTriggers);
@@ -278,6 +275,8 @@
         };
         this.triggerChannels = [];
         this.sortedTriggers = {};
+
+        this.utilityArray = [];
       },
 
       checkReaction: function(){
@@ -289,16 +288,26 @@
       },
 
       sendReaction: function(){
-        var body = {
-          "conditions": [],
-          "triggerUuid": "39c8c841-299f-4d4d-bdc1-5ecd7d2ef50a",
-          "commands": [
-            {
-              uuid: "13031c51-8fee-4e63-ae00-934eca0568de"
-            }
-          ]
+        var getUUID = function(o){
+          return {
+            name: o.name,
+            uuid: o.uuid 
+          };
+        }
+
+        var commands = this.utilityArray.filter(
+          function(o){
+            return o;
+          }
+        );
+
+        var reaction = {
+          conditions: this.newReaction.conditions.map(getUUID),
+          triggerUuid: this.newReaction.trigger.uuid,
+          commands: commands.map(getUUID)
         };
-        body = JSON.stringify(body);
+
+        body = JSON.stringify(reaction);
         this.$.sendReactionService.body = body;
         this.$.sendReactionService.go();
       },
