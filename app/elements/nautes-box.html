@@ -8,6 +8,8 @@
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
+<link rel="import" href="../elements/nautes-open-sans.html">
+
 <polymer-element name="nautes-box" attributes="box tooltip">
   <template>
     <style>
@@ -19,6 +21,7 @@
       min-height: 200px !IMPORTANT;
       position: relative;
       z-index: 1;
+      font-family: Open Sans;
     }
 
     core-icon{
@@ -37,7 +40,6 @@
 
     #my-button {
         margin: 10px;
-        font-family: Verdana;
         background: {{box.color}};
         color: #444;
         min-width: 150px;

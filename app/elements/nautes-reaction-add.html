@@ -193,7 +193,8 @@
                 </core-icon>
                 <nautes-radio-select 
                   image="{{channelImages[newReaction.trigger.channel]}}" 
-                  selected="{{newReaction.trigger.name}}" 
+                  selected="0" 
+                  selectedOption="{{newReaction.trigger}}"
                   options="{{sortedTriggers[newReaction.trigger.channel]}}">
                 </nautes-radio-select>
               </div>
@@ -213,7 +214,8 @@
                 </core-icon>
                 <nautes-radio-select 
                   image="{{channelImages[commandNR.receiver]}}" 
-                  selected="{{commandNR.name}}" 
+                  selected="0"
+                  selectedOption="{{commandNR}}" 
                   options="{{sortedCommands[commandNR.receiver]}}">
                 </nautes-radio-select>
               </div>
@@ -241,6 +243,14 @@
   <script>
 
     Polymer("nautes-reaction-add",{
+
+      observe: {
+        "newReaction.trigger.uuid":"log"
+      },
+
+      log: function(){
+        console.log(this.newReaction.trigger.uuid);
+      },
 
       sortedTriggersChanged: function() {
         if(this.sortedTriggers){
@@ -302,14 +312,11 @@
           var dropTarget = dragInfo.event.relatedTarget;
 
           if (dropTarget.id === 'dropTrigger' && target.id==="trigger") {
-            self.newReaction.trigger.channel = target.channel;
-            self.newReaction.trigger.name = self.sortedTriggers[target.channel][0].name;
+            self.newReaction.trigger = self.sortedTriggers[target.channel][0];
             self.triggerSet = true;
-          } else if (dropTarget.id === 'dropCommands' && target.id==="command") {
-            var command = {
-              receiver: target.channel,
-              name: self.sortedCommands[target.channel][0].name
-            };
+          } 
+          else if (dropTarget.id === 'dropCommands' && target.id==="command") {
+            var command = self.sortedCommands[target.channel][0];
             self.newReaction.commands.push(command);
           }
           console.log(self.newReaction);
