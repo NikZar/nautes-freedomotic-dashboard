@@ -6268,6 +6268,7 @@ license that can be found in the LICENSE file.
 
 
 
+
 <polymer-element name="nautes-dashboard-page" attributes="selected selectedBox" assetpath="../app/elements/">
   <template>
     <style>
@@ -6275,6 +6276,7 @@ license that can be found in the LICENSE file.
         display: block;
         color: #fff;
         z-index: 4;
+        font-family: Open Sans;
       }
 
       #header{
@@ -11174,6 +11176,8 @@ Example:
 
 
 
+
+
 <polymer-element name="nautes-settings" attributes="" assetpath="../app/elements/">
   <template>
     <style>
@@ -11183,7 +11187,7 @@ Example:
       div{
         line-height: 40px;
         color: #444;
-        font-family: Verdana;
+        font-family: Open Sans;
       }
       .label{
         display: inline-block;
@@ -11203,7 +11207,7 @@ Example:
         background-color: #9C9;
       }
       paper-input{
-        width: 250px;
+        width: 220px;
       }
     </style>
 
@@ -11269,7 +11273,7 @@ Example:
         
         this.$.LSssl.value = this.newSSL;
 
-        window.setTimeout(function(){location.reload();}, 500);
+        window.setTimeout(function(){location.reload();}, 2000);
       }
 
     });
@@ -11432,6 +11436,7 @@ Example:
 
 
 
+
 <polymer-element name="nautes-reaction-row" attributes="bgColor reaction" assetpath="../app/elements/">
   <template>
     <style>
@@ -11443,12 +11448,12 @@ Example:
         width: 100%;
         font-size: 1.2rem;
         font-weight: 300;
+        font-family: Open Sans;
       }
 
       .reaction-row {
         margin-bottom: 10px;
         padding: 40px;
-        font-family: Tahoma;
         color: #444;
         text-transform: lowercase;
       }
@@ -11551,6 +11556,7 @@ Example:
 
 
 
+
 <polymer-element name="nautes-reactions" attributes="bgColor toast" assetpath="../app/elements/">
   <template>
     <style>
@@ -11558,6 +11564,7 @@ Example:
       :host {
         display: block;
         width: 100%;
+        font-family: Open Sans;
       }
       
       .header{
@@ -11601,6 +11608,7 @@ Example:
           <core-icon-button class="reaction" icon="add-box" on-tap="{{addReaction}}">
             REACTION
           </core-icon-button>
+          <!--
           <core-icon-button class="trigger" icon="add-box" on-tap="{{addTrigger}}">
             TRIGGER
           </core-icon-button>
@@ -11610,6 +11618,7 @@ Example:
           <core-icon-button class="command" icon="add-box" on-tap="{{addCommand}}">
             COMMAND
           </core-icon-button>
+        -->
         </div>
       </div>
     

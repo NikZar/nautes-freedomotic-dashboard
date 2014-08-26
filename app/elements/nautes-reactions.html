@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
 <link rel="import" href="../elements/nautes-reaction-list.html">
+<link rel="import" href="../elements/nautes-open-sans.html">
 
 <polymer-element name="nautes-reactions" attributes="bgColor toast">
   <template>
@@ -11,6 +12,7 @@
       :host {
         display: block;
         width: 100%;
+        font-family: Open Sans;
       }
       
       .header{
@@ -54,6 +56,7 @@
           <core-icon-button class="reaction" icon="add-box" on-tap="{{addReaction}}">
             REACTION
           </core-icon-button>
+          <!--
           <core-icon-button class="trigger" icon="add-box" on-tap="{{addTrigger}}">
             TRIGGER
           </core-icon-button>
@@ -63,6 +66,7 @@
           <core-icon-button class="command" icon="add-box" on-tap="{{addCommand}}">
             COMMAND
           </core-icon-button>
+        -->
         </div>
       </div>
     

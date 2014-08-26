@@ -4,6 +4,8 @@
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 
+<link rel="import" href="../elements/nautes-open-sans.html">
+
 <polymer-element name="nautes-settings" attributes="">
   <template>
     <style>
@@ -13,7 +15,7 @@
       div{
         line-height: 40px;
         color: #444;
-        font-family: Verdana;
+        font-family: Open Sans;
       }
       .label{
         display: inline-block;
@@ -33,7 +35,7 @@
         background-color: #9C9;
       }
       paper-input{
-        width: 250px;
+        width: 220px;
       }
     </style>
 
@@ -105,7 +107,7 @@
         
         this.$.LSssl.value = this.newSSL;
 
-        window.setTimeout(function(){location.reload();}, 500);
+        window.setTimeout(function(){location.reload();}, 2000);
       }
 
     });
