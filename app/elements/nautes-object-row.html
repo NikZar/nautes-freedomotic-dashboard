@@ -4,6 +4,8 @@
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
+<link rel="import" href="../elements/nautes-open-sans.html">
+
 <polymer-element name="nautes-object-row" attributes="bgColor object graph">
   <template>
     <style>
@@ -14,10 +16,10 @@
         width: 100%;
         font-size: 1.2rem;
         font-weight: 300;
+        font-family: Open Sans;
       }
       .object-row {
         padding: 40px;
-        font-family: Tahoma;
         color: #444;
       }
       
@@ -51,9 +53,9 @@
     </style>
 
     <div class="object-row" layout vertical>
-      <div  layout horizontal center start>
+      <div layout horizontal center start>
         <content select="img"></content>
-        <div layout vertical center-justified>
+        <div flex>
           <content select="h2"></content>
           <content></content>
           <template if="{{ graph }}">
