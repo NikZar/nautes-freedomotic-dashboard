@@ -34,22 +34,39 @@
 
           for (var i=0; i<tuples.length; i++) {
             var tuple = tuples[i];
-            var graph = null;
-            if(!(tuple.uuid in this.graphs)){
-              this.graphs[tuple.uuid] = {};
-              this.graphs[tuple.uuid].title = tuple.name;
-              this.graphs[tuple.uuid].cols =  [{label:"Date", type:"date"}, {label:"On/Off", type:"number"}];
-              this.graphs[tuple.uuid].rows =  [];
+            if(tuple.behavior === "powered"){
+              var graph = null;
+              if(!(tuple.uuid in this.graphs)){
+                this.graphs[tuple.uuid] = {};
+                this.graphs[tuple.uuid].title = tuple.name;
+                this.graphs[tuple.uuid].behavior = tuple.behavior;
+                this.graphs[tuple.uuid].cols =  [{label:"Date", type:"string"}, {label: tuple.behavior, type:"number"}];
+                this.graphs[tuple.uuid].rows =  [];
+                this.graphs[tuple.uuid].options =  {
+                  backgroundColor: "transparent",
+                  hAxis: { 
+                    slantedText: true
+                  },
+                  vAxis: { 
+                    minValue:0,
+                    maxValue:1,
+                    gridlines:{count:2},
+                    ticks: [{v:1.00, f:'ON'}, {v:0.00, f:'OFF'}] 
+                  }
+                };
+                this.graphs[tuple.uuid].type = "stepped-area";
+              }
+              graph = this.graphs[tuple.uuid];
+
+              var strdate = tuple.datetime.replace("CEST","");
+              var milliseconds = Date.parse(strdate);
+              var date = new Date(milliseconds);
+
+              var value = (JSON.parse(tuple.behaviorValue) ? 1 : 0);
+
+              graph.rows.push([strdate, value]);
+
             }
-            graph = this.graphs[tuple.uuid];
-
-            var strdate = tuple.datetime.replace("CEST","");
-            var milliseconds = Date.parse(strdate);
-            var date = new Date(milliseconds);
-
-            var value = (JSON.parse(tuple.behaviorValue) ? 1 : 0);
-
-            graph.rows.push([date, value]);
 
           }
 

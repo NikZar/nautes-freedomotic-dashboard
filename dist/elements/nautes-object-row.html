@@ -68,8 +68,8 @@
           <google-chart id="chart"
             height='200px'
             width='{{fullWidth()}}px'
-            type="area"
-            options = '{"backgroundColor": "transparent"}'
+            type="{{graph.type}}"
+            options = "{{graph.options}}"
             cols="{{graph.cols}}"
             rows="{{graph.rows}}">
           </google-chart>
@@ -97,7 +97,7 @@
 
       fullWidth: function(){
         return window.innerWidth - 80;
-      }
+      },
 
     });
   </script>

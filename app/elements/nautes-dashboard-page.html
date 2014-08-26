@@ -2,6 +2,8 @@
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 
+<link rel="import" href="../elements/nautes-dashboard-service.html">
+
 <polymer-element name="nautes-dashboard-page" attributes="selected selectedBox">
   <template>
     <style>
@@ -33,15 +35,30 @@
   </template>
   <script>
     Polymer("nautes-dashboard-page",{
+
+      observe: {
+        'selected':'updatePage',
+        'boxesObjects':'updatePage'
+      },
+
+      updatePage: function(){
+        if(this.selected && this.boxesObjects){
+          this.selectedBox = this.boxesObjects[this.selected];
+        }
+      },
+
       back: function() {
         this.fire('page-back');
       },
+
       selectedBoxChanged: function(){
         if(this.selectedBox){
           this.style.backgroundColor = this.selectedBox.color;
           this.style.minHeight = window.innerHeight + "px";
         }
       }
+
+
     });
   </script>
 </polymer-element>

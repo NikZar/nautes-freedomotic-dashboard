@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl method">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl method auto params body">
   <template>
     <style>
     :host {
@@ -27,12 +27,15 @@
     </core-localstorage>
     
     <core-ajax id="ajax" 
-      auto
+      auto="{{auto}}"
       on-core-error="{{errorHandler}}"
       on-core-response="{{elementsLoaded}}"
       response="{{fditems}}"
       handleAs="json"
-      method="{{method}}">
+      method="{{method}}"
+      contentType="application/json"
+      params="{{params}}"
+      body="{{body}}">
     </core-ajax>
 
   </template>
@@ -46,6 +49,8 @@
     fditems: [],
 
     method: "GET",
+
+    auto: true,
     
     created: function() {
       this.fditems = [];
@@ -65,6 +70,12 @@
         this.reloadUrl();
     },
 
+    autoChanged: function(){
+      if(this.auto){
+        this.$.ajax.auto =  this.auto;
+      }
+    },
+
     credentialrequiredChanged: function(){
       if(this.credentialrequired){
         this.$.ajax.withCredentials =  this.credentialrequired;
@@ -81,6 +92,10 @@
         this.toast.text="There was a problem loading "+this.fdtype+" data.";
         this.toast.show();
       }
+    },
+
+    go: function(){
+      this.$.ajax.go();
     }
     
   });
