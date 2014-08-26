@@ -268,15 +268,19 @@
       },
 
       created: function(){
+        this.clearNewReaction();
+        this.triggerChannels = [];
+        this.sortedTriggers = {};
+        this.utilityArray = [];
+      },
+
+      clearNewReaction: function(){
         this.newReaction = {
           trigger: {}, 
           conditions: [],
           commands: []
         };
-        this.triggerChannels = [];
-        this.sortedTriggers = {};
-
-        this.utilityArray = [];
+        this.clearTrigger();
       },
 
       checkReaction: function(){
@@ -310,6 +314,7 @@
         body = JSON.stringify(reaction);
         this.$.sendReactionService.body = body;
         this.$.sendReactionService.go();
+        this.clearNewReaction();
       },
 
       dropFactory: function(){

@@ -1,0 +1,86 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icons/device-icons.html">
+<link rel="import" href="../bower_components/core-icons/notification-icons.html">
+
+<polymer-element name="nautes-channel" attributes="channel channelImages">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        color: #444;
+      }
+      .icon{
+        width: 59px;
+        height: 59px;
+        color: black;
+      }
+    </style>
+    <core-icon id="icon" alt="{{channel}}" class="icon" icon="{{icon}}" src="{{localicon}}"></core-icon>
+  </template>
+  <script>
+    Polymer("nautes-channel",{
+
+      icon: "",
+
+      localicon: "",
+
+      channelImages: {
+        "app.event.sensor.calendar.event.schedule": {
+          icon: "device:access-time",
+          src: ""
+        },
+        "app.event.sensor.protocol.read": {
+          icon: "visibility",
+          src: ""
+        },
+        "app.event.sensor.protocol.read.harvester": {
+          icon: "keep",
+          src: ""
+        },
+        "app.event.sensor.object.behavior.change": {
+          icon: "notification:sync",
+          src: ""
+        },
+        "app.event.sensor.protocol.read.ipx800": {
+          icon: "device:wifi-tethering",
+          src: ""
+        },
+        "app.event.sensor.object.behavior.clicked": {
+          icon: "",
+          src: "images/pulse.svg"
+        },
+        //receivers
+        "app.events.sensors.behavior.request.objects": {
+          icon: "device:access-time",
+          src: ""
+        },
+        "app.actuators.protocol.harvester.in": {
+          icon: "keep",
+          src: ""
+        },
+        "app.actuators.plugins.controller.in": {
+          icon: "device:wifi-tethering",
+          src: ""
+        },
+        "app.actuators.automation.delayer.in": {
+          icon: "device:access-time",
+          src: ""
+        },
+        "command.jfrontend.user.callout": {
+          icon: "",
+          src: "images/pulse.svg"
+        }
+      },
+
+      channelChanged: function(){
+        if(this.channel){
+          this.icon = this.channelImages[this.channel].icon;
+          this.localicon = this.channelImages[this.channel].src;
+        } 
+      }
+
+    });
+  </script>
+</polymer-element>
