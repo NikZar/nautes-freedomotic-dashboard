@@ -11646,7 +11646,7 @@ Example:
       </template>
 
       <template if="{{showAddReaction}}">
-        <nautes-reaction-add bgcolor="{{bgColor}}">
+        <nautes-reaction-add smallquery="max-width: 640px" bgcolor="{{bgColor}}">
         </nautes-reaction-add>
       </template>
 
@@ -12457,6 +12457,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       elementsChanged: function(){
+        console.log("sorting..", this.elements.length);
         if(this.elements){
           var sortedElements = {};
           for (var i = 0; i < this.elements.length; i++) {
@@ -12550,7 +12551,7 @@ information about `paper-radio-button`.
 
 
 
-<polymer-element name="nautes-radio-select" attributes="selected image options selectedOption arrayIndex arrayToSet" assetpath="../app/elements/">
+<polymer-element name="nautes-radio-select" attributes="selected image options selectedOption arrayIndex arrayToSet objToSet" assetpath="../app/elements/">
   <template>
     <style>
 
@@ -12596,6 +12597,9 @@ information about `paper-radio-button`.
     Polymer("nautes-radio-select",{
       
       selectedModelChanged: function(){
+        if(this.selectedModel && this.objToSet){
+          this.objToSet = this.selectedModel.option;
+        }
         if (this.selectedModel && this.arrayToSet) {
           this.arrayToSet[this.arrayIndex] = this.selectedModel.option;
         }
@@ -12620,7 +12624,8 @@ information about `paper-radio-button`.
 
 
 
-<polymer-element name="nautes-reaction-add" attributes="bgColor" assetpath="../app/elements/">
+
+<polymer-element name="nautes-reaction-add" attributes="bgColor smallQuery" assetpath="../app/elements/">
   <template>
     <style>
 
@@ -12707,6 +12712,9 @@ information about `paper-radio-button`.
         display: none; 
       }
     </style>
+    
+    <core-media-query query="{{smallQuery}}" querymatches="{{smallScreen}}">
+    </core-media-query>
 
     <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}">
     </fd-rest-element-service>
@@ -12720,66 +12728,132 @@ information about `paper-radio-button`.
     <nautes-sorter property="receiver" elements="{{commands}}" sortedelements="{{sortedCommands}}">
     </nautes-sorter>
 
-    <fd-rest-element-service id="sendReactionService" auto="false" method="POST" fdtype="reactions" fditems="{{commands}}" toast="{{toast}}" body="{{body}}">
+    <fd-rest-element-service id="sendReactionService" auto="false" method="POST" fdtype="reactions" toast="{{toast}}" body="{{body}}">
     </fd-rest-element-service>
+
+    <div hidden>
+      <div id="triggerIcon" layout="" vertical="" center="" center-justified="">
+        <core-icon class="icon" icon="image:flash-on"></core-icon>
+      </div>
+      <div id="conditionIcon">
+        <core-icon class="icon" icon="send"></core-icon>
+      </div>
+      <div id="commandIcon">
+        <core-icon class="icon" icon="send"></core-icon>
+      </div>
+    </div>
 
     <div vertical="" layout="" center="">
 
-      <div layout="" horizontal="" center="">
-
-        <div class="box triggers">
-          <div class="list-title">
-            TRIGGER LIST
-          </div>
-          <div style="background-color: #fdf;">
-            <core-drag-drop on-drag-start="{{dragStartHandler}}">
-            </core-drag-drop>
-            <template repeat="{{channel in triggerChannels}}">
-              <nautes-channel id="trigger" style="background-color: #fdf;" channel="{{channel}}" draggable="true">
-              </nautes-channel>
-            </template>
-          </div>
-        </div>
-
-        <div class="box commands">
-          <div class="list-title">
-            COMMAND LIST
-          </div>
-          <div style="background-color: #f88;">
-            <core-drag-drop on-drag-start="{{dragStartHandler}}">
-            </core-drag-drop>
-            <template repeat="{{receiver in commandReceivers}}">
-              <nautes-channel id="command" style="background-color: #f88;" channel="{{receiver}}" draggable="true">
-              </nautes-channel>
-            </template>
-          </div>
-        </div>
-      </div>
-
-      <div hidden>
-        <div id="triggerIcon" layout="" vertical="" center="" center-justified="">
-          <core-icon class="icon" icon="image:flash-on"></core-icon>
-        </div>
-        <div id="conditionIcon">
-          <core-icon class="icon" icon="send"></core-icon>
-        </div>
-        <div id="commandIcon">
-          <core-icon class="icon" icon="send"></core-icon>
-        </div>
-      </div>
-
-      <br>
-
-      <div id="reaction" vertical="" layout="" center="">
-        <div class="new-reaction">NEW REACTION</div>
+      <!-- Horizontal UI -->
+      <template if="{{!smallScreen}}">
         <div layout="" horizontal="" center="">
+
+          <div class="box triggers">
+            <div class="list-title">
+              TRIGGER LIST
+            </div>
+            <div style="background-color: #fdf;">
+              <core-drag-drop on-drag-start="{{dragStartHandler}}">
+              </core-drag-drop>
+              <template repeat="{{channel in triggerChannels}}">
+                <nautes-channel id="trigger" style="background-color: #fdf;" channel="{{channel}}" draggable="true">
+                </nautes-channel>
+              </template>
+            </div>
+          </div>
+
+          <div class="box commands">
+            <div class="list-title">
+              COMMAND LIST
+            </div>
+            <div style="background-color: #f88;">
+              <core-drag-drop on-drag-start="{{dragStartHandler}}">
+              </core-drag-drop>
+              <template repeat="{{receiver in commandReceivers}}">
+                <nautes-channel id="command" style="background-color: #f88;" channel="{{receiver}}" draggable="true">
+                </nautes-channel>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <br>
+
+        <div id="reaction" vertical="" layout="" center="">
+          <div class="new-reaction">NEW REACTION</div>
+          <div layout="" horizontal="" center="">
+
+            <div class="box triggers" layout="" vertical="" center="">
+              <template if="{{triggerSet}}">
+                <div relative="">
+                  <core-icon class="icon-remove" icon="clear" on-tap="{{clearTrigger}}">
+                  </core-icon>
+                  <nautes-radio-select image="{{channelImages[newReaction.trigger.channel]}}" selected="0" options="{{sortedTriggers[newReaction.trigger.channel]}}" objtoset="{{newReaction.trigger}}">
+                  </nautes-radio-select>
+                </div>
+              </template>
+
+              <div id="dropTrigger" class="drop" flex="" layout="" vertical="" center="" center-justified="">
+                <div id="dropTrigger">
+                  DRAG ONE TRIGGER HERE
+                </div>
+                <core-icon id="dropTrigger" class="dropicon" icon="add">
+                </core-icon>
+              </div>
+
+            </div>
+
+            <div class="box commands" layout="" vertical="" center="">
+              <template repeat="{{commandNR, i in newReaction.commands}}">
+                <div relative="">
+                  <core-icon class="icon-remove" icon="clear">
+                  </core-icon>
+                  <nautes-radio-select selected="0" image="{{channelImages[commandNR.receiver]}}" selectedoption="{{commandNR}}" options="{{sortedCommands[commandNR.receiver]}}" arrayindex="{{i}}" arraytoset="{{utilityArray}}">
+                  </nautes-radio-select>
+                </div>
+
+              </template>
+              <div id="dropCommands" class="drop" flex="" layout="" vertical="" center="" center-justified="">
+                <div id="dropCommands">DRAG COMMANDS HERE</div>
+                <core-icon id="dropCommands" class="dropicon" icon="add"></core-icon>
+              </div>
+            </div>
+
+          </div>
+          <div>
+            <template if="{{canSendReaction}}">
+              <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
+               ADD REACTION
+              </core-icon-button>
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <!-- Vertical UI for iPhone -->
+      <template if="{{smallScreen}}">
+
+          <div class="box triggers">
+            <div class="list-title">
+              TRIGGER LIST
+            </div>
+            <div style="background-color: #fdf;">
+              <core-drag-drop on-drag-start="{{dragStartHandler}}">
+              </core-drag-drop>
+              <template repeat="{{channel in triggerChannels}}">
+                <nautes-channel id="trigger" style="background-color: #fdf;" channel="{{channel}}" draggable="true">
+                </nautes-channel>
+              </template>
+            </div>
+          </div>
 
           <div class="box triggers" layout="" vertical="" center="">
             <template if="{{triggerSet}}">
               <div relative="">
                 <core-icon class="icon-remove" icon="clear" on-tap="{{clearTrigger}}">
                 </core-icon>
-                <nautes-radio-select image="{{channelImages[newReaction.trigger.channel]}}" selected="0" selectedoption="{{newReaction.trigger}}" options="{{sortedTriggers[newReaction.trigger.channel]}}">
+                <nautes-radio-select image="{{channelImages[newReaction.trigger.channel]}}" selected="0" options="{{sortedTriggers[newReaction.trigger.channel]}}" objtoset="{{newReaction.trigger}}">
                 </nautes-radio-select>
               </div>
             </template>
@@ -12793,6 +12867,21 @@ information about `paper-radio-button`.
             </div>
 
           </div>
+
+          <div class="box commands">
+              <div class="list-title">
+                COMMAND LIST
+              </div>
+              <div style="background-color: #f88;">
+                <core-drag-drop on-drag-start="{{dragStartHandler}}">
+                </core-drag-drop>
+                <template repeat="{{receiver in commandReceivers}}">
+                  <nautes-channel id="command" style="background-color: #f88;" channel="{{receiver}}" draggable="true">
+                  </nautes-channel>
+                </template>
+              </div>
+            </div>
+          </template></div>
 
           <div class="box commands" layout="" vertical="" center="">
             <template repeat="{{commandNR, i in newReaction.commands}}">
@@ -12810,22 +12899,29 @@ information about `paper-radio-button`.
             </div>
           </div>
 
-        </div>
-        <div>
-          <template if="{{canSendReaction}}">
-            <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
-             ADD REACTION
-            </core-icon-button>
-          </template>
-        </div>
-      </div>
+          <div>
+            <template if="{{canSendReaction}}">
+              <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
+               ADD REACTION
+              </core-icon-button>
+            </template>
+          </div>
 
-    </div>
+      </template>
 
-  </template>
+    
+
+  
   <script>
 
     Polymer("nautes-reaction-add",{
+      observe: {
+        "newReaction.trigger": "log"
+      },
+
+      log: function(){
+        console.log(this.newReaction.trigger);
+      },
 
       sortedTriggersChanged: function() {
         if(this.sortedTriggers){
@@ -12834,6 +12930,7 @@ information about `paper-radio-button`.
       },
 
       sortedCommandsChanged: function() {
+        console.log("sortedCommands",this.sortedCommands);
         if(this.sortedCommands){
           this.commandReceivers = Object.keys(this.sortedCommands);
         }
@@ -12845,13 +12942,6 @@ information about `paper-radio-button`.
         this.newReaction.trigger = {};
       },
 
-      created: function(){
-        this.clearNewReaction();
-        this.triggerChannels = [];
-        this.sortedTriggers = {};
-        this.utilityArray = [];
-      },
-
       clearNewReaction: function(){
         this.newReaction = {
           trigger: {}, 
@@ -12859,6 +12949,17 @@ information about `paper-radio-button`.
           commands: []
         };
         this.clearTrigger();
+      },
+
+      created: function(){
+        this.clearNewReaction();
+
+        this.triggerChannels = [];
+        this.sortedTriggers = {};
+
+        this.commandReceivers = [];
+        this.sortedCommands = {};
+        this.utilityArray = [];
       },
 
       checkReaction: function(){
@@ -12870,6 +12971,7 @@ information about `paper-radio-button`.
       },
 
       sendReaction: function(){
+
         var getUUID = function(o){
           return {
             name: o.name,
