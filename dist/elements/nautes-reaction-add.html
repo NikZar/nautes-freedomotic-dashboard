@@ -136,35 +136,38 @@
     </fd-rest-element-service>
 
 
-    <core-drag-drop on-drag-start="{{dragStartHandler}}"></core-drag-drop>
+    <core-drag-drop on-drag-start="{{dragStartHandler}}">
+    </core-drag-drop>
 
     <div vertical layout center>
 
       <div layout horizontal center>
 
-        <div class="box triggers" draggable="false">
-          <div class="list-title" draggable="false">
+        <div class="box triggers">
+          <div class="list-title">
             TRIGGER LIST
           </div>
-          <div style="background-color: #fdf;" draggable="false">
+          <div style="background-color: #fdf;">
             <template repeat="{{channel in triggerChannels}}">
               <nautes-channel id="trigger" 
                 style="background-color: #fdf;" 
-                channel="{{channel}}">
+                channel="{{channel}}"
+                draggable="true">
               </nautes-channel>
             </template>
           </div>
         </div>
 
         <div class="box commands">
-          <div class="list-title" draggable="false">
+          <div class="list-title">
             COMMAND LIST
           </div>
-          <div style="background-color: #f88;" draggable="false">
+          <div style="background-color: #f88;">
             <template repeat="{{receiver in commandReceivers}}">
               <nautes-channel id="command" 
                 style="background-color: #f88;" 
-                channel="{{receiver}}">
+                channel="{{receiver}}"
+                draggable="true">
               </nautes-channel>
             </template>
           </div>
@@ -183,18 +186,18 @@
         </div>
       </div>
 
-      <br><br>
+      <br>
 
       <div id="reaction" vertical layout center>
         <div class="new-reaction">NEW REACTION</div>
         <div layout horizontal center>
 
-          <div class="box triggers" draggable="false" layout vertical center>
+          <div class="box triggers" layout vertical center>
             <template if="{{triggerSet}}">
               <div relative>
                 <core-icon class="icon-remove" icon="clear" on-tap="{{clearTrigger}}">
                 </core-icon>
-                <nautes-radio-select 
+                <nautes-radio-select
                   image="{{channelImages[newReaction.trigger.channel]}}" 
                   selected="0" 
                   selectedOption="{{newReaction.trigger}}"
@@ -204,13 +207,19 @@
             </template>
 
             <div id="dropTrigger" class="drop" flex layout vertical center center-justified>
-              <div id="dropTrigger">DRAG ONE TRIGGER HERE</div>
-              <core-icon id="dropTrigger" class="dropicon" icon="add"></core-icon>
+              <div id="dropTrigger">
+                DRAG ONE TRIGGER HERE
+              </div>
+              <core-icon id="dropTrigger" 
+                class="dropicon" 
+                icon="add" 
+               >
+              </core-icon>
             </div>
 
           </div>
 
-          <div class="box commands" draggable="false" layout vertical center>
+          <div class="box commands" layout vertical center>
             <template repeat="{{commandNR, i in newReaction.commands}}">
               <div relative>
                 <core-icon class="icon-remove" icon="clear">
@@ -345,24 +354,31 @@
         
         //set avatar icon
         var dragInfo = e.detail;
-        var color = dragInfo.event.target.style.backgroundColor;
-        dragInfo.avatar.style.cssText = 'border: 3px solid ' + color + '; width: 32px; height: 32px; border-radius: 32px; background-color: whitesmoke';
-        var icon = null;
-        var id = dragInfo.event.target.id;
-        if(id === "trigger"){
-          icon = this.$.triggerIcon;
-        } else if(id === "command"){
-          icon = this.$.commandIcon;
-        }
-        while (dragInfo.avatar.firstChild) {
-            dragInfo.avatar.removeChild(dragInfo.avatar.firstChild);
-        }
-        if(icon){
-          dragInfo.avatar.appendChild(icon);
-        }
 
-        dragInfo.drag = function() {};
-        dragInfo.drop = drop;
+        var isDraggable = dragInfo.event.target.draggable;
+
+        if(isDraggable){
+          var color = dragInfo.event.target.style.backgroundColor;
+          dragInfo.avatar.style.cssText = 'border: 3px solid ' + color + '; width: 32px; height: 32px; border-radius: 32px; background-color: whitesmoke';
+          var icon = null;
+          var id = dragInfo.event.target.id;
+          if(id === "trigger"){
+            icon = this.$.triggerIcon;
+          } else if(id === "command"){
+            icon = this.$.commandIcon;
+          }
+          while (dragInfo.avatar.firstChild) {
+              dragInfo.avatar.removeChild(dragInfo.avatar.firstChild);
+          }
+          if(icon){
+            dragInfo.avatar.appendChild(icon);
+          }
+
+          dragInfo.drag = function() {};
+          dragInfo.drop = drop;
+        } else {
+          e.detail = null;
+        }
       },
 
       channelImages: {

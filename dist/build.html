@@ -6281,7 +6281,6 @@ license that can be found in the LICENSE file.
 
       #header{
         background: #444;
-        font-family: Tahoma;
         text-transform: uppercase;
         padding-bottom: 10px;
         z-index: 99 !IMPORTANT;
@@ -8590,6 +8589,8 @@ core-icon {
 
 
 
+
+
 <polymer-element name="nautes-object-row" attributes="bgColor object graph" assetpath="../app/elements/">
   <template>
     <style>
@@ -8600,10 +8601,10 @@ core-icon {
         width: 100%;
         font-size: 1.2rem;
         font-weight: 300;
+        font-family: Open Sans;
       }
       .object-row {
         padding: 40px;
-        font-family: Tahoma;
         color: #444;
       }
       
@@ -9114,6 +9115,8 @@ core-icon {
 
 
 
+
+
 <polymer-element name="nautes-trigger-row" attributes="bgColor trigger" assetpath="../app/elements/">
   <template>
     <style>
@@ -9124,6 +9127,7 @@ core-icon {
         width: 100%;
         font-size: 1.2rem;
         font-weight: 300;
+        font-family: Open Sans;
       }
       
       .trigger-row {
@@ -11216,7 +11220,7 @@ Example:
       <div class="row" layout="" horizonal="" center="" start="">
         <core-localstorage id="LSapiurl" name="apiurl" value="{{apiurl}}">
         </core-localstorage>
-        <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatinglabel="true" value="{{newAPIUrl}}"></paper-input>
+        <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatinglabel="true" inputvalue="{{newAPIUrl}}"></paper-input>
       </div>
 
       <div class="row" layout="" horizonal="" center="" start="">
@@ -11263,7 +11267,13 @@ Example:
 
       },
 
+      newAPIUrlChanged: function(){
+        console.log(this.newAPIUrl);
+      },
+
       applyChanges: function(){
+
+        console.log(this.newAPIUrl);
 
         if(this.newAPIUrl != ""){
           this.$.LSapiurl.value = this.newAPIUrl;
@@ -11273,7 +11283,10 @@ Example:
         
         this.$.LSssl.value = this.newSSL;
 
-        window.setTimeout(function(){location.reload();}, 2000);
+        window.setTimeout(function(){
+          location.reload();
+        }, 500);
+        
       }
 
     });
@@ -11284,15 +11297,16 @@ Example:
 
 
 
+
 <polymer-element name="nautes-fd-info" attributes="toast" assetpath="../app/elements/">
   <template>
     <style>
       :host {
         display: block;
+        font-family: Open Sans;
       }
       div{
         color: #444;
-        font-family: Verdana;
         font-size: 1.0em;
         padding-top: 20px;
         text-align: center;
@@ -11335,6 +11349,8 @@ Example:
 
 
 
+
+
 <polymer-element name="nautes-asynch-messages-row" attributes="bgColor message" assetpath="../app/elements/">
   <template>
     <style>
@@ -11345,6 +11361,7 @@ Example:
         width: 100%;
         font-size: 1.2rem;
         font-weight: 300;
+        font-family: Open Sans;
       }
       .message-row{
         padding: 40px;
@@ -11437,6 +11454,7 @@ Example:
 
 
 
+
 <polymer-element name="nautes-reaction-row" attributes="bgColor reaction" assetpath="../app/elements/">
   <template>
     <style>
@@ -11472,7 +11490,7 @@ Example:
       }
 
       .trigger {
-        color: #dad;
+        color: #c8c;
       }
 
       .condition {
@@ -11579,22 +11597,22 @@ Example:
         border: 1px solid rgba(64,64,64,0.3);
       }
 
-      .reaction {
+      .reactionbtn {
         margin: 5px;
         background-color: #fcc;
       }
 
-      .trigger {
+      .triggerbtn {
         margin: 5px;
         background-color: #fdf;
       }
 
-      .condition {
+      .conditionbtn {
         margin: 5px;
         background-color: #cfc;
       }
 
-      .command {
+      .commandbtn {
         margin: 5px;
         background-color: #f88;
       }
@@ -11605,7 +11623,7 @@ Example:
 
       <div class="header" layout="" vertical="" center="">
         <div layout="" horizontal="" center="">
-          <core-icon-button class="reaction" icon="add-box" on-tap="{{addReaction}}">
+          <core-icon-button class="reactionbtn" icon="add-box" on-tap="{{addReaction}}">
             REACTION
           </core-icon-button>
           <!--
@@ -12706,31 +12724,32 @@ information about `paper-radio-button`.
     </fd-rest-element-service>
 
 
-    <core-drag-drop on-drag-start="{{dragStartHandler}}"></core-drag-drop>
+    <core-drag-drop on-drag-start="{{dragStartHandler}}">
+    </core-drag-drop>
 
     <div vertical="" layout="" center="">
 
       <div layout="" horizontal="" center="">
 
-        <div class="box triggers" draggable="false">
-          <div class="list-title" draggable="false">
+        <div class="box triggers">
+          <div class="list-title">
             TRIGGER LIST
           </div>
-          <div style="background-color: #fdf;" draggable="false">
+          <div style="background-color: #fdf;">
             <template repeat="{{channel in triggerChannels}}">
-              <nautes-channel id="trigger" style="background-color: #fdf;" channel="{{channel}}">
+              <nautes-channel id="trigger" style="background-color: #fdf;" channel="{{channel}}" draggable="true">
               </nautes-channel>
             </template>
           </div>
         </div>
 
         <div class="box commands">
-          <div class="list-title" draggable="false">
+          <div class="list-title">
             COMMAND LIST
           </div>
-          <div style="background-color: #f88;" draggable="false">
+          <div style="background-color: #f88;">
             <template repeat="{{receiver in commandReceivers}}">
-              <nautes-channel id="command" style="background-color: #f88;" channel="{{receiver}}">
+              <nautes-channel id="command" style="background-color: #f88;" channel="{{receiver}}" draggable="true">
               </nautes-channel>
             </template>
           </div>
@@ -12749,13 +12768,13 @@ information about `paper-radio-button`.
         </div>
       </div>
 
-      <br><br>
+      <br>
 
       <div id="reaction" vertical="" layout="" center="">
         <div class="new-reaction">NEW REACTION</div>
         <div layout="" horizontal="" center="">
 
-          <div class="box triggers" draggable="false" layout="" vertical="" center="">
+          <div class="box triggers" layout="" vertical="" center="">
             <template if="{{triggerSet}}">
               <div relative="">
                 <core-icon class="icon-remove" icon="clear" on-tap="{{clearTrigger}}">
@@ -12766,13 +12785,16 @@ information about `paper-radio-button`.
             </template>
 
             <div id="dropTrigger" class="drop" flex="" layout="" vertical="" center="" center-justified="">
-              <div id="dropTrigger">DRAG ONE TRIGGER HERE</div>
-              <core-icon id="dropTrigger" class="dropicon" icon="add"></core-icon>
+              <div id="dropTrigger">
+                DRAG ONE TRIGGER HERE
+              </div>
+              <core-icon id="dropTrigger" class="dropicon" icon="add">
+              </core-icon>
             </div>
 
           </div>
 
-          <div class="box commands" draggable="false" layout="" vertical="" center="">
+          <div class="box commands" layout="" vertical="" center="">
             <template repeat="{{commandNR, i in newReaction.commands}}">
               <div relative="">
                 <core-icon class="icon-remove" icon="clear">
@@ -12901,24 +12923,31 @@ information about `paper-radio-button`.
         
         //set avatar icon
         var dragInfo = e.detail;
-        var color = dragInfo.event.target.style.backgroundColor;
-        dragInfo.avatar.style.cssText = 'border: 3px solid ' + color + '; width: 32px; height: 32px; border-radius: 32px; background-color: whitesmoke';
-        var icon = null;
-        var id = dragInfo.event.target.id;
-        if(id === "trigger"){
-          icon = this.$.triggerIcon;
-        } else if(id === "command"){
-          icon = this.$.commandIcon;
-        }
-        while (dragInfo.avatar.firstChild) {
-            dragInfo.avatar.removeChild(dragInfo.avatar.firstChild);
-        }
-        if(icon){
-          dragInfo.avatar.appendChild(icon);
-        }
 
-        dragInfo.drag = function() {};
-        dragInfo.drop = drop;
+        var isDraggable = dragInfo.event.target.draggable;
+
+        if(isDraggable){
+          var color = dragInfo.event.target.style.backgroundColor;
+          dragInfo.avatar.style.cssText = 'border: 3px solid ' + color + '; width: 32px; height: 32px; border-radius: 32px; background-color: whitesmoke';
+          var icon = null;
+          var id = dragInfo.event.target.id;
+          if(id === "trigger"){
+            icon = this.$.triggerIcon;
+          } else if(id === "command"){
+            icon = this.$.commandIcon;
+          }
+          while (dragInfo.avatar.firstChild) {
+              dragInfo.avatar.removeChild(dragInfo.avatar.firstChild);
+          }
+          if(icon){
+            dragInfo.avatar.appendChild(icon);
+          }
+
+          dragInfo.drag = function() {};
+          dragInfo.drop = drop;
+        } else {
+          e.detail = null;
+        }
       },
 
       channelImages: {

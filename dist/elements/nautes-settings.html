@@ -46,7 +46,7 @@
           name="apiurl" 
           value="{{apiurl}}">
         </core-localstorage>
-        <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatingLabel="true" value="{{newAPIUrl}}"></paper-input>
+        <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatingLabel="true" inputValue="{{newAPIUrl}}"></paper-input>
       </div>
 
       <div class="row" layout horizonal center start>
@@ -97,7 +97,13 @@
 
       },
 
+      newAPIUrlChanged: function(){
+        console.log(this.newAPIUrl);
+      },
+
       applyChanges: function(){
+
+        console.log(this.newAPIUrl);
 
         if(this.newAPIUrl != ""){
           this.$.LSapiurl.value = this.newAPIUrl;
@@ -107,7 +113,10 @@
         
         this.$.LSssl.value = this.newSSL;
 
-        window.setTimeout(function(){location.reload();}, 2000);
+        window.setTimeout(function(){
+          location.reload();
+        }, 500);
+        
       }
 
     });
