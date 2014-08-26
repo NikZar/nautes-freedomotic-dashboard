@@ -265,6 +265,7 @@
       },
 
       sortedCommandsChanged: function() {
+        console.log("sortedCommands",this.sortedCommands);
         if(this.sortedCommands){
           this.commandReceivers = Object.keys(this.sortedCommands);
         }
@@ -276,13 +277,6 @@
         this.newReaction.trigger = {};
       },
 
-      created: function(){
-        this.clearNewReaction();
-        this.triggerChannels = [];
-        this.sortedTriggers = {};
-        this.utilityArray = [];
-      },
-
       clearNewReaction: function(){
         this.newReaction = {
           trigger: {}, 
@@ -290,6 +284,13 @@
           commands: []
         };
         this.clearTrigger();
+      },
+
+      created: function(){
+        this.clearNewReaction();
+        this.triggerChannels = [];
+        this.sortedTriggers = {};
+        this.utilityArray = [];
       },
 
       checkReaction: function(){
