@@ -26,7 +26,7 @@
       }
 
       .box {
-        width: 320px;
+        width: 300px;
         min-height: 200px;
         margin: 10px;
         overflow-y: scroll;
@@ -346,7 +346,7 @@
             </div>
           </div>
 
-          <div>
+          <div layout horizontal center-justified>
             <template if="{{canSendReaction}}">
               <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
                ADD REACTION

@@ -12327,8 +12327,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #444;
       }
       .icon{
-        width: 59px;
-        height: 59px;
+        width: 55px;
+        height: 55px;
         color: black;
       }
     </style>
@@ -12557,6 +12557,7 @@ information about `paper-radio-button`.
 
       :host {
         display: block;
+        width: 300px;
       }
 
       ::-webkit-scrollbar { 
@@ -12564,14 +12565,13 @@ information about `paper-radio-button`.
       }
 
       .icon{
-        width: 59px;
-        height: 59px;
+        width: 55px;
+        height: 55px;
         color: black;
       }
 
       .list{
         overflow-y: scroll;
-        width: 250px;
         height: 80px;
         padding: 10px;
       }
@@ -12582,7 +12582,7 @@ information about `paper-radio-button`.
       <core-icon id="icon" class="icon" alt="{{channel}}" icon="{{image.icon}}" src="{{image.src}}">
       </core-icon>
 
-      <div class="list" layout="" vertical="">
+      <div class="list" flex="">
         <paper-radio-group selected="{{selected}}" selectedmodel="{{selectedModel}}">
           <template repeat="{{option in options}}">
             <paper-radio-button label="{{option.name}}">
@@ -12637,7 +12637,7 @@ information about `paper-radio-button`.
       }
 
       .box {
-        width: 320px;
+        width: 300px;
         min-height: 200px;
         margin: 10px;
         overflow-y: scroll;
@@ -12899,7 +12899,7 @@ information about `paper-radio-button`.
             </div>
           </div>
 
-          <div>
+          <div layout="" horizontal="" center-justified="">
             <template if="{{canSendReaction}}">
               <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
                ADD REACTION
