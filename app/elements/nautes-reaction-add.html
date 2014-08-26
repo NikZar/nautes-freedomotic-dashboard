@@ -135,10 +135,6 @@
       body="{{body}}">
     </fd-rest-element-service>
 
-
-    <core-drag-drop on-drag-start="{{dragStartHandler}}">
-    </core-drag-drop>
-
     <div vertical layout center>
 
       <div layout horizontal center>
@@ -148,6 +144,8 @@
             TRIGGER LIST
           </div>
           <div style="background-color: #fdf;">
+            <core-drag-drop on-drag-start="{{dragStartHandler}}">
+            </core-drag-drop>
             <template repeat="{{channel in triggerChannels}}">
               <nautes-channel id="trigger" 
                 style="background-color: #fdf;" 
@@ -163,6 +161,8 @@
             COMMAND LIST
           </div>
           <div style="background-color: #f88;">
+            <core-drag-drop on-drag-start="{{dragStartHandler}}">
+            </core-drag-drop>
             <template repeat="{{receiver in commandReceivers}}">
               <nautes-channel id="command" 
                 style="background-color: #f88;" 
@@ -349,15 +349,15 @@
       },
 
       dragStartHandler: function(e){
-
-        var drop = this.dropFactory();
         
         //set avatar icon
         var dragInfo = e.detail;
-
         var isDraggable = dragInfo.event.target.draggable;
 
         if(isDraggable){
+
+          var drop = this.dropFactory();
+
           var color = dragInfo.event.target.style.backgroundColor;
           dragInfo.avatar.style.cssText = 'border: 3px solid ' + color + '; width: 32px; height: 32px; border-radius: 32px; background-color: whitesmoke';
           var icon = null;
