@@ -10,6 +10,7 @@
 
       :host {
         display: block;
+        width: 300px;
       }
 
       ::-webkit-scrollbar { 
@@ -17,14 +18,13 @@
       }
 
       .icon{
-        width: 59px;
-        height: 59px;
+        width: 55px;
+        height: 55px;
         color: black;
       }
 
       .list{
         overflow-y: scroll;
-        width: 250px;
         height: 80px;
         padding: 10px;
       }
@@ -38,7 +38,7 @@
         src="{{image.src}}">
       </core-icon>
 
-      <div class="list" layout vertical>
+      <div class="list" flex>
         <paper-radio-group selected="{{selected}}" selectedModel="{{selectedModel}}">
           <template repeat="{{option in options}}">
             <paper-radio-button label="{{option.name}}" >
