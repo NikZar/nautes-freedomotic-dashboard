@@ -53,7 +53,7 @@ PolymerExpressions.prototype.translate = function(key){
 		var key = key.toLowerCase();
 
 		if(!localStorage["locale"]){
-			localStorage["locale"] = navigator.language;
+			localStorage["locale"] = JSON.stringify(navigator.language);
 		}
 
 		var currentLocale = JSON.parse(localStorage["locale"]);
