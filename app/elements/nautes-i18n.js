@@ -43,6 +43,22 @@ var locale = {
 	"cr" : {
 		"en-US": "CREDENTIALS REQUIRED",
 		"it-IT": "CREDENZIALI RICHIESTE"
+	},
+	"show actions" : {
+		"en-US": "show actions",
+		"it-IT": "mostra azioni"
+	},
+	"hide actions" : {
+		"en-US": "hide actions",
+		"it-IT": "nascondi azioni"
+	},
+	"show stats" : {
+		"en-US": "show stats",
+		"it-IT": "mostra statistiche"
+	},
+	"hide stats" : {
+		"en-US": "hide stats",
+		"it-IT": "nascondi statistiche"
 	}
 	
 }
@@ -50,7 +66,6 @@ var locale = {
 PolymerExpressions.prototype.translate = function(key){
 
 	if(key){
-		var key = key.toLowerCase();
 
 		if(!localStorage["locale"]){
 
@@ -81,13 +96,13 @@ PolymerExpressions.prototype.translate = function(key){
 
 		var currentLocale = JSON.parse(localStorage["locale"]);
 
-		//console.log(currentLocale);
+		var lower_key = key.toLowerCase();
 
 		var translation = "";
-		if( (key in locale) && (currentLocale in locale[key]) ){
-			return locale[key][currentLocale];
-		} else if( (key in locale) && ("en-US" in locale[key]) ) {
-			return locale[key]["en-US"];
+		if( (lower_key in locale) && (currentLocale in locale[lower_key]) ){
+			return locale[lower_key][currentLocale];
+		} else if( (lower_key in locale) && ("en-US" in locale[lower_key]) ) {
+			return locale[lower_key]["en-US"];
 		} else {
 			return key;
 		}	

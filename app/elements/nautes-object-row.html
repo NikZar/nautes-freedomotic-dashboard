@@ -1,10 +1,12 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/google-chart/google-chart.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/nautes-i18n.html">
 
 <polymer-element name="nautes-object-row" attributes="bgColor object graph">
   <template>
@@ -60,7 +62,12 @@
           <content></content>
           <template if="{{ graph }}">
             <core-icon-button icon="drive-fusiontable" on-tap="{{toggleStats}}">
-              {{label}}
+              {{label | translate}}
+            </core-icon-button>
+          </template>
+          <template if="{{ hasBehavior() }}">
+            <core-icon-button icon="drive-fusiontable" on-tap="{{toggleActions}}">
+              {{labelActions | translate}}
             </core-icon-button>
           </template>
         </div>
@@ -77,6 +84,33 @@
           </google-chart>
         </div>
       </template>
+      <template if="{{ showActions }}">
+        <template repeat="{{behaviour in object.behaviors}}">
+          <div layout horizontal center>
+            {{behaviour.name}} : {{behaviour.value}}
+            
+            <template if="{{behaviour.type === 'boolean'}}">
+              <core-icon-button>
+                TOGGLE
+              </core-icon-button>
+            </template>
+            <template if="{{behaviour.type === 'rangedint'}}">
+              <div layout horizontal center unresolved>
+                <paper-slider 
+                  min="{{behavior.min}}" 
+                  max="{{behavior.max}}" 
+                  immediateValue="{{behavior.value}}"
+                  editable>
+                </paper-slider>
+                <core-icon-button>
+                  CHANGE
+                </core-icon-button>
+              </div>
+            </template>
+            
+          </div>
+        </template>
+      </template>
       <paper-shadow z="1"></paper-shadow>
     </div>
 
@@ -86,14 +120,40 @@
 
       showStats: false,
 
+      showActions: false,
+
       label: "SHOW STATS",
+
+      labelActions: "SHOW ACTIONS",
+
+      hasBehavior: function(){
+        console.log(this.object);
+        var rwBehaviors = this.object.behaviors.filter(
+          function(behaviour){
+            return !behaviour.readOnly;
+          }
+        );
+        return rwBehaviors.length > 0;
+      },
 
       toggleStats: function(){
         this.showStats = !this.showStats;
+        this.showActions = false;
         if(this.showStats){
           this.label = "HIDE STATS";
         } else {
           this.label = "SHOW STATS";
+        }
+      },
+
+      toggleActions: function(){
+        console.log(this.object);
+        this.showActions = !this.showActions;
+        this.showStats = false;
+        if(this.showActions){
+          this.label = "HIDE ACTIONS";
+        } else {
+          this.label = "SHOW ACTIONS";
         }
       },
 
