@@ -53,7 +53,30 @@ PolymerExpressions.prototype.translate = function(key){
 		var key = key.toLowerCase();
 
 		if(!localStorage["locale"]){
-			localStorage["locale"] = JSON.stringify(navigator.language);
+
+			var defaultLanguage = navigator.language;
+
+			if(!defaultLanguage){
+				defaultLanguage = navigator.browserLanguage;
+			}
+
+			switch(defaultLanguage){
+				case undefined : 
+				case "en-us":
+				case "en":{
+					localStorage["locale"] = JSON.stringify("en-US");
+					break;
+				}
+				case "it-it":
+				case "it":{
+					localStorage["locale"] = JSON.stringify("it-IT");
+					break;
+				}
+				default: {
+					localStorage["locale"] = JSON.stringify(defaultLanguage);
+				}
+			}
+
 		}
 
 		var currentLocale = JSON.parse(localStorage["locale"]);
