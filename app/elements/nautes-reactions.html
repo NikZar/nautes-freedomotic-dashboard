@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
 <link rel="import" href="../elements/nautes-reaction-list.html">
+<link rel="import" href="../elements/nautes-open-sans.html">
 
 <polymer-element name="nautes-reactions" attributes="bgColor toast">
   <template>
@@ -11,6 +12,7 @@
       :host {
         display: block;
         width: 100%;
+        font-family: Open Sans;
       }
       
       .header{
@@ -25,22 +27,22 @@
         border: 1px solid rgba(64,64,64,0.3);
       }
 
-      .reaction {
+      .reactionbtn {
         margin: 5px;
         background-color: #fcc;
       }
 
-      .trigger {
+      .triggerbtn {
         margin: 5px;
         background-color: #fdf;
       }
 
-      .condition {
+      .conditionbtn {
         margin: 5px;
         background-color: #cfc;
       }
 
-      .command {
+      .commandbtn {
         margin: 5px;
         background-color: #f88;
       }
@@ -51,9 +53,10 @@
 
       <div class="header" layout vertical center>
         <div layout horizontal center>
-          <core-icon-button class="reaction" icon="add-box" on-tap="{{addReaction}}">
+          <core-icon-button class="reactionbtn" icon="add-box" on-tap="{{addReaction}}">
             REACTION
           </core-icon-button>
+          <!--
           <core-icon-button class="trigger" icon="add-box" on-tap="{{addTrigger}}">
             TRIGGER
           </core-icon-button>
@@ -63,6 +66,7 @@
           <core-icon-button class="command" icon="add-box" on-tap="{{addCommand}}">
             COMMAND
           </core-icon-button>
+        -->
         </div>
       </div>
     
@@ -72,7 +76,7 @@
       </template>
 
       <template if="{{showAddReaction}}">
-        <nautes-reaction-add bgColor="{{bgColor}}">
+        <nautes-reaction-add smallQuery="max-width: 640px" bgColor="{{bgColor}}">
         </nautes-reaction-add>
       </template>
 

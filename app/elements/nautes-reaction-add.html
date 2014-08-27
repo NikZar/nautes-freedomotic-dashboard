@@ -3,6 +3,7 @@
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../bower_components/core-media-query/core-media-query.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/fd-rest-element-service.html">
@@ -13,7 +14,7 @@
 <link rel="import" href="../elements/nautes-radio-select.html">
 
 
-<polymer-element name="nautes-reaction-add" attributes="bgColor">
+<polymer-element name="nautes-reaction-add" attributes="bgColor smallQuery">
   <template>
     <style>
 
@@ -25,7 +26,7 @@
       }
 
       .box {
-        width: 320px;
+        width: 300px;
         min-height: 200px;
         margin: 10px;
         overflow-y: scroll;
@@ -100,6 +101,11 @@
         display: none; 
       }
     </style>
+    
+    <core-media-query
+      query="{{smallQuery}}"
+      queryMatches="{{smallScreen}}">
+    </core-media-query>
 
     <fd-rest-element-service 
       fdtype="triggers" 
@@ -129,88 +135,196 @@
     <fd-rest-element-service id="sendReactionService" 
       auto="false"
       method="POST" 
-      fdtype="reactions" 
-      fditems="{{commands}}" 
+      fdtype="reactions"  
       toast="{{toast}}"
       body="{{body}}">
     </fd-rest-element-service>
 
-
-    <core-drag-drop on-drag-start="{{dragStartHandler}}"></core-drag-drop>
+    <div hidden>
+      <div id="triggerIcon" layout vertical center center-justified>
+        <core-icon class="icon" icon="image:flash-on"></core-icon>
+      </div>
+      <div id="conditionIcon">
+        <core-icon class="icon" icon="send"></core-icon>
+      </div>
+      <div id="commandIcon">
+        <core-icon class="icon" icon="send"></core-icon>
+      </div>
+    </div>
 
     <div vertical layout center>
 
-      <div layout horizontal center>
-
-        <div class="box triggers" draggable="false">
-          <div class="list-title" draggable="false">
-            TRIGGER LIST
-          </div>
-          <div style="background-color: #fdf;" draggable="false">
-            <template repeat="{{channel in triggerChannels}}">
-              <nautes-channel id="trigger" 
-                style="background-color: #fdf;" 
-                channel="{{channel}}">
-              </nautes-channel>
-            </template>
-          </div>
-        </div>
-
-        <div class="box commands">
-          <div class="list-title" draggable="false">
-            COMMAND LIST
-          </div>
-          <div style="background-color: #f88;" draggable="false">
-            <template repeat="{{receiver in commandReceivers}}">
-              <nautes-channel id="command" 
-                style="background-color: #f88;" 
-                channel="{{receiver}}">
-              </nautes-channel>
-            </template>
-          </div>
-        </div>
-      </div>
-
-      <div hidden>
-        <div id="triggerIcon" layout vertical center center-justified>
-          <core-icon class="icon" icon="image:flash-on"></core-icon>
-        </div>
-        <div id="conditionIcon">
-          <core-icon class="icon" icon="send"></core-icon>
-        </div>
-        <div id="commandIcon">
-          <core-icon class="icon" icon="send"></core-icon>
-        </div>
-      </div>
-
-      <br><br>
-
-      <div id="reaction" vertical layout center>
-        <div class="new-reaction">NEW REACTION</div>
+      <!-- Horizontal UI -->
+      <template if="{{!smallScreen}}">
         <div layout horizontal center>
 
-          <div class="box triggers" draggable="false" layout vertical center>
+          <div class="box triggers">
+            <div class="list-title">
+              TRIGGER LIST
+            </div>
+            <div style="background-color: #fdf;">
+              <core-drag-drop on-drag-start="{{dragStartHandler}}">
+              </core-drag-drop>
+              <template repeat="{{channel in triggerChannels}}">
+                <nautes-channel id="trigger" 
+                  style="background-color: #fdf;" 
+                  channel="{{channel}}"
+                  draggable="true">
+                </nautes-channel>
+              </template>
+            </div>
+          </div>
+
+          <div class="box commands">
+            <div class="list-title">
+              COMMAND LIST
+            </div>
+            <div style="background-color: #f88;">
+              <core-drag-drop on-drag-start="{{dragStartHandler}}">
+              </core-drag-drop>
+              <template repeat="{{receiver in commandReceivers}}">
+                <nautes-channel id="command" 
+                  style="background-color: #f88;" 
+                  channel="{{receiver}}"
+                  draggable="true">
+                </nautes-channel>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <br>
+
+        <div id="reaction" vertical layout center>
+          <div class="new-reaction">NEW REACTION</div>
+          <div layout horizontal center>
+
+            <div class="box triggers" layout vertical center>
+              <template if="{{triggerSet}}">
+                <div relative>
+                  <core-icon class="icon-remove" icon="clear" on-tap="{{clearTrigger}}">
+                  </core-icon>
+                  <nautes-radio-select
+                    image="{{channelImages[newReaction.trigger.channel]}}" 
+                    selected="0" 
+                    options="{{sortedTriggers[newReaction.trigger.channel]}}"
+                    objToSet="{{newReaction.trigger}}">
+                  </nautes-radio-select>
+                </div>
+              </template>
+
+              <div id="dropTrigger" class="drop" flex layout vertical center center-justified>
+                <div id="dropTrigger">
+                  DRAG ONE TRIGGER HERE
+                </div>
+                <core-icon id="dropTrigger" 
+                  class="dropicon" 
+                  icon="add" 
+                 >
+                </core-icon>
+              </div>
+
+            </div>
+
+            <div class="box commands" layout vertical center>
+              <template repeat="{{commandNR, i in newReaction.commands}}">
+                <div relative>
+                  <core-icon class="icon-remove" icon="clear">
+                  </core-icon>
+                  <nautes-radio-select 
+                    selected="0"
+                    image="{{channelImages[commandNR.receiver]}}" 
+                    selectedOption="{{commandNR}}" 
+                    options="{{sortedCommands[commandNR.receiver]}}"
+                    arrayIndex="{{i}}" 
+                    arrayToSet="{{utilityArray}}">
+                  </nautes-radio-select>
+                </div>
+
+              </template>
+              <div id="dropCommands" class="drop" flex layout vertical center center-justified>
+                <div id="dropCommands">DRAG COMMANDS HERE</div>
+                <core-icon id="dropCommands" class="dropicon" icon="add"></core-icon>
+              </div>
+            </div>
+
+          </div>
+          <div>
+            <template if="{{canSendReaction}}">
+              <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
+               ADD REACTION
+              </core-icon-button>
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <!-- Vertical UI for iPhone -->
+      <template if="{{smallScreen}}">
+
+          <div class="box triggers">
+            <div class="list-title">
+              TRIGGER LIST
+            </div>
+            <div style="background-color: #fdf;">
+              <core-drag-drop on-drag-start="{{dragStartHandler}}">
+              </core-drag-drop>
+              <template repeat="{{channel in triggerChannels}}">
+                <nautes-channel id="trigger" 
+                  style="background-color: #fdf;" 
+                  channel="{{channel}}"
+                  draggable="true">
+                </nautes-channel>
+              </template>
+            </div>
+          </div>
+
+          <div class="box triggers" layout vertical center>
             <template if="{{triggerSet}}">
               <div relative>
                 <core-icon class="icon-remove" icon="clear" on-tap="{{clearTrigger}}">
                 </core-icon>
-                <nautes-radio-select 
+                <nautes-radio-select
                   image="{{channelImages[newReaction.trigger.channel]}}" 
                   selected="0" 
-                  selectedOption="{{newReaction.trigger}}"
-                  options="{{sortedTriggers[newReaction.trigger.channel]}}">
+                  options="{{sortedTriggers[newReaction.trigger.channel]}}"
+                  objToSet="{{newReaction.trigger}}">
                 </nautes-radio-select>
               </div>
             </template>
 
             <div id="dropTrigger" class="drop" flex layout vertical center center-justified>
-              <div id="dropTrigger">DRAG ONE TRIGGER HERE</div>
-              <core-icon id="dropTrigger" class="dropicon" icon="add"></core-icon>
+              <div id="dropTrigger">
+                DRAG ONE TRIGGER HERE
+              </div>
+              <core-icon id="dropTrigger" 
+                class="dropicon" 
+                icon="add" 
+               >
+              </core-icon>
             </div>
 
           </div>
 
-          <div class="box commands" draggable="false" layout vertical center>
+          <div class="box commands">
+              <div class="list-title">
+                COMMAND LIST
+              </div>
+              <div style="background-color: #f88;">
+                <core-drag-drop on-drag-start="{{dragStartHandler}}">
+                </core-drag-drop>
+                <template repeat="{{receiver in commandReceivers}}">
+                  <nautes-channel id="command" 
+                    style="background-color: #f88;" 
+                    channel="{{receiver}}"
+                    draggable="true">
+                  </nautes-channel>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <div class="box commands" layout vertical center>
             <template repeat="{{commandNR, i in newReaction.commands}}">
               <div relative>
                 <core-icon class="icon-remove" icon="clear">
@@ -232,15 +346,15 @@
             </div>
           </div>
 
-        </div>
-        <div>
-          <template if="{{canSendReaction}}">
-            <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
-             ADD REACTION
-            </core-icon-button>
-          </template>
-        </div>
-      </div>
+          <div layout horizontal center-justified>
+            <template if="{{canSendReaction}}">
+              <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
+               ADD REACTION
+              </core-icon-button>
+            </template>
+          </div>
+
+      </template>
 
     </div>
 
@@ -248,6 +362,13 @@
   <script>
 
     Polymer("nautes-reaction-add",{
+      observe: {
+        "newReaction.trigger": "log"
+      },
+
+      log: function(){
+        console.log(this.newReaction.trigger);
+      },
 
       sortedTriggersChanged: function() {
         if(this.sortedTriggers){
@@ -256,6 +377,7 @@
       },
 
       sortedCommandsChanged: function() {
+        console.log("sortedCommands",this.sortedCommands);
         if(this.sortedCommands){
           this.commandReceivers = Object.keys(this.sortedCommands);
         }
@@ -267,13 +389,6 @@
         this.newReaction.trigger = {};
       },
 
-      created: function(){
-        this.clearNewReaction();
-        this.triggerChannels = [];
-        this.sortedTriggers = {};
-        this.utilityArray = [];
-      },
-
       clearNewReaction: function(){
         this.newReaction = {
           trigger: {}, 
@@ -281,6 +396,17 @@
           commands: []
         };
         this.clearTrigger();
+      },
+
+      created: function(){
+        this.clearNewReaction();
+
+        this.triggerChannels = [];
+        this.sortedTriggers = {};
+
+        this.commandReceivers = [];
+        this.sortedCommands = {};
+        this.utilityArray = [];
       },
 
       checkReaction: function(){
@@ -292,6 +418,7 @@
       },
 
       sendReaction: function(){
+
         var getUUID = function(o){
           return {
             name: o.name,
@@ -340,29 +467,36 @@
       },
 
       dragStartHandler: function(e){
-
-        var drop = this.dropFactory();
         
         //set avatar icon
         var dragInfo = e.detail;
-        var color = dragInfo.event.target.style.backgroundColor;
-        dragInfo.avatar.style.cssText = 'border: 3px solid ' + color + '; width: 32px; height: 32px; border-radius: 32px; background-color: whitesmoke';
-        var icon = null;
-        var id = dragInfo.event.target.id;
-        if(id === "trigger"){
-          icon = this.$.triggerIcon;
-        } else if(id === "command"){
-          icon = this.$.commandIcon;
-        }
-        while (dragInfo.avatar.firstChild) {
-            dragInfo.avatar.removeChild(dragInfo.avatar.firstChild);
-        }
-        if(icon){
-          dragInfo.avatar.appendChild(icon);
-        }
+        var isDraggable = dragInfo.event.target.draggable;
 
-        dragInfo.drag = function() {};
-        dragInfo.drop = drop;
+        if(isDraggable){
+
+          var drop = this.dropFactory();
+
+          var color = dragInfo.event.target.style.backgroundColor;
+          dragInfo.avatar.style.cssText = 'border: 3px solid ' + color + '; width: 32px; height: 32px; border-radius: 32px; background-color: whitesmoke';
+          var icon = null;
+          var id = dragInfo.event.target.id;
+          if(id === "trigger"){
+            icon = this.$.triggerIcon;
+          } else if(id === "command"){
+            icon = this.$.commandIcon;
+          }
+          while (dragInfo.avatar.firstChild) {
+              dragInfo.avatar.removeChild(dragInfo.avatar.firstChild);
+          }
+          if(icon){
+            dragInfo.avatar.appendChild(icon);
+          }
+
+          dragInfo.drag = function() {};
+          dragInfo.drop = drop;
+        } else {
+          e.detail = null;
+        }
       },
 
       channelImages: {
