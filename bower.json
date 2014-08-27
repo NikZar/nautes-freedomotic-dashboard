@@ -13,6 +13,7 @@
   "devDependencies": {},
   "resolutions": {
     "platform": ">=0.3.0 <1.0.0",
-    "polymer": ">=0.3.0 <1.0.0"
+    "polymer": ">=0.3.0 <1.0.0",
+    "core-component-page": ">=0.3.0 <1.0.0"
   }
 }
