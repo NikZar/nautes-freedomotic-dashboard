@@ -81,7 +81,7 @@ PolymerExpressions.prototype.translate = function(key){
 
 		var currentLocale = JSON.parse(localStorage["locale"]);
 
-		console.log(currentLocale);
+		//console.log(currentLocale);
 
 		var translation = "";
 		if( (key in locale) && (currentLocale in locale[key]) ){
