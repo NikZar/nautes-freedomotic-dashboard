@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 
@@ -54,7 +56,8 @@
           name="credentialrequired" 
           value="{{credentialrequired}}">
         </core-localstorage>
-        CREDENTIAL REQUIRED: <paper-toggle-button checked="{{newCredentialRequired}}"></paper-toggle-button>
+          {{"cr" | translate }}:  <paper-toggle-button checked="{{newCredentialRequired}}">
+                                  </paper-toggle-button>
       </div>
 
       <div class="row" layout horizonal center start>
@@ -62,12 +65,24 @@
           name="ssl" 
           value="{{ssl}}">
         </core-localstorage>
-        SSL: <paper-toggle-button checked="{{newSSL}}"></paper-toggle-button>
+        SSL:  <paper-toggle-button checked="{{newSSL}}">
+              </paper-toggle-button>
       </div>
 
-      <div class="row-fab" horizontal end-justified layout>
-        <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
+      <div class="row" layout horizonal center start>
+        <core-localstorage id="LSlocale" 
+          name="locale" 
+          value="{{locale}}">
+        </core-localstorage>
+        {{"language" | translate}}: <paper-radio-group selected="{{newLocale}}">
+                                      <paper-radio-button name="en-US" label="English">
+                                      </paper-radio-button>
+                                      <paper-radio-button name="it-IT" label="Italiano">
+                                      </paper-radio-button>
+                                    </paper-radio-group>
       </div>
+      
+      <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
 
     </div>
 
@@ -95,6 +110,10 @@
           this.newSSL = false;
         }
 
+        if(localStorage["locale"]){
+          this.newLocale = JSON.parse(localStorage["locale"]);
+        }
+
       },
 
       newAPIUrlChanged: function(){
@@ -108,6 +127,10 @@
         if(this.newAPIUrl != ""){
           this.$.LSapiurl.value = this.newAPIUrl;
         }
+
+        this.$.LSlocale.value = this.newLocale;
+
+        console.log(this.newLocale);
 
         this.$.LScr.value = this.newCredentialRequired;
         
