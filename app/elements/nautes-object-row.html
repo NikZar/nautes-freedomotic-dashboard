@@ -7,8 +7,9 @@
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/nautes-i18n.html">
+<link rel="import" href="../elements/nautes-behavior-edit.html">
 
-<polymer-element name="nautes-object-row" attributes="bgColor object graph">
+<polymer-element name="nautes-object-row" attributes="bgColor object graph toast">
   <template>
     <style>
       :host {
@@ -52,7 +53,20 @@
         padding-left: -15px;
       }
 
+      core-icon-button{
+        border: 1px solid rgba(50,50,50,0.2);
+        margin-top: 5px;
+      }
+
     </style>
+
+    <fd-rest-element-service id="updateObjectService" 
+      auto="false"
+      method="PUT" 
+      fdtype="objects/{{updateUUID}}"  
+      toast="{{toast}}"
+      body="{{body}}">
+    </fd-rest-element-service>
 
     <div class="object-row" layout vertical>
       <div layout horizontal center start>
@@ -85,30 +99,12 @@
         </div>
       </template>
       <template if="{{ showActions }}">
-        <template repeat="{{behaviour in object.behaviors}}">
-          <div layout horizontal center>
-            {{behaviour.name}} : {{behaviour.value}}
-            
-            <template if="{{behaviour.type === 'boolean'}}">
-              <core-icon-button>
-                TOGGLE
-              </core-icon-button>
-            </template>
-            <template if="{{behaviour.type === 'rangedint'}}">
-              <div layout horizontal center unresolved>
-                <paper-slider 
-                  min="{{behavior.min}}" 
-                  max="{{behavior.max}}" 
-                  immediateValue="{{behavior.value}}"
-                  editable>
-                </paper-slider>
-                <core-icon-button>
-                  CHANGE
-                </core-icon-button>
-              </div>
-            </template>
-            
-          </div>
+        <template repeat="{{behavior in object.behaviors}}">
+          <nautes-behavior-edit 
+            behavior="{{behavior}}" 
+            object="{{object}}" 
+            on-behavior-submit="{{submitBehavior}}">
+          </nautes-behavior-edit>
         </template>
       </template>
       <paper-shadow z="1"></paper-shadow>
@@ -117,6 +113,7 @@
   </template>
   <script>
     Polymer("nautes-object-row",{
+      updateUUID: "",
 
       showStats: false,
 
@@ -127,10 +124,10 @@
       labelActions: "SHOW ACTIONS",
 
       hasBehavior: function(){
-        console.log(this.object);
+        //console.log(this.object);
         var rwBehaviors = this.object.behaviors.filter(
-          function(behaviour){
-            return !behaviour.readOnly;
+          function(behavior){
+            return !behavior.readOnly;
           }
         );
         return rwBehaviors.length > 0;
@@ -160,6 +157,17 @@
       fullWidth: function(){
         return window.innerWidth - 80;
       },
+
+      submitBehavior: function(event, detail, sender){
+        console.log(detail);
+        this.updateUUID = detail.object.uuid;
+
+        var body = JSON.stringify(detail.object);
+        this.$.updateObjectService.body = body;
+
+        this.$.updateObjectService.go();
+
+      } 
 
     });
   </script>
