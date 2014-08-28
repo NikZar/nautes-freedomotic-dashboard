@@ -229,7 +229,7 @@
             <div class="box commands" layout vertical center>
               <template repeat="{{commandNR, i in newReaction.commands}}">
                 <div relative>
-                  <core-icon class="icon-remove" icon="clear">
+                  <core-icon index="{{i}}" class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
                   </core-icon>
                   <nautes-radio-select 
                     selected="0"
@@ -327,7 +327,7 @@
           <div class="box commands" layout vertical center>
             <template repeat="{{commandNR, i in newReaction.commands}}">
               <div relative>
-                <core-icon class="icon-remove" icon="clear">
+                <core-icon index="{{i}}" class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
                 </core-icon>
                 <nautes-radio-select 
                   selected="0"
@@ -362,13 +362,6 @@
   <script>
 
     Polymer("nautes-reaction-add",{
-      observe: {
-        "newReaction.trigger": "log"
-      },
-
-      log: function(){
-        console.log(this.newReaction.trigger);
-      },
 
       sortedTriggersChanged: function() {
         if(this.sortedTriggers){
@@ -387,6 +380,12 @@
         this.triggerSet = false;
         this.canSendReaction = false;
         this.newReaction.trigger = {};
+      },
+
+      removeCommand: function(event, detail, sender){
+        var index = sender.getAttribute("index");
+        this.utilityArray.splice(index, 1);
+        this.newReaction.commands.splice(index, 1);
       },
 
       clearNewReaction: function(){

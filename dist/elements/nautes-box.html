@@ -9,6 +9,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/nautes-i18n.html">
 
 <polymer-element name="nautes-box" attributes="box tooltip">
   <template>
@@ -74,7 +75,7 @@
     </style>
     <div layout vertical center center-justified fit>
       <core-icon icon="{{box.img}}" class="icon"></core-icon>
-      <paper-button id="my-button" label="{{box.title}}"></paper-button>
+      <paper-button id="my-button" label="{{box.title | translate}}"></paper-button>
       <paper-ripple fit></paper-ripple>
     </div>
     <div id="left-icon" layout vertical center center-justified on-tap="{{doFlip}}">
