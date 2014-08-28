@@ -304,7 +304,7 @@ element.
         args.headers = JSON.parse(args.headers);
       }
       if (this.contentType) {
-        args.headers['content-type'] = this.contentType;
+        args.headers['Content-Type'] = this.contentType;
       }
       if (this.handleAs === 'arraybuffer' || this.handleAs === 'blob' ||
           this.handleAs === 'document') {

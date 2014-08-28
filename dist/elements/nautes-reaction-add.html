@@ -137,7 +137,8 @@
       method="POST" 
       fdtype="reactions"  
       toast="{{toast}}"
-      body="{{body}}">
+      body="{{body}}"
+      contentType="application/json">
     </fd-rest-element-service>
 
     <div hidden>
@@ -299,8 +300,7 @@
               </div>
               <core-icon id="dropTrigger" 
                 class="dropicon" 
-                icon="add" 
-               >
+                icon="add">
               </core-icon>
             </div>
 
@@ -439,6 +439,7 @@
 
         body = JSON.stringify(reaction);
         this.$.sendReactionService.body = body;
+        this.$.sendReactionService.contentType = "application/json";
         this.$.sendReactionService.go();
         this.clearNewReaction();
       },

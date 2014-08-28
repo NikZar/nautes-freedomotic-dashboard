@@ -300,8 +300,7 @@
               </div>
               <core-icon id="dropTrigger" 
                 class="dropicon" 
-                icon="add" 
-               >
+                icon="add">
               </core-icon>
             </div>
 
@@ -440,6 +439,7 @@
 
         body = JSON.stringify(reaction);
         this.$.sendReactionService.body = body;
+        this.$.sendReactionService.contentType = "application/json";
         this.$.sendReactionService.go();
         this.clearNewReaction();
       },

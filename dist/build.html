@@ -1950,7 +1950,7 @@ element.
         args.headers = JSON.parse(args.headers);
       }
       if (this.contentType) {
-        args.headers['content-type'] = this.contentType;
+        args.headers['Content-Type'] = this.contentType;
       }
       if (this.handleAs === 'arraybuffer' || this.handleAs === 'blob' ||
           this.handleAs === 'document') {
@@ -7883,7 +7883,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl method auto params body" assetpath="../app/elements/">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl method auto params body contentType" assetpath="../app/elements/">
   <template>
     <style>
     :host {
@@ -7900,7 +7900,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <core-localstorage name="ssl" value="{{ssl}}">
     </core-localstorage>
     
-    <core-ajax id="ajax" auto="{{auto}}" on-core-error="{{errorHandler}}" on-core-response="{{elementsLoaded}}" response="{{fditems}}" handleas="json" method="{{method}}" contenttype="application/json" params="{{params}}" body="{{body}}">
+    <core-ajax id="ajax" auto="{{auto}}" on-core-error="{{errorHandler}}" on-core-response="{{elementsLoaded}}" response="{{fditems}}" handleas="json" method="{{method}}" params="{{params}}" body="{{body}}" contenttype="{{contentType}}">
     </core-ajax>
 
   </template>
@@ -7916,23 +7916,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     method: "GET",
 
     auto: true,
+
+    observe: {
+      "ssl apiurl fdtype": "reloadUrl"
+    },
     
     created: function() {
       this.fditems = [];
     },
 
     reloadUrl: function(){
-      if(this.ssl != undefined && this.apiurl){
+      if(this.ssl != undefined && this.apiurl && this.fdtype){   
         this.$.ajax.url = (this.ssl ? "https" : "http") +"://"+ this.apiurl + this.fdtype +"/";
       }
-    },
-
-    sslChanged: function(){
-        this.reloadUrl();
-    },
-
-    apiurlChanged: function(){
-        this.reloadUrl();
     },
 
     autoChanged: function(){
@@ -7952,7 +7948,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
     
     errorHandler: function(event){
-      console.log(event);
+      console.log("Error:", event.detail);
       if(this.toast){
         this.toast.text="There was a problem loading "+this.fdtype+" data.";
         this.toast.show();
@@ -7960,6 +7956,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     go: function(){
+      this.reloadUrl();
       this.$.ajax.go();
     }
     
@@ -10445,10 +10442,74 @@ core-icon {
 
 
 
+<polymer-element name="nautes-behavior-edit" attributes="behavior object" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: Open Sans;
+        font-size: 0.75em;
+      }
+      .uppercase{
+        text-transform: uppercase;
+      }
+      core-icon-button{
+        border: 1px solid rgba(50,50,50,0.2);
+        margin-top: 5px;
+        width: 110px;
+      }
+    </style>
+
+    <div layout="" horizontal="" center="">
+      <template if="{{behavior.type === &apos;boolean&apos;}}">
+        <core-icon-button icon="create" on-tap="{{toggle}}">
+          TOGGLE
+        </core-icon-button>
+      </template>
+      <template if="{{behavior.type === &apos;rangedint&apos;}}">
+        <core-icon-button icon="create" on-tap="{{submit}}">
+          CHANGE
+        </core-icon-button>
+        <paper-slider id="ratings" pin="" snaps="" min="{{behavior.min}}" max="{{behavior.max}}" step="1" value="{{behavior.value}}" flex="">
+        </paper-slider>
+      </template>
+        <div class="uppercase">
+          &nbsp {{behavior.name}} : {{behavior.value}}
+        </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer("nautes-behavior-edit",{
+
+      submit: function(){
+        this.fire("behavior-submit",{
+          object: this.object, 
+          behavior: this.behavior
+        });
+      },
+
+      toggle: function(){
+        this.behavior.value = !this.behavior.value;
+        this.submit();
+      }
+
+    });
+  </script>
+</polymer-element>
 
 
 
-<polymer-element name="nautes-object-row" attributes="bgColor object graph" assetpath="../app/elements/">
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-object-row" attributes="bgColor object graph toast" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -10492,7 +10553,15 @@ core-icon {
         padding-left: -15px;
       }
 
+      core-icon-button{
+        border: 1px solid rgba(50,50,50,0.2);
+        margin-top: 5px;
+      }
+
     </style>
+
+    <fd-rest-element-service id="updateObjectService" auto="false" method="PUT" fdtype="objects/{{updateUUID}}" toast="{{toast}}" body="{{body}}">
+    </fd-rest-element-service>
 
     <div class="object-row" layout="" vertical="">
       <div layout="" horizontal="" center="" start="">
@@ -10519,26 +10588,9 @@ core-icon {
         </div>
       </template>
       <template if="{{ showActions }}">
-        <template repeat="{{behaviour in object.behaviors}}">
-          <div layout="" horizontal="" center="">
-            {{behaviour.name}} : {{behaviour.value}}
-            
-            <template if="{{behaviour.type === &apos;boolean&apos;}}">
-              <core-icon-button>
-                TOGGLE
-              </core-icon-button>
-            </template>
-            <template if="{{behaviour.type === &apos;rangedint&apos;}}">
-              <div layout="" horizontal="" center="" unresolved="">
-                <paper-slider min="{{behavior.min}}" max="{{behavior.max}}" immediatevalue="{{behavior.value}}" editable="">
-                </paper-slider>
-                <core-icon-button>
-                  CHANGE
-                </core-icon-button>
-              </div>
-            </template>
-            
-          </div>
+        <template repeat="{{behavior in object.behaviors}}">
+          <nautes-behavior-edit behavior="{{behavior}}" object="{{object}}" on-behavior-submit="{{submitBehavior}}">
+          </nautes-behavior-edit>
         </template>
       </template>
       <paper-shadow z="1"></paper-shadow>
@@ -10547,6 +10599,7 @@ core-icon {
   </template>
   <script>
     Polymer("nautes-object-row",{
+      updateUUID: "",
 
       showStats: false,
 
@@ -10557,10 +10610,10 @@ core-icon {
       labelActions: "SHOW ACTIONS",
 
       hasBehavior: function(){
-        console.log(this.object);
+        //console.log(this.object);
         var rwBehaviors = this.object.behaviors.filter(
-          function(behaviour){
-            return !behaviour.readOnly;
+          function(behavior){
+            return !behavior.readOnly;
           }
         );
         return rwBehaviors.length > 0;
@@ -10590,6 +10643,17 @@ core-icon {
       fullWidth: function(){
         return window.innerWidth - 80;
       },
+
+      submitBehavior: function(event, detail, sender){
+        console.log(detail);
+        this.updateUUID = detail.object.uuid;
+
+        var body = JSON.stringify(detail.object);
+        this.$.updateObjectService.body = body;
+
+        this.$.updateObjectService.go();
+
+      } 
 
     });
   </script>
@@ -10953,7 +11017,7 @@ core-icon {
 
     <div layout="" vertical="" center="">
       <template repeat="{{obj in objects}}">
-        <nautes-object-row bgcolor="{{bgColor}}" object="{{obj}}" graph="{{graphs[obj.uuid]}}">
+        <nautes-object-row bgcolor="{{bgColor}}" object="{{obj}}" graph="{{graphs[obj.uuid]}}" toast="{{toast}}">
           <img src="{{getImg(obj)}}" width="50" height="50">
           <h2>{{obj.name}}</h2>
           <p>{{obj.description}}</p>
@@ -11110,7 +11174,7 @@ core-icon {
       }
     </style>
 
-    <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}">
+    <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}" method="GET">
     </fd-rest-element-service>
 
     <div layout="" vertical="" center="">
@@ -12519,7 +12583,7 @@ information about `paper-radio-button`.
           <core-icon-button class="command" icon="add-box" on-tap="{{addCommand}}">
             COMMAND
           </core-icon-button>
-        -->
+          -->
         </div>
       </div>
     
@@ -12529,7 +12593,7 @@ information about `paper-radio-button`.
       </template>
 
       <template if="{{showAddReaction}}">
-        <nautes-reaction-add smallquery="max-width: 640px" bgcolor="{{bgColor}}">
+        <nautes-reaction-add smallquery="max-width: 640px" bgcolor="{{bgColor}}" toast="{{toast}}">
         </nautes-reaction-add>
       </template>
 
@@ -13542,7 +13606,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <nautes-sorter property="receiver" elements="{{commands}}" sortedelements="{{sortedCommands}}">
     </nautes-sorter>
 
-    <fd-rest-element-service id="sendReactionService" auto="false" method="POST" fdtype="reactions" toast="{{toast}}" body="{{body}}">
+    <fd-rest-element-service id="sendReactionService" auto="false" method="POST" fdtype="reactions" toast="{{toast}}" body="{{body}}" contenttype="application/json">
     </fd-rest-element-service>
 
     <div hidden>
@@ -13806,6 +13870,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         body = JSON.stringify(reaction);
         this.$.sendReactionService.body = body;
+        this.$.sendReactionService.contentType = "application/json";
         this.$.sendReactionService.go();
         this.clearNewReaction();
       },
@@ -13952,6 +14017,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
   </script>
 </polymer-element>
+
 
 
 
