@@ -4,6 +4,7 @@
 
 <link rel="import" href="../elements/nautes-dashboard-service.html">
 <link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/nautes-i18n.html">
 
 <polymer-element name="nautes-dashboard-page" attributes="selected selectedBox">
   <template>
@@ -29,7 +30,7 @@
     <div id="header">
       <paper-icon-button icon="arrow-back" on-tap="{{back}}"></paper-icon-button>
       <div horizontal center-justified layout>
-        {{selectedBox.title}}
+        {{selectedBox.title | translate}}
       </div>
     </div>
     <content></content>

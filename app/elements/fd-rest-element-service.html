@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl method auto params body">
+<polymer-element name="fd-rest-element-service" attributes="fditems fdtype toast apiurl credentialrequired ssl method auto params body contentType">
   <template>
     <style>
     :host {
@@ -33,9 +33,9 @@
       response="{{fditems}}"
       handleAs="json"
       method="{{method}}"
-      contentType="application/json"
       params="{{params}}"
-      body="{{body}}">
+      body="{{body}}"
+      contentType="{{contentType}}">
     </core-ajax>
 
   </template>
@@ -51,23 +51,19 @@
     method: "GET",
 
     auto: true,
+
+    observe: {
+      "ssl apiurl fdtype": "reloadUrl"
+    },
     
     created: function() {
       this.fditems = [];
     },
 
     reloadUrl: function(){
-      if(this.ssl != undefined && this.apiurl){
+      if(this.ssl != undefined && this.apiurl && this.fdtype){   
         this.$.ajax.url = (this.ssl ? "https" : "http") +"://"+ this.apiurl + this.fdtype +"/";
       }
-    },
-
-    sslChanged: function(){
-        this.reloadUrl();
-    },
-
-    apiurlChanged: function(){
-        this.reloadUrl();
     },
 
     autoChanged: function(){
@@ -87,7 +83,7 @@
     },
     
     errorHandler: function(event){
-      console.log(event);
+      console.log("Error:", event.detail);
       if(this.toast){
         this.toast.text="There was a problem loading "+this.fdtype+" data.";
         this.toast.show();
@@ -95,6 +91,7 @@
     },
 
     go: function(){
+      this.reloadUrl();
       this.$.ajax.go();
     }
     

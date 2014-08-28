@@ -51,23 +51,19 @@
     method: "GET",
 
     auto: true,
+
+    observe: {
+      "ssl apiurl fdtype": "reloadUrl"
+    },
     
     created: function() {
       this.fditems = [];
     },
 
     reloadUrl: function(){
-      if(this.ssl != undefined && this.apiurl){
+      if(this.ssl != undefined && this.apiurl && this.fdtype){
         this.$.ajax.url = (this.ssl ? "https" : "http") +"://"+ this.apiurl + this.fdtype +"/";
       }
-    },
-
-    sslChanged: function(){
-        this.reloadUrl();
-    },
-
-    apiurlChanged: function(){
-        this.reloadUrl();
     },
 
     autoChanged: function(){
@@ -95,6 +91,7 @@
     },
 
     go: function(){
+      //this.reloadUrl();
       this.$.ajax.go();
     }
     

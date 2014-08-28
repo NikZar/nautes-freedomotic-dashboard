@@ -1,12 +1,15 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../bower_components/google-chart/google-chart.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/nautes-i18n.html">
+<link rel="import" href="../elements/nautes-behavior-edit.html">
 
-<polymer-element name="nautes-object-row" attributes="bgColor object graph">
+<polymer-element name="nautes-object-row" attributes="bgColor object graph toast">
   <template>
     <style>
       :host {
@@ -50,7 +53,20 @@
         padding-left: -15px;
       }
 
+      core-icon-button{
+        border: 1px solid rgba(50,50,50,0.2);
+        margin-top: 5px;
+      }
+
     </style>
+
+    <fd-rest-element-service id="updateObjectService" 
+      auto="false"
+      method="PUT" 
+      fdtype="objects/{{updateUUID}}"  
+      toast="{{toast}}"
+      body="{{body}}">
+    </fd-rest-element-service>
 
     <div class="object-row" layout vertical>
       <div layout horizontal center start>
@@ -60,7 +76,12 @@
           <content></content>
           <template if="{{ graph }}">
             <core-icon-button icon="drive-fusiontable" on-tap="{{toggleStats}}">
-              {{label}}
+              {{label | translate}}
+            </core-icon-button>
+          </template>
+          <template if="{{ hasBehavior() }}">
+            <core-icon-button icon="drive-fusiontable" on-tap="{{toggleActions}}">
+              {{labelActions | translate}}
             </core-icon-button>
           </template>
         </div>
@@ -77,19 +98,44 @@
           </google-chart>
         </div>
       </template>
+      <template if="{{ showActions }}">
+        <template repeat="{{behavior in object.behaviors}}">
+          <nautes-behavior-edit 
+            behavior="{{behavior}}" 
+            object="{{object}}" 
+            on-behavior-submit="{{submitBehavior}}">
+          </nautes-behavior-edit>
+        </template>
+      </template>
       <paper-shadow z="1"></paper-shadow>
     </div>
 
   </template>
   <script>
     Polymer("nautes-object-row",{
+      updateUUID: "",
 
       showStats: false,
 
+      showActions: false,
+
       label: "SHOW STATS",
+
+      labelActions: "SHOW ACTIONS",
+
+      hasBehavior: function(){
+        //console.log(this.object);
+        var rwBehaviors = this.object.behaviors.filter(
+          function(behavior){
+            return !behavior.readOnly;
+          }
+        );
+        return rwBehaviors.length > 0;
+      },
 
       toggleStats: function(){
         this.showStats = !this.showStats;
+        this.showActions = false;
         if(this.showStats){
           this.label = "HIDE STATS";
         } else {
@@ -97,9 +143,31 @@
         }
       },
 
+      toggleActions: function(){
+        console.log(this.object);
+        this.showActions = !this.showActions;
+        this.showStats = false;
+        if(this.showActions){
+          this.label = "HIDE ACTIONS";
+        } else {
+          this.label = "SHOW ACTIONS";
+        }
+      },
+
       fullWidth: function(){
         return window.innerWidth - 80;
       },
+
+      submitBehavior: function(event, detail, sender){
+        console.log(detail);
+        this.updateUUID = detail.object.uuid;
+
+        var body = JSON.stringify(detail.object);
+        this.$.updateObjectService.body = body;
+
+        this.$.updateObjectService.go();
+
+      } 
 
     });
   </script>

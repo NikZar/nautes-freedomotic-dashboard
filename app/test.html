@@ -1,0 +1,35 @@
+<!doctype html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Nautes Dashboard</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <!-- build:css styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild-->
+
+        <!-- Place your HTML imports here -->
+        <script src="bower_components/platform/platform.js"></script>
+        <link rel="import" href="elements/elements.html">
+        <link rel="import" href="bower_components/core-ajax/core-ajax.html">
+
+    </head>
+    <body>
+
+        <core-ajax
+            auto
+            url="http://fritz.bestmazzo.it:9111/v3/objects/"
+            withCredentials>
+        </core-ajax>
+       
+      <script>
+        document.addEventListener('polymer-ready', function() {
+            // Perform some behaviour
+        });
+      </script>
+    </body>
+</html>

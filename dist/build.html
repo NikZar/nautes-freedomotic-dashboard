@@ -4392,6 +4392,10 @@ To style the background, text and hover color, apply the `background` and
 
 <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
 
+<script src="../app/elements/nautes-i18n.js"></script>
+
+
+
 
 
 
@@ -4467,7 +4471,7 @@ To style the background, text and hover color, apply the `background` and
     </style>
     <div layout="" vertical="" center="" center-justified="" fit="">
       <core-icon icon="{{box.img}}" class="icon"></core-icon>
-      <paper-button id="my-button" label="{{box.title}}"></paper-button>
+      <paper-button id="my-button" label="{{box.title | translate}}"></paper-button>
       <paper-ripple fit=""></paper-ripple>
     </div>
     <div id="left-icon" layout="" vertical="" center="" center-justified="" on-tap="{{doFlip}}">
@@ -6269,6 +6273,7 @@ license that can be found in the LICENSE file.
 
 
 
+
 <polymer-element name="nautes-dashboard-page" attributes="selected selectedBox" assetpath="../app/elements/">
   <template>
     <style>
@@ -6293,7 +6298,7 @@ license that can be found in the LICENSE file.
     <div id="header">
       <paper-icon-button icon="arrow-back" on-tap="{{back}}"></paper-icon-button>
       <div horizontal="" center-justified="" layout="">
-        {{selectedBox.title}}
+        {{selectedBox.title | translate}}
       </div>
     </div>
     <content></content>
@@ -7970,146 +7975,103 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-
 <!--
-Supports sharing a JSONP-based JavaScript library.
+The `core-range` element is used for managing a numeric value within a given 
+range.  It has no visual appearance and is typically used in conjunction with 
+another element.
 
-    <core-shared-lib on-core-shared-lib-load="{{load}}" url="https://apis.google.com/js/plusone.js?onload=%%callback%%">
+One can build a progress bar using `core-range` like this:
 
-Multiple components can request a library using a `core-shared-lib` component and only one copy of that library will
-loaded from the network.
-
-Currently, the library must support JSONP to work as a shared-lib. 
-
-Some libraries require a specific global function be defined. If this is the case, specify the `callbackName` property.
-
-Where possible, you should use an HTML Import to load library dependencies. Rather than using this element,
-create an import (`<link rel="import" href="lib.html">`) that wraps loading the .js file:
-
-lib.html:
-
-    <script src="lib.js"></script>
+    <core-range min="0" max="200" value="100" ratio="{{ratio}}"></core-range>
+    <div class="progress-bar" style="width: {{ratio}}%;"></div>
 
 @group Polymer Core Elements
-@element core-shared-lib
+@element core-range
+@homepage github.io
+
 -->
-<polymer-element name="core-shared-lib" attributes="url notifyEvent callbackName" assetpath="../app/bower_components/core-shared-lib/">
+
+
+
+<polymer-element name="core-range" attributes="value min max step ratio" assetpath="../app/bower_components/core-range/">
 <script>
-(function() {
-  
-  Polymer({
+
+  Polymer('core-range', {
     
-    notifyEvent: 'core-shared-lib-load',
+    /**
+     * The number that represents the current value.
+     *
+     * @attribute value
+     * @type number
+     * @default 0
+     */
+    value: 0,
     
-    ready: function() {
-      if (!this.url && this.defaultUrl) {
-        this.url = this.defaultUrl;
-      }
+    /**
+     * The number that indicates the minimum value of the range.
+     *
+     * @attribute min
+     * @type number
+     * @default 0
+     */
+    min: 0,
+    
+    /**
+     * The number that indicates the maximum value of the range.
+     *
+     * @attribute max
+     * @type number
+     * @default 100
+     */
+    max: 100,
+    
+    /**
+     * Specifies the value granularity of the range's value.
+     *
+     * @attribute step
+     * @type number
+     * @default 1
+     */
+    step: 1,
+    
+    /**
+     * Returns the ratio of the value.
+     *
+     * @attribute ratio
+     * @type number
+     * @default 0
+     */
+    ratio: 0,
+    
+    observe: {
+      'value min max step': 'update'
     },
     
-    urlChanged: function() {
-      require(this.url, this, this.callbackName);
+    calcRatio: function(value) {
+      return (this.clampValue(value) - this.min) / (this.max - this.min);
     },
     
-    provide: function() {
-      this.async('notify');
+    clampValue: function(value) {
+      return Math.min(this.max, Math.max(this.min, this.calcStep(value)));
     },
     
-    notify: function() {
-      this.fire(this.notifyEvent, arguments);
+    calcStep: function(value) {
+      return this.step ? (Math.round(value / this.step) / (1 / this.step)) : value;
+    },
+    
+    validateValue: function() {
+      var v = this.clampValue(this.value);
+      this.value = this.oldValue = isNaN(v) ? this.oldValue : v;
+      return this.value !== v;
+    },
+    
+    update: function() {
+      this.validateValue();
+      this.ratio = this.calcRatio(this.value) * 100;
     }
     
   });
-
-  var apiMap = {};
   
-  function require(url, notifiee, callbackName) {
-    // make hashable string form url
-    var name = nameFromUrl(url);
-    // lookup existing loader instance
-    var loader = apiMap[name];
-    // create a loader as needed
-    if (!loader) {
-      loader = apiMap[name] = new Loader(name, url, callbackName);
-    }
-    loader.requestNotify(notifiee);
-  }
-  
-  function nameFromUrl(url) {
-    return url.replace(/[\:\/\%\?\&\.\=\-]/g, '_') + '_api';
-  }
-
-  var Loader = function(name, url, callbackName) {
-    this.instances = [];
-    this.callbackName = callbackName;
-    if (this.callbackName) {
-      window[this.callbackName] = this.success.bind(this);
-    } else {
-      if (url.indexOf(this.callbackMacro) >= 0) {
-        this.callbackName = name + '_loaded';
-        window[this.callbackName] = this.success.bind(this);
-        url = url.replace(this.callbackMacro, this.callbackName);
-      } else {
-        // TODO(sjmiles): we should probably fallback to listening to script.load
-        throw 'core-shared-api: a %%callback%% parameter is required in the API url';
-      }
-    }
-    //
-    this.addScript(url);
-  };
-  
-  Loader.prototype = {
-    
-    callbackMacro: '%%callback%%',
-    loaded: false,
-    
-    addScript: function(src) {
-      var script = document.createElement('script');
-      script.src = src;
-      script.onerror = this.error.bind(this);
-      var s = document.querySelector('script');
-      s.parentNode.insertBefore(script, s);
-      this.script = script;
-    },
-    
-    removeScript: function() {
-      if (this.script.parentNode) {
-        this.script.parentNode.removeChild(this.script);
-      }
-      this.script = null;
-    },
-    
-    error: function() {
-      this.cleanup();
-    },
-    
-    success: function() {
-      this.loaded = true;
-      this.cleanup();
-      this.result = Array.prototype.slice.call(arguments);
-      this.instances.forEach(this.provide, this);
-      this.instances = null;
-    },
-    
-    cleanup: function() {
-      delete window[this.callbackName];
-    },
-
-    provide: function(instance) {
-      instance.notify(instance, this.result);
-    },
-    
-    requestNotify: function(instance) {
-      if (this.loaded) {
-        this.provide(instance);
-      } else {
-        this.instances.push(instance);
-      }
-    }
-    
-  };
-  
-})();
 </script>
 </polymer-element>
 
@@ -8122,1429 +8084,128 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-
-
-
 <!--
-Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/),
-firing the `api-load` event when ready.
+The progress bars are for situations where the percentage completed can be 
+determined. They give users a quick sense of how much longer an operation 
+will take.
 
-Any number of components can use `<google-jsapi>` elements, and the library will only be loaded once.
+Example:
 
-@element google-jsapi
--->
-<polymer-element name="google-jsapi" extends="core-shared-lib" assetpath="../app/bower_components/google-apis/">
-<script>
-  Polymer({
-    defaultUrl: 'https://www.google.com/jsapi?callback=%%callback%%',
-    notifyEvent: 'api-load',
-    get api() {
-      return google;
+    <paper-progress value="10"></paper-progress>
+    
+There is also a secondary progress which is useful for displaying intermediate 
+progress, such as the buffer level during a streaming playback progress bar.
+
+Example:
+
+    <paper-progress value="10" secondaryProgesss="30"></paper-progress>
+
+Styling progress bar:
+
+To change the active progress bar color:
+
+    paper-progress::shadow #activeProgress {
+      background-color: #e91e63;
     }
-  });
-</script>
-</polymer-element>
 
+To change the secondary progress bar color:
 
+    paper-progress::shadow #secondaryProgress {
+      background-color: #f8bbd0;
+    }
+    
+To change the progress bar background color:
 
+    paper-progress::shadow #progressContainer {
+      background-color: #64ffda;
+    }
 
-
-<!--
-`google-chart` encapsulates Google Charts into a web component.
-
-    <google-chart
-      type='pie'
-      height='300px'
-      width='400px'
-      options='{"title": "Distribution of days in 2001Q1"}'
-      cols='[{"label":"Month", "type":"string"}, {"label":"Days", "type":"number"}]'
-      rows='[["Jan", 31],["Feb", 28],["Mar", 31]]'>
-    </google-chart>
-
-Data can be provided in one of three ways:
-
-- Via the `cols` and `rows` attributes:
-
-      cols='[{"label":"Mth", "type":"string"}, {"label":"Days", "type":"number"}]'
-      rows='[["Jan", 31],["Feb", 28],["Mar", 31]]'
-
-- Via the `data` attribute, passing in the data directly:
-
-      data='[["Month", "Days"], ["Jan", 31], ["Feb", 28], ["Mar", 31]]'
-
-- Via the `data` attribute, passing in the URL to a resource containing the
-  data, in JSON format:
-
-      data='http://example.com/chart-data.json'
-
-@element google-chart
-@status alpha
-@homepage http://googlewebcomponents.github.io/google-chart
--->
-<polymer-element name="google-chart" attributes="type width height options cols rows data" assetpath="../app/bower_components/google-chart/">
-
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-    <core-ajax id="ajax" handleas="json" url="{{data}}" on-core-response="{{externalDataLoaded}}"></core-ajax>
-    <div id="chartdiv" style="width: {{width}}; height: {{height}};
-      min-width: {{width}}; min-height: {{height}}; text-align: center;"></div>
-    <google-jsapi on-api-load="{{readyForAction}}"></google-jsapi>
-  </template>
-
-  <script>
-    Polymer({
-      /**
-       * Fired when the graph is displayed.
-       *
-       * @event google-chart-render
-       */
-
-
-      /**
-       * Sets the type of the chart.
-       *
-       * Should be one of:
-       * - `area`, `bar`, `bubble`, `candlestick`, `column`, `combo`,
-       *   `histogram`, `line`, `pie`, `scatter`, `stepped-area`
-       *
-       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/gallery">Google Visualization API reference (Chart Gallery)</a> for details.
-       *
-       * @attribute type
-       * @type string
-       */
-      type: 'column',
-
-      /**
-       * Sets the width of the chart on the page.
-       *
-       * @attribute width
-       * @type string
-       */
-      width: '400px',
-
-      /**
-       * Sets the height of the chart on the page.
-       *
-       * @attribute height
-       * @type string
-       */
-      height: '300px',
-
-      /**
-       * Sets the options for the chart.
-       *
-       * Example:
-       * <pre>{
-       *   title: "Chart title goes here",
-       *   hAxis: {title: "Categories"},
-       *   vAxis: {title: "Values", minValue: 0, maxValue: 2},
-       *   legend: "none"
-       * };</pre>
-       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/gallery">Google Visualization API reference (Chart Gallery)</a>
-       * for the options available to each chart type.
-       *
-       * @attribute options
-       * @type object
-       */
-      options: null,
-
-      /**
-       * Sets the data columns for this object.
-       *
-       * When specifying data with `cols` you must also specify `rows`, and
-       * not specify `data`.
-       *
-       * Example:
-       * <pre>[{label: "Categories", type: "string"},
-       *  {label: "Value", type: "number"}]</pre>
-       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/reference#DataTable_addColumn">Google Visualization API reference (addColumn)</a>
-       * for column definition format.
-       *
-       * @attribute cols
-       * @type array
-       */
-      cols: null,
-
-      /**
-       * Sets the data rows for this object.
-       *
-       * When specifying data with `rows` you must also specify `cols`, and
-       * not specify `data`.
-       *
-       * Example:
-       * <pre>[["Category 1", 1.0],
-       *  ["Category 2", 1.1]]</pre>
-       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/reference#addrow">Google Visualization API reference (addRow)</a>
-       * for row format.
-       *
-       * @attribute rows
-       * @type array
-       */
-      rows: null,
-
-      /**
-       * Sets the entire dataset for this object.
-       * Can be used to provide the data directly, or to provide a URL from
-       * which to request the data.
-       *
-       * When specifying data with `data` you must not specify `cols` or `rows`.
-       *
-       * Example:
-       * <pre>[["Categories", "Value"],
-       *  ["Category 1", 1.0],
-       *  ["Category 2", 1.1]]</pre>
-       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/reference#DataTable">Google Visualization API reference (DataTable constructor)</a>
-       * for data table format.
-       *
-       * @attribute data
-       * @type array or string
-       */
-      data: null,
-
-      chartTypes: null,
-
-      chartObject: null,
-
-      isReady: false,
-
-      created: function() {
-        this.chartTypes = {};
-        this.cols = [];
-        this.data = [];
-        this.options = {};
-        this.rows = [];
-      },
-
-      readyForAction: function(e, detail, sender) {
-        google.load("visualization", "1", {
-          packages: ['corechart'],
-          callback: function() {
-            this.isReady = true;
-            this.loadChartTypes();
-            this.loadData();
-          }.bind(this)
-        });
-      },
-
-      typeChanged: function() {
-        // Invalidate current chart object.
-        this.chartObject = null;
-        this.loadData();
-      },
-
-      observe: {
-        rows: 'loadData',
-        cols: 'loadData',
-        data: 'loadData',
-      },
-
-      drawChart: function(dataTable) {
-        if (!this.options) {
-          this.options = {};
-        }
-        this.options.height = this.height;
-        this.options.width = this.width;
-        if (!this.chartObject) {
-          var chartClass = this.chartTypes[this.type];
-          if (chartClass) {
-            this.chartObject = new chartClass(this.$.chartdiv);
-          }
-        }
-        if (this.chartObject) {
-          this.chartObject.draw(dataTable, this.options);
-          google.visualization.events.addOneTimeListener(this.chartObject,
-              'ready', function() {
-                  this.fire('google-chart-render');
-              }.bind(this));
-        } else {
-          this.$.chartdiv.innerHTML = 'Undefined chart type';
-        }
-      },
-
-      loadChartTypes: function() {
-        this.chartTypes = {
-          'area': google.visualization.AreaChart,
-          'bar': google.visualization.BarChart,
-          'bubble': google.visualization.BubbleChart,
-          'candlestick': google.visualization.CandlestickChart,
-          'column': google.visualization.ColumnChart,
-          'combo': google.visualization.ComboChart,
-          'histogram': google.visualization.Histogram,
-          'line': google.visualization.LineChart,
-          'pie': google.visualization.PieChart,
-          'scatter': google.visualization.ScatterChart,
-          'stepped-area': google.visualization.SteppedAreaChart
-        };
-      },
-
-      loadData: function() {
-        if (this.isReady) {
-          if (typeof this.data == 'string' || this.data instanceof String) {
-            // Load data asynchronously, from external URL.
-            this.$.ajax.go();
-          } else {
-            // Create a data table with provided data.
-            this.createDataTable();
-          }
-        }
-      },
-
-      externalDataLoaded: function(e, detail, sender) {
-        var dataTable =
-            google.visualization.arrayToDataTable(this.$.ajax.response);
-        this.drawChart(dataTable);
-      },
-
-      createDataTable: function() {
-        var dataTable = null;
-        if (this.rows && this.rows.length > 0 && this.cols &&
-            this.cols.length > 0) {
-          // Create the data table from cols and rows.
-          var dataTable = new google.visualization.DataTable();
-          dataTable.cols = this.cols;
-
-          for (var i = 0; i < this.cols.length; i++) {
-            dataTable.addColumn(this.cols[i]);
-          }
-
-          dataTable.addRows(this.rows);
-        } else if (this.data && this.data.length > 0) {
-          // Create the data table from the data attribute.
-          dataTable = google.visualization.arrayToDataTable(this.data);
-        }
-
-        if (dataTable) {
-          this.drawChart(dataTable);
-        }
-      }
-    });
-  </script>
-
-</polymer-element>
-
-<!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-`core-icon-button` is an icon with button behaviors.
-
-    <core-icon-button src="star.png"></core-icon-button>
-
-`core-icon-button` includes a default icon set.  Use `icon` to specify 
-which icon from the icon set to use.
-
-    <core-icon-button icon="menu"></core-icon-button>
-
-See [`core-iconset`](#core-iconset) for more information about 
-how to use a custom icon set.
-
-@group Polymer Core Elements
-@element core-icon-button
+@group Paper Elements
+@element paper-progress
+@extends core-range
 @homepage github.io
 -->
 
 
 
-
-<polymer-element name="core-icon-button" attributes="src icon active" assetpath="../app/bower_components/core-icon-button/">
+<polymer-element name="paper-progress" extends="core-range" attributes="secondaryProgress" assetpath="../app/bower_components/paper-progress/">
 
   <template>
+  
     <style>/*
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
-The complete set of authors may be found at http://polymer.github.io/AUTHORS
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
 :host {
   display: inline-block;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  border-radius: 2px;
-  padding: 7px;
-  margin: 2px;
-  vertical-align: middle;
-  font-size: 1rem;
-  cursor: pointer;
+  width: 200px;
+  height: 4px;
 }
 
-:host([disabled]) {
-  opacity: 0.6;
-  pointer-events: none;
+#progressContainer {
+  position: relative;
+  height: 100%;
+  background-color: #c8c8c8;
 }
 
-:host(.outline) {
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+#activeProgress, #secondaryProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
 }
 
-:host(:hover:not([disabled])) {
-  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.1);
+#activeProgress {
+  background-color: #0f9d58;
 }
 
-:host(.selected:not([disabled])) {
-  background-color: rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.12);
-}
-
-:host(:active:not([disabled]), .selected:active:not([disabled])) {
-  background-color: rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.12);
-}
-
-:host(.core-dark-theme.outline) {
-  background-color: rgba(200, 200, 200, 0.05);
-  box-shadow: 0 0 0 1px rgba(200, 200, 200, 0.1);
-}
-
-:host(.core-dark-theme:hover) {
-  background-color: rgba(200, 200, 200, 0.05);
-  box-shadow: 0 1px 0 0 rgba(200, 200, 200, 0.12), 0 0 0 1px rgba(200, 200, 200, 0.1);
-}
-
-:host(.core-dark-theme.selected) {
-  background-color: rgba(220, 220, 220, 0.05);
-  box-shadow: inset 0 1px 0 0 rgba(200, 200, 200, 0.05), 0 0 0 1px rgba(200, 200, 200, 0.12);
-}
-
-:host(.core-dark-theme:active, .core-dark-theme.selected:active) {
-  background-color: rgba(200, 200, 200, 0.05);
-  box-shadow: inset 0 1px 0 0 rgba(200, 200, 200, 0.1), 0 0 0 1px rgba(200, 200, 200, 0.12);
-}
-
-core-icon {
-  pointer-events: none;
-}
-
-/* note: this is a polyfill aware selector */
-:host ::content > :not(core-icon) {
-  margin-left: 4px;
-}
-</style>
-    <core-icon src="{{src}}" icon="{{icon}}"></core-icon><content></content>
-  </template>
-
-  <script>
-
-    Polymer('core-icon-button', {
-
-      /**
-       * The URL of an image for the icon.  Should not use `icon` property
-       * if you are using this property.
-       *
-       * @attribute src
-       * @type string
-       * @default ''
-       */
-      src: '',
-
-      /**
-       * If true, border is placed around the button to indicate it's
-       * active state.
-       *
-       * @attribute active
-       * @type boolean
-       * @default false
-       */
-      active: false,
-
-      /**
-       * Specifies the icon name or index in the set of icons available in
-       * the icon set.  Should not use `src` property if you are using this
-       * property.
-       *
-       * @attribute icon
-       * @type string
-       * @default ''
-       */
-      icon: '',
-
-      activeChanged: function() {
-        this.classList.toggle('selected', this.active);
-      }
-
-    });
-
-  </script>
-
-</polymer-element>
-
-
-
-
-
-
-
-
-
-<polymer-element name="nautes-object-row" attributes="bgColor object graph" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        position: relative;
-        background-color: {{ bgColor }};
-        width: 100%;
-        font-size: 1.2rem;
-        font-weight: 300;
-        font-family: Open Sans;
-      }
-      .object-row {
-        padding: 40px;
-        color: #444;
-      }
+#secondaryProgress {
+  background-color: #87ceac;
+}</style>
+  
+    <div id="progressContainer" role="progressbar" aria-valuenow="{{value}}" aria-valuemin="{{min}}" aria-valuemax="{{max}}">
+    
+      <div id="secondaryProgress" style="width: {{secondaryRatio}}%;"></div>
+      <div id="activeProgress" style="width: {{ratio}}%;"></div>
       
-      polyfill-next-selector { content: '.object-row h2'; }
-      
-      .object-row ::content h2 {
-        margin: 0;
-        font-size: 1.8rem;
-        font-weight: 300;
-      }
-
-      polyfill-next-selector { content: '.object-row img'; }
-      
-      .object-row ::content img {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        background: #444;
-        margin-right: 30px;
-      }
-
-      .chart-container{
-        margin-top: 10px;
-        background-color: rgba(255, 255, 255, 0.4);
-        border: 3px solid rgba(255, 255, 255, 0.6);
-        border-radius: 10px;
-        padding-left: -15px;
-      }
-
-    </style>
-
-    <div class="object-row" layout="" vertical="">
-      <div layout="" horizontal="" center="" start="">
-        <content select="img"></content>
-        <div flex="">
-          <content select="h2"></content>
-          <content></content>
-          <template if="{{ graph }}">
-            <core-icon-button icon="drive-fusiontable" on-tap="{{toggleStats}}">
-              {{label}}
-            </core-icon-button>
-          </template>
-        </div>
-      </div>
-      <template if="{{ showStats }}">
-        <div unresolved="" class="chart-container" layout="" horizontal="" center="" center-justified="">
-          <google-chart id="chart" height="200px" width="{{fullWidth()}}px" type="{{graph.type}}" options="{{graph.options}}" cols="{{graph.cols}}" rows="{{graph.rows}}">
-          </google-chart>
-        </div>
-      </template>
-      <paper-shadow z="1"></paper-shadow>
     </div>
-
-  </template>
-  <script>
-    Polymer("nautes-object-row",{
-
-      showStats: false,
-
-      label: "SHOW STATS",
-
-      toggleStats: function(){
-        this.showStats = !this.showStats;
-        if(this.showStats){
-          this.label = "HIDE STATS";
-        } else {
-          this.label = "SHOW STATS";
-        }
-      },
-
-      fullWidth: function(){
-        return window.innerWidth - 80;
-      },
-
-    });
-  </script>
-</polymer-element>
-
-
-<polymer-element name="x-websocket" attributes="url json jsonSend jsonReceive" constructor="XWebsocket" assetpath="../app/bower_components/x-websocket/dist/">
-	<template>
-		<style>
-			:host {
-				display: none;
-			}
-		</style>
-	</template>
-	<script type="text/javascript">
-		(function() {
-			Polymer("x-websocket", {
-				/**
-				 * Should both sent and received data be interpreted as json and encoded/decoded ? Defaults to false.
-				 * @public
-				 * @type {Boolean}
-				 */
-				json: false,
-				/**
-				 * Should sent data be json-encoded, even if {{json}} is falsy ? Defaults to false.
-				 * @public
-				 * @type {Boolean}
-				 */
-				jsonSend: false,
-				/**
-				 * Should received data be json-decoded, even if {{json}} is falsy ? Defaults to false.
-				 * @type {Boolean}
-				 */
-				jsonReceive: false,
-				/**
-				 * WebSocket object.
-				 * @private
-				 * @type {WebSocket}
-				 */
-				_ws: null,
-				/**
-				 * Send data through the WebSocket connection. Will optionally be json-encoded if {{json}} or {{jsonSend}} is truthy.
-				 * @public
-				 * @param  {*} data The data to send.
-				 */
-				send: function(data) {
-					if(!this._ws) {
-						throw new Error("x-websocket.send(...): not connected.");
-					}
-					if(this.json || this.jsonSend) {
-						data = JSON.stringify(data);
-					}
-					this._ws.send(data);
-				},
-				/**
-				 * Close the current connection. Optionally provide with a reason.
-				 * @public
-				 * @param {[String]} Optional closing reason to provide the server with.
-				 */
-				close: function(reason) {
-					if(this._ws) {
-						this._ws.close(reason);
-						this._ws = null;
-					}
-				},
-				/**
-				 * Underlying connection readyState getter.
-				 * @see {@link http://www.w3.org/TR/websockets/#dom-websocket-readystate}
-				 * @public
-				 * @type {Number}
-				 */
-				get readyState() {
-					if(this._ws) {
-						return this._ws.readyState;
-					}
-					else {
-						return -1;
-					}
-				},
-
-				/**
-				 * {{url}} change handler.
-				 * @private
-				 */
-				urlChanged: function() {
-					this._connect();
-				},
-
-				/**
-				 * Create a connection to the remote server identified by {{url}}.
-				 * @private
-				 */
-				_connect: function() {
-					if(!this.url) {
-						throw new Error("x-websocket.connect(...): no url.");
-					}
-					if(this._ws) {
-						throw new Error("x-websocket.connect(...): already connected.");
-					}
-					this._ws = new WebSocket(this.url);
-					this._ws.onopen = this._onwsopen.bind(this);
-					this._ws.onerror = this._onwserror.bind(this);
-					this._ws.onmessage = this._onwsmessage.bind(this);
-					this._ws.onclose = this._onwsclose.bind(this);
-				},
-				/**
-				 * WebSocket open event handler. Re-fires to the x-websocket element.
-				 * @private
-				 */
-				_onwsopen: function() {
-					this.fire("open");
-				},
-				/**
-				 * WebSocket error event handler. Re-fires to the x-websocket element.
-				 * @private
-				 */
-				_onwserror: function() {
-					this.fire("error");
-				},
-				/**
-				 * WebSocket message event handler. Re-fires to the x-websocket element, after optionally json-parsing the payload if {{json}} or {{jsonReceive}} is truthy.
-				 * @private
-				 */
-				_onwsmessage: function(event) {
-					var data = event.data;
-					if(this.json || this.jsonReceive) {
-						data = JSON.parse(data);
-					}
-					this.fire("message", { data: data });
-				},
-				/**
-				 * WebSocket close event handler.
-				 * @private
-				 */
-				_onwsclose: function(event) {
-					this.fire("error", { code: event.code, reason: event.reason });
-				},
-			});
-		})();
-	</script>
-</polymer-element>
-
-
-
-
-<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiurl ssl" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-
-    <core-localstorage name="ssl" value="{{ ssl }}">
-    </core-localstorage>
-
-    <core-localstorage name="apiurl" value="{{apiurl}}">
-    </core-localstorage>
-
-    <x-websocket id="ws" on-message="{{onMessage}}">
-    </x-websocket>
-
-  </template>
-  <script>
-    Polymer("nautes-fd-websocket-api-service",{
-
-      reloadUrl: function(){
-        if(this.ssl != undefined && this.apiurl){
-          this.$.ws.url = (this.ssl ? "wss" : "ws") + "://" + this.apiurl + "ws/" + this.wstype +"/";
-        }
-      },
-
-      apiprotocolwsChanged: function(){
-        this.reloadUrl();
-      },
-
-      apiurlChanged: function(){
-        this.reloadUrl();
-      },
-
-      onMessage: function(event){
-        var data = event.detail.data;
-        data = data.split("|").pop();
-        if(data.trim() != ""){
-          data = {uuid: data, type: this.wstype};
-          this.fire("message", { data: data });
-        }
-        event.stopPropagation();
-      },
-
-      _parse: function(input){
-        var statements = input.substring(2, input.length -2).split("; ");
-        var output = {};
-
-        for (var i = 0; i < statements.length; i++) {
-          var statement = statements[i].split(" EQUALS ");
-          var leftSide = statement[0].split(".");
-          var rightSide = statement[1];
-          this._assign(output, leftSide, rightSide);
-        }
-
-        var data = JSON.stringify(output);
-        return JSON.parse(data);
-      },
-
-      _assign: function(obj, keyPath, value){
-         var lastKeyIndex = keyPath.length-1;
-         for (var i = 0; i < lastKeyIndex; ++i) {
-           key = keyPath[i];
-           if (!(key in obj)){
-             obj[key] = {};
-           }
-           obj = obj[key];
-         }
-         obj[keyPath[lastKeyIndex]] = value;
-      }
-
-    });
-  </script>
-</polymer-element>
-
-
-
-
-
-
-
-<polymer-element name="nautes-stats" attributes="stats graphs graphsArray" assetpath="../app/elements/">
-  <template>
-
-    <style>
-      :host {
-        display: none;
-      }
-    </style>
-
-    <fd-rest-element-service fdtype="commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run" fditems="{{ stats }}" toast="{{" }}="" method="POST">
-    </fd-rest-element-service>
-
-  </template>
-
-  <script>
-    Polymer("nautes-stats",{
-
-      graphs: {},
-
-      graphsArray: [],
-
-      statsChanged: function(){
-
-        if(this.stats && this.stats.properties && this.stats.properties.tuples){
-          var tuples = this.stats.properties.tuples.tuples;
-          this.graphs = {};
-          this.graphsArray = [];
-
-          for (var i=0; i<tuples.length; i++) {
-            var tuple = tuples[i];
-            if(tuple.behavior === "powered"){
-              var graph = null;
-              if(!(tuple.uuid in this.graphs)){
-                this.graphs[tuple.uuid] = {};
-                this.graphs[tuple.uuid].title = tuple.name;
-                this.graphs[tuple.uuid].behavior = tuple.behavior;
-                this.graphs[tuple.uuid].cols =  [{label:"Date", type:"string"}, {label: tuple.behavior, type:"number"}];
-                this.graphs[tuple.uuid].rows =  [];
-                this.graphs[tuple.uuid].options =  {
-                  backgroundColor: "transparent",
-                  hAxis: { 
-                    slantedText: true
-                  },
-                  vAxis: { 
-                    minValue:0,
-                    maxValue:1,
-                    gridlines:{count:2},
-                    ticks: [{v:1.00, f:'ON'}, {v:0.00, f:'OFF'}] 
-                  }
-                };
-                this.graphs[tuple.uuid].type = "stepped-area";
-              }
-              graph = this.graphs[tuple.uuid];
-
-              var strdate = tuple.datetime.replace("CEST","");
-              var milliseconds = Date.parse(strdate);
-              var date = new Date(milliseconds);
-
-              var value = (JSON.parse(tuple.behaviorValue) ? 1 : 0);
-
-              graph.rows.push([strdate, value]);
-
-            }
-
-          }
-
-          for(var uuid in this.graphs){
-            if(this.graphs.hasOwnProperty(uuid)){
-              var graph = this.graphs[uuid];
-
-              graph.rows = graph.rows.sort(function(a, b){
-                return b[0]-a[0];
-              });
-
-              this.graphsArray.push(graph);
-            }
-          }
-
-        }
-      },
-
-      handleStatsResponse: function(response){
-        console.log(response.detail.response);
-      },
-
-      go: function(){
-        this.$.statsRequest.go();
-      },
-
-    });
-  </script>
-</polymer-element>
-
-
-
-
-
-
-
-
-
-
-
-<polymer-element name="nautes-object-list" attributes="bgColor toast" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        background-color: {{ bgColor }};
-      }
-    </style>
-
-    <core-localstorage name="ssl" value="{{ ssl }}">
-    </core-localstorage>
-
-
-    <core-localstorage name="apiurl" value="{{ apiurl }}">
-    </core-localstorage>
-
-    <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
-    </core-localstorage>
-
-    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast="{{" }}="">
-    </fd-rest-element-service>
-
-    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
-    </nautes-fd-websocket-api-service>
-
-    <core-ajax id="objGetRequest" on-core-response="{{handleGetResponse}}" on-core-error="{{errorGetHandler}}" method="GET" handleas="json" withcredentials="{{credentialrequired}}">
-    </core-ajax>
-
-
-    <nautes-stats graphs="{{graphs}}"></nautes-stats>
-
-    <div layout="" vertical="" center="">
-      <template repeat="{{obj in objects}}">
-        <nautes-object-row bgcolor="{{bgColor}}" object="{{obj}}" graph="{{graphs[obj.uuid]}}">
-          <img src="{{getImg(obj)}}" width="50" height="50">
-          <h2>{{obj.name}}</h2>
-          <p>{{obj.description}}</p>
-        </nautes-object-row>
-      </template>
-    </div>    
     
   </template>
-
-
+  
   <script>
-    Polymer("nautes-object-list",{
-
-      objectUpdatingIndex: 0,
-
-      objectUpdating: {},
-
-      reloadUrl: function(){
-        if(this.ssl != undefined && this.apiurl && this.objectUpdating.uuid){
-          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.objectUpdating.uuid;
-        }
+  
+    Polymer('paper-progress', {
+      
+      /**
+       * The number that represents the current secondary progress.
+       *
+       * @attribute secondaryProgress
+       * @type number
+       * @default 0
+       */
+      secondaryProgress: 0,
+      
+      step: 0,
+      
+      observe: {
+        'value secondaryProgress min max': 'update'
       },
-
-      sslChanged: function(){
-        this.reloadUrl();
-      },
-
-      apiurlChanged: function(){
-        this.reloadUrl();
-      },
-
-      getImg: function(obj) {
-        var icon = obj.representation[obj.currentRepresentation].icon;
-        if(icon != null){
-          var src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + icon ;
-          return src;
-        }
-      },
-
-      updateObject: function(event){
-        var uuid = event.detail.data.uuid;
-
-        if(uuid){
-        
-          for (var i = 0; i < this.objects.length; i++) {
-            var obj = this.objects[i];
-
-            if (obj.uuid === uuid) {
-              console.log("Object List - Asynch update of: " + uuid);
-              this.objectUpdating = obj;
-              this.objectUpdatingIndex = i;
-              this.reloadUrl();
-              this.$.objGetRequest.go();
-            }
-
-          }
-        }
-      },
-
-      handleGetResponse: function(response){
-          this.objects[this.objectUpdatingIndex] = response.detail.response;
+      
+      update: function() {
+        this.super();
+        this.secondaryProgress = this.clampValue(this.secondaryProgress);
+        this.secondaryRatio = this.calcRatio(this.secondaryProgress) * 100;
       }
       
     });
-  </script>
-</polymer-element>
-
-
-
-
-
-
-
-
-<polymer-element name="nautes-trigger-row" attributes="bgColor trigger" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        position: relative;
-        background-color: {{bgColor}};
-        width: 100%;
-        font-size: 1.2rem;
-        font-weight: 300;
-        font-family: Open Sans;
-      }
-      
-      .trigger-row {
-        margin-bottom: 10px;
-        padding: 40px;
-        font-family: Tahoma;
-        color: #444;
-      }
-      
-      .trigger-row ::content h2 {
-        margin: 0;
-        font-size: 1.8rem;
-        font-weight: 300;
-      }
-      
-      .trigger-row ::content img {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        background: #444;
-        margin: 10px;
-      }
-      .title{
-        font-weight: bold;
-      }
-      span{
-        line-height: 24px;
-        margin-right: 5px;
-        font-size: 17px;
-      }
-      .icon{
-        margin-left: 30px;
-        color: #444;
-        width: 70px;
-        height: 70px;
-      }
-    </style>
-    <div layout="" horizontal="" center="">
-      <core-icon class="icon" icon="image:flash-on"></core-icon>
-      <div class="trigger-row" layout="" vertical="" center-justified="">
-        <div layout="" horizontal="">
-            <span class="title">{{trigger.name}}: </span> <span> {{trigger.description}}</span>
-        </div>
-        <span>Channel: {{trigger.channel}}</span>
-      </div>
-      <paper-shadow z="1"></paper-shadow>
-    </div>
-
-  </template>
-  <script>
-    Polymer("nautes-trigger-row",{
-
-    });
-  </script>
-</polymer-element>
-
-
-
-
-
-
-<polymer-element name="nautes-trigger-list" attributes="bgColor toast" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        background-color: {{bgColor}};
-      }
-    </style>
-
-    <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}">
-    </fd-rest-element-service>
-
-    <div layout="" vertical="" center="">
-      <template repeat="{{trigger in triggers}}">
-        <nautes-trigger-row bgcolor="{{bgColor}}" trigger="{{trigger}}">
-        </nautes-trigger-row>
-      </template>
-    </div>    
-
-  </template>
-  <script>
-    Polymer("nautes-trigger-list",{
-
-    });
-  </script>
-</polymer-element>
-
-
-
-
-
-
-
-<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequired ssl" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        position: absolute;
-        z-index: 1000;
-      }
-    </style>
-
-    <core-localstorage name="ssl" value="{{ ssl }}">
-    </core-localstorage>
-
-    <core-localstorage name="apiurl" value="{{ apiurl }}">
-    </core-localstorage>
-
-    <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
-    </core-localstorage>
-
-    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
-    </nautes-fd-websocket-api-service>
-
-    <img id="envObjectImg" on-tap="{{onTap}}" width="50" height="50" alt="{{ envObject.name }}" title="{{envObject.name}}">
-
-    <core-ajax id="objTapRequest" on-core-response="{{ handleTapResponse }}" on-core-error="{{ errorTapHandler }}" method="POST" withcredentials="{{ credentialrequired }}">
-    </core-ajax>
-
-    <core-ajax id="objGetRequest" on-core-response="{{ handleGetResponse }}" on-core-error="{{ errorGetHandler }}" method="GET" handleas="json" withcredentials="{{ credentialrequired }}">
-    </core-ajax>
-
-  </template>
-  <script>
-    Polymer("nautes-zone-object",{
-
-      reloadUrl: function(){
-        if(this.ssl != undefined && this.apiurl && this.envObject.uuid){
-          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid + "/click";
-          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid;
-        }
-      },
-
-      setImg: function(){
-        if(this.ssl != undefined && this.apiurl){
-          var src = this.getImg();
-          if(src){
-            this.$.envObjectImg.src = src;
-          }
-        }
-      },
-
-      envObjectChanged: function(){
-        if(this.envObject){
-          this.setImg();
-          this.style.left = this.envObject.representation[0].offset.x + "px";
-          this.style.top = this.envObject.representation[0].offset.y + "px";
-        }
-      },
-
-      sslChanged: function(){
-          this.setImg();
-          this.reloadUrl();
-      },
-
-      apiurlChanged: function(){
-          this.setImg();
-          this.reloadUrl();
-      },
-
-      errorGetHandler: function(event){
-          if(this.toast){
-            this.toast.text="There was a problem loading " + this.envObject.name + " data.";
-            this.toast.show();
-          }
-        },
-
-      errorTapHandler: function(event){
-          if(this.toast){
-            this.toast.text="There was a server problem during " + this.envObject.name + " interaction.";
-            this.toast.show();
-          }
-        },
-
-      handleGetResponse: function(response){
-          this.envObject = response.detail.response;
-        },
-
-      handleTapResponse: function(response){
-          this.$.objGetRequest.go();
-        },
-
-      onTap: function(){
-          this.$.objTapRequest.go();
-        },
-
-      updateObject: function(event){
-          var uuid = event.detail.data.uuid;
-          if(uuid){
-            var obj = this.envObject;
-            if (obj.uuid === uuid) {
-              console.log("Environment Zone - Asynch update of: "+uuid);
-              this.$.objGetRequest.go();
-            }
-          }
-        },
-
-      getImg: function() {
-        var obj = this.envObject;
-        if(obj){
-          var icon = obj.representation[obj.currentRepresentation].icon;
-          if(icon){
-            var src = (this.ssl ? "https" : "http") + "://" + this.apiurl + "resources/" + icon;
-            return src;
-          } 
-        }
-      }
-      
-    });
-  </script>
-</polymer-element>
-
-
-
-
-
-<polymer-element name="nautes-zone" attributes="zone canvas toast" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-      #title{
-        position: absolute;
-        z-index: 12;
-        background-color: rgba(100, 100, 100, 0.7);
-        color: #fff;
-      }
-    </style>
-    <div id="title">
-      {{zone.name}}
-    </div>
-    <template repeat="{{envObject in zone.objects}}">
-      <nautes-zone-object envobject="{{envObject}}" toast="{{toast}}"></nautes-zone-object>
-    </template>
-  </template>
-  <script>
-    Polymer("nautes-zone",{
-      zoneChanged: function(){
-        if(this.zone){
-          this.$.title.style.left = this.zone.shape.points[0].x +"px";
-          this.$.title.style.top = this.zone.shape.points[0].y +"px";
-        }
-      },
-
-      canvasChanged: function() {
-          var poly = this.zone.shape.points;
-          var canvas = this.canvas;
-          var context = canvas.getContext('2d');
-
-          var ranR = Math.floor(Math.random() * 255);
-          var ranG = Math.floor(Math.random() * 255);
-          var ranB = Math.floor(Math.random() * 255);
-
-          context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.2)";
-          context.beginPath();
-          context.moveTo(poly[0].x, poly[0].y);
-          for( item=1 ; item < poly.length ; item++ ){
-              context.lineTo( poly[item].x , poly[item].y );
-          }
-          context.closePath();
-          context.fill();
-      }
-
-    });
-  </script>
-</polymer-element>
-
-
-
-
-
-
-<polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiurl ssl" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        color: #444;
-        background: {{bgColor}};
-        position: relative;
-        font-family: Verdana;
-      }
-      canvas{
-        position: absolute;
-        z-index: 11;
-      }
-    </style>
     
-    <core-localstorage name="ssl" value="{{ ssl }}">
-    </core-localstorage>
-
-    <core-localstorage name="apiurl" value="{{ apiurl }}">
-    </core-localstorage>
-
-    <div layout="" vertical="" center="">
-      <h2>{{environment.name}}</h2>
-      <div id="container" relative="">
-        <canvas id="environmentCanvas" width="{{environment.width}}px" height="{{environment.height}}px"></canvas>
-        <img id="environmentImg" width="{{environment.width}}px" height="{{environment.height}}px">
-        <template repeat="{{zone in environment.zones}}">
-          <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
-        </template>
-      </div>
-    </div>
-  </template>
-  <script>
-    Polymer("nautes-environment-row",{
-
-      scaleFactor: 1.0,
-
-      scaleFactorChanged: function(){
-        if(this.scaleFactor){
-          var scaleStr = "scale("+this.scaleFactor+ ","+this.scaleFactor+")";
-          this.style.transform = scaleStr;
-          this.style.WebkitTransform = scaleStr;
-          this.style.msTransform = scaleStr;
-
-          var verticalOffset = - (this.environment.height * (1 - this.scaleFactor))/2 + 20;
-          this.style.top = verticalOffset+"px";
-        }
-      },
-
-      setEnvImg: function(){
-        if(this.ssl != undefined && this.apiurl){
-          var src = this.getImg();
-          if(src){
-            this.$.environmentImg.src = src;
-          }
-        }
-      },
-
-      sslChanged: function(){
-        this.setEnvImg();
-      },
-
-      apiurlChanged: function(){
-        this.setEnvImg();
-      },
-
-      ready: function(){
-        var element = this;
-        element.resize();
-        window.addEventListener('resize', function(event){
-          element.resize();
-        });
-      },
-
-      resize: function(){
-        var element = this;
-        this.scaleFactor = element.getScaleFactor();
-      },
-
-      getImg: function() {
-        var src =  (this.ssl ? "https" : "http") + "://" + this.apiurl + 'resources/' + this.environment.backgroundImage;
-        return src;
-      },
-      
-      getScaleFactor: function(){
-        var scaleFactorX =  (window.innerWidth - 100) / this.environment.width;
-        var scaleFactorY =  (window.innerHeight - 150) / this.environment.height;
-        var scaleFactor = Math.min(scaleFactorX,scaleFactorY,1);
-        return scaleFactor;
-      }
-
-    });
   </script>
-</polymer-element>
-
-
-
-
-
-
-<fd-rest-element-service id="triggersService" fdtype="triggers" fditems="{{triggers}}"></fd-rest-element-service>
-
-<polymer-element name="nautes-environment" attributes="bgColor toast" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        background-color: {{bgColor}};
-        width: 100%;
-        overflow: hidden;
-      }
-    </style>
-
-    <fd-rest-element-service fdtype="environments" fditems="{{environments}}" toast="{{toast}}">
-    </fd-rest-element-service>
-
-    <div relative="">
-      <template repeat="{{environment in environments}}">
-        <nautes-environment-row bgcolor="{{bgColor}}" environment="{{environment}}" toast="{{toast}}">
-        </nautes-environment-row>
-      </template>
-    </div>
-
-  </template>
-  <script>
-    Polymer("nautes-environment",{
-      resize: function(){
-        var maxHeight = window.innerHeight-80;
-        this.style.maxHeight = maxHeight + "px";
-      },
-
-      ready: function(){
-        var element = this;
-        element.resize();
-        window.addEventListener('resize', function(event){
-          element.resize();
-        });
-      }
-    });
-  </script>
+  
 </polymer-element>
 
 <!--
@@ -10669,6 +9330,2144 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <!--
+`paper-slider` allows user to select a value from a range of values by
+moving the slider thumb.  The interactive nature of the slider makes it a 
+great choice for settings that reflect intensity levels, such as volume, 
+brightness, or color saturation.
+
+Example:
+
+    <paper-slider></paper-slider>
+
+Use `min` and `max` to specify the slider range.  Default is 0 to 100.
+
+Example:
+
+    <paper-slider min="10" max="200" value="110"></paper-slider>
+
+Styling slider:
+
+To change the slider progress bar color:
+
+    paper-slider::shadow #sliderBar::shadow #activeProgress {
+      background-color: #0f9d58;
+    }
+
+To change the slider knob color:
+
+    paper-slider::shadow #sliderKnobInner {
+      background-color: #0f9d58;
+    }
+
+To change the slider pin color:
+
+    paper-slider::shadow #sliderKnobInner::before {
+      background-color: #0f9d58;
+    }
+
+To change the slider pin's value:
+
+    paper-slider::shadow #sliderKnobInner::after {
+      color: #0f9d58
+    }
+
+To change the slider secondary progress bar color:
+
+    paper-slider::shadow #sliderBar::shadow #secondaryProgress {
+      background-color: #0f9d58;
+    }
+
+@group Paper Elements
+@element paper-slider
+@extends core-range
+@homepage github.io
+-->
+
+
+
+
+<polymer-element name="paper-slider" extends="core-range" attributes="snaps pin disabled secondaryProgress editable immediateValue" assetpath="../app/bower_components/paper-slider/">
+<template>
+
+  <style>/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+*/
+
+:host {
+  display: inline-block;
+  width: 200px;
+  cursor: default;
+}
+
+#sliderContainer {
+  position: relative;
+  width: calc(100% - 32px);
+  height: 32px;
+}
+
+:host([editable]) #sliderContainer {
+  float: left;
+  width: calc(100% - 72px);
+}
+
+#sliderBar {
+  position: absolute;
+  top: 15px;
+  left: 16px;
+  height: 2px;
+  width: 100%;
+  padding: 8px 0;
+  margin: -8px 0;
+}
+
+.slider-markers {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  height: 2px;
+  width: calc(100% + 2px);
+  box-sizing: border-box;
+  pointer-events: none;
+  /* background-image: -webkit-linear-gradient(0deg, #ccc, #ccc 1px, transparent 1px, transparent);
+  background-size: 10%; */
+}
+
+.slider-markers::after, .slider-marker::after {
+  content: "";
+  display: block;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background-color: black;
+}
+
+#sliderBar::shadow #activeProgress {
+  background-color: #3f51b5;
+}
+
+#sliderKnob {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+}
+
+#sliderKnob.transiting {
+  transition: left 0.08s ease;
+}
+
+#sliderKnob:focus {
+  outline: none;
+}
+
+#sliderKnob.dragging {
+  transition: none;
+}
+
+#sliderKnob.snaps.dragging {
+  transition: -webkit-transform 0.08s ease;
+  transition: transform 0.08s ease;
+}
+
+#sliderKnobInner {
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  border-radius: 50%;
+  background-color: #3f51b5;
+  /* FIXME(ffu): can't use the following. https://github.com/Polymer/platform/issues/53 */
+  /* transition-property: height, width, background-color, border;
+  transition-duration: 0.1s;
+  transition-timing-function: ease; */
+  transition: height 0.18s ease, width 0.18s ease, background-color 0.28s ease, border 0.18s ease;
+}
+
+#sliderKnob.expand:not(.pin) > #sliderKnobInner {
+  width: 100%;
+  height: 100%;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+#sliderKnob.ring > #sliderKnobInner {
+  background-color: #fff;
+  border: 2px solid #c8c8c8;
+}
+
+#sliderKnobInner::before {
+  background-color: #3f51b5;
+}
+
+#sliderKnob.pin > #sliderKnobInner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  margin-left: 3px;
+  border-radius: 50% 50% 50% 0;
+  -webkit-transform: rotate(-45deg) scale(0) translate(0);
+  transform: rotate(-45deg) scale(0) translate(0);
+}
+
+#sliderKnobInner::before, #sliderKnobInner::after {
+  transition: -webkit-transform .2s ease, background-color .18s ease;
+  transition: transform .2s ease, background-color .18s ease;
+}
+
+#sliderKnob.pin.ring > #sliderKnobInner::before {
+  background-color: #c8c8c8;
+}
+
+#sliderKnob.pin.expand > #sliderKnobInner::before {
+  -webkit-transform: rotate(-45deg) scale(1) translate(17px, -17px);
+  transform: rotate(-45deg) scale(1) translate(17px, -17px);
+}
+
+#sliderKnob.pin > #sliderKnobInner::after {
+  /* FIXME(ffu): add dummy quotes to workaround https://github.com/Polymer/platform/issues/57 */
+  content: attr(value) "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 26px;
+  text-align: center;
+  color: #fff;
+  font-size: 10px;
+  -webkit-transform: scale(0) translate(0);
+  transform: scale(0) translate(0);
+}
+
+#sliderKnob.pin.expand > #sliderKnobInner::after {
+  -webkit-transform: scale(1) translate(0, -17px);
+  transform: scale(1) translate(0, -17px);
+}
+
+.slider-input {
+  width: 40px;
+  height: 32px;
+  float: right;
+}
+
+.slider-input::shadow input {
+  /* FIXME(ffu): should one be able set text-align directly on paper-input? */
+  text-align: center;
+}
+
+/* disabled state */
+:host([disabled]) #sliderContainer {
+  pointer-events: none;
+}
+
+:host([disabled]) {
+  pointer-events: none;
+}
+
+:host([disabled]) #sliderKnob > #sliderKnobInner {
+  width: 12px;
+  height: 12px;
+  background-color: #c8c8c8;
+  border: 2px solid #fff;
+}
+
+:host([disabled]) #sliderContainer > #sliderBar::shadow #activeProgress {
+  background-color: #c8c8c8;
+}
+</style>
+
+  <div id="sliderContainer" on-keydown="{{keydown}}">
+  
+    <paper-progress id="sliderBar" aria-hidden="true" min="{{min}}" max="{{max}}" value="{{immediateValue}}" secondaryprogress="{{secondaryProgress}}" on-down="{{bardown}}" on-up="{{resetKnob}}" on-trackstart="{{trackStart}}" on-trackx="{{trackx}}" on-trackend="{{trackEnd}}"></paper-progress>
+    
+    <template if="{{snaps &amp;&amp; !disabled}}">
+      <div class="slider-markers" horizontal="" layout="">
+        <template repeat="{{markers}}">
+          <div flex="" class="slider-marker"></div>
+        </template>
+      </div>
+    </template>
+    
+    <div id="sliderKnob" class="{{ {pin : pin, snaps : snaps} | tokenList }}" on-down="{{expandKnob}}" on-up="{{resetKnob}}" on-trackstart="{{trackStart}}" on-trackx="{{trackx}}" on-trackend="{{trackEnd}}" on-transitionend="{{knobTransitionEnd}}" role="slider" aria-valuenow="{{value}}" aria-valuemin="{{min}}" aria-valuemax="{{max}}" aria-valuetext="{{value}}" tabindex="0" center-justified="" center="" horizontal="" layout="">
+        
+      <div id="sliderKnobInner" value="{{immediateValue}}"></div>
+      
+    </div>
+    
+  </div>
+  
+  <template if="{{editable}}">
+    <paper-input id="input" class="slider-input" value="{{immediateValue}}" validate="^[-+]?[0-9]*\.?[0-9]+$" disabled?="{{disabled}}" on-change="{{inputChange}}"></paper-input>
+  </template>
+
+</template>
+<script>
+
+  Polymer('paper-slider', {
+    
+    /**
+     * Fired when the slider's value changes.
+     *
+     * @event change
+     */
+
+    /**
+     * Fired when the slider's value changes due to manual interaction.
+     *
+     * Changes to the slider's value due to changes in an underlying
+     * bound variable will not trigger this event.
+     *
+     * @event manual-change
+     */
+     
+    /**
+     * If true, the slider thumb snaps to tick marks evenly spaced based
+     * on the `step` property value.
+     *
+     * @attribute snaps
+     * @type boolean
+     * @default false
+     */
+    snaps: false,
+    
+    /**
+     * If true, a pin with numeric value label is shown when the slider thumb 
+     * is pressed.  Use for settings for which users need to know the exact 
+     * value of the setting.
+     *
+     * @attribute pin
+     * @type boolean
+     * @default false
+     */
+    pin: false,
+    
+    /**
+     * If true, this slider is disabled.  A disabled slider cannot be tapped
+     * or dragged to change the slider value.
+     *
+     * @attribute disabled
+     * @type boolean
+     * @default false
+     */
+    disabled: false,
+    
+    /**
+     * The number that represents the current secondary progress.
+     *
+     * @attribute secondaryProgress
+     * @type number
+     * @default 0
+     */
+    secondaryProgress: 0,
+    
+    /**
+     * If true, an input is shown and user can use it to set the slider value.
+     *
+     * @attribute editable
+     * @type boolean
+     * @default false
+     */
+    editable: false,
+    
+    /**
+     * The immediate value of the slider.  This value is updated while the user
+     * is dragging the slider.
+     *
+     * @attribute immediateValue
+     * @type number
+     * @default 0
+     */
+    
+    observe: {
+      'min max step snaps': 'update'
+    },
+    
+    ready: function() {
+      this.update();
+    },
+    
+    update: function() {
+      this.positionKnob(this.calcRatio(this.value));
+      this.updateMarkers();
+    },
+    
+    valueChanged: function() {
+      this.update();
+      this.fire('change');
+    },
+    
+    expandKnob: function() {
+      this.$.sliderKnob.classList.add('expand');
+    },
+    
+    resetKnob: function() {
+      this.expandJob && this.expandJob.stop();
+      this.$.sliderKnob.classList.remove('expand');
+    },
+    
+    positionKnob: function(ratio) {
+      this._ratio = ratio;
+      this.immediateValue = this.calcStep(this.calcKnobPosition()) || 0;
+      if (this.snaps) {
+        this._ratio = this.calcRatio(this.immediateValue);
+      }
+      this.$.sliderKnob.style.left = this._ratio * 100 + '%';
+    },
+    
+    immediateValueChanged: function() {
+      this.$.sliderKnob.classList.toggle('ring', this.immediateValue <= this.min);
+    },
+    
+    inputChange: function() {
+      this.value = this.$.input.value;
+      this.fire('manual-change');
+    },
+    
+    calcKnobPosition: function() {
+      return (this.max - this.min) * this._ratio + this.min;
+    },
+    
+    measureWidth: function() {
+      this._w = this.$.sliderBar.offsetWidth;
+    },
+    
+    trackStart: function(e) {
+      this.measureWidth();
+      this._x = this._ratio * this._w;
+      this._startx = this._x || 0;
+      this._minx = - this._startx;
+      this._maxx = this._w - this._startx;
+      this.$.sliderKnob.classList.add('dragging');
+      e.preventTap();
+    },
+
+    trackx: function(e) {
+      var x = Math.min(this._maxx, Math.max(this._minx, e.dx));
+      this._x = this._startx + x;
+      this._ratio = this._x / this._w;
+      this.immediateValue = this.calcStep(this.calcKnobPosition()) || 0;
+      var s =  this.$.sliderKnob.style;
+      s.transform = s.webkitTransform = 'translate3d(' + (this.snaps ? 
+          (this.calcRatio(this.immediateValue) * this._w) - this._startx : x) + 'px, 0, 0)';
+    },
+    
+    trackEnd: function() {
+      var s =  this.$.sliderKnob.style;
+      s.transform = s.webkitTransform = '';
+      this.$.sliderKnob.classList.remove('dragging');
+      this.resetKnob();
+      this.value = this.immediateValue;
+      this.fire('manual-change');
+    },
+    
+    bardown: function(e) {
+      this.measureWidth();
+      this.$.sliderKnob.classList.add('transiting');
+      var rect = this.$.sliderBar.getBoundingClientRect();
+      this.positionKnob((e.x - rect.left) / this._w);
+      this.value = this.calcStep(this.calcKnobPosition());
+      this.expandJob = this.job(this.expandJob, this.expandKnob, 60);
+      this.fire('manual-change');
+    },
+    
+    knobTransitionEnd: function() {
+      this.$.sliderKnob.classList.remove('transiting');
+    },
+    
+    updateMarkers: function() {
+      this.markers = [], l = (this.max - this.min) / this.step;
+      for (var i = 0; i < l; i++) {
+        this.markers.push('');
+      }
+    },
+    
+    increment: function() {
+      this.value = this.clampValue(this.value + this.step);
+    },
+    
+    decrement: function() {
+      this.value = this.clampValue(this.value - this.step);
+    },
+    
+    keydown: function(e) {
+      if (this.disabled) {
+        return;
+      }
+      var c = e.keyCode;
+      if (c === 37) {
+        this.decrement();
+        this.fire('manual-change');
+      } else if (c === 39) {
+        this.increment();
+        this.fire('manual-change');
+      }
+    }
+
+  });
+
+</script>
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+
+<!--
+Supports sharing a JSONP-based JavaScript library.
+
+    <core-shared-lib on-core-shared-lib-load="{{load}}" url="https://apis.google.com/js/plusone.js?onload=%%callback%%">
+
+Multiple components can request a library using a `core-shared-lib` component and only one copy of that library will
+loaded from the network.
+
+Currently, the library must support JSONP to work as a shared-lib. 
+
+Some libraries require a specific global function be defined. If this is the case, specify the `callbackName` property.
+
+Where possible, you should use an HTML Import to load library dependencies. Rather than using this element,
+create an import (`<link rel="import" href="lib.html">`) that wraps loading the .js file:
+
+lib.html:
+
+    <script src="lib.js"></script>
+
+@group Polymer Core Elements
+@element core-shared-lib
+-->
+<polymer-element name="core-shared-lib" attributes="url notifyEvent callbackName" assetpath="../app/bower_components/core-shared-lib/">
+<script>
+(function() {
+  
+  Polymer({
+    
+    notifyEvent: 'core-shared-lib-load',
+    
+    ready: function() {
+      if (!this.url && this.defaultUrl) {
+        this.url = this.defaultUrl;
+      }
+    },
+    
+    urlChanged: function() {
+      require(this.url, this, this.callbackName);
+    },
+    
+    provide: function() {
+      this.async('notify');
+    },
+    
+    notify: function() {
+      this.fire(this.notifyEvent, arguments);
+    }
+    
+  });
+
+  var apiMap = {};
+  
+  function require(url, notifiee, callbackName) {
+    // make hashable string form url
+    var name = nameFromUrl(url);
+    // lookup existing loader instance
+    var loader = apiMap[name];
+    // create a loader as needed
+    if (!loader) {
+      loader = apiMap[name] = new Loader(name, url, callbackName);
+    }
+    loader.requestNotify(notifiee);
+  }
+  
+  function nameFromUrl(url) {
+    return url.replace(/[\:\/\%\?\&\.\=\-]/g, '_') + '_api';
+  }
+
+  var Loader = function(name, url, callbackName) {
+    this.instances = [];
+    this.callbackName = callbackName;
+    if (this.callbackName) {
+      window[this.callbackName] = this.success.bind(this);
+    } else {
+      if (url.indexOf(this.callbackMacro) >= 0) {
+        this.callbackName = name + '_loaded';
+        window[this.callbackName] = this.success.bind(this);
+        url = url.replace(this.callbackMacro, this.callbackName);
+      } else {
+        // TODO(sjmiles): we should probably fallback to listening to script.load
+        throw 'core-shared-api: a %%callback%% parameter is required in the API url';
+      }
+    }
+    //
+    this.addScript(url);
+  };
+  
+  Loader.prototype = {
+    
+    callbackMacro: '%%callback%%',
+    loaded: false,
+    
+    addScript: function(src) {
+      var script = document.createElement('script');
+      script.src = src;
+      script.onerror = this.error.bind(this);
+      var s = document.querySelector('script');
+      s.parentNode.insertBefore(script, s);
+      this.script = script;
+    },
+    
+    removeScript: function() {
+      if (this.script.parentNode) {
+        this.script.parentNode.removeChild(this.script);
+      }
+      this.script = null;
+    },
+    
+    error: function() {
+      this.cleanup();
+    },
+    
+    success: function() {
+      this.loaded = true;
+      this.cleanup();
+      this.result = Array.prototype.slice.call(arguments);
+      this.instances.forEach(this.provide, this);
+      this.instances = null;
+    },
+    
+    cleanup: function() {
+      delete window[this.callbackName];
+    },
+
+    provide: function(instance) {
+      instance.notify(instance, this.result);
+    },
+    
+    requestNotify: function(instance) {
+      if (this.loaded) {
+        this.provide(instance);
+      } else {
+        this.instances.push(instance);
+      }
+    }
+    
+  };
+  
+})();
+</script>
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+
+
+
+<!--
+Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/),
+firing the `api-load` event when ready.
+
+Any number of components can use `<google-jsapi>` elements, and the library will only be loaded once.
+
+@element google-jsapi
+-->
+<polymer-element name="google-jsapi" extends="core-shared-lib" assetpath="../app/bower_components/google-apis/">
+<script>
+  Polymer({
+    defaultUrl: 'https://www.google.com/jsapi?callback=%%callback%%',
+    notifyEvent: 'api-load',
+    get api() {
+      return google;
+    }
+  });
+</script>
+</polymer-element>
+
+
+
+
+
+<!--
+`google-chart` encapsulates Google Charts into a web component.
+
+    <google-chart
+      type='pie'
+      height='300px'
+      width='400px'
+      options='{"title": "Distribution of days in 2001Q1"}'
+      cols='[{"label":"Month", "type":"string"}, {"label":"Days", "type":"number"}]'
+      rows='[["Jan", 31],["Feb", 28],["Mar", 31]]'>
+    </google-chart>
+
+Data can be provided in one of three ways:
+
+- Via the `cols` and `rows` attributes:
+
+      cols='[{"label":"Mth", "type":"string"}, {"label":"Days", "type":"number"}]'
+      rows='[["Jan", 31],["Feb", 28],["Mar", 31]]'
+
+- Via the `data` attribute, passing in the data directly:
+
+      data='[["Month", "Days"], ["Jan", 31], ["Feb", 28], ["Mar", 31]]'
+
+- Via the `data` attribute, passing in the URL to a resource containing the
+  data, in JSON format:
+
+      data='http://example.com/chart-data.json'
+
+@element google-chart
+@status alpha
+@homepage http://googlewebcomponents.github.io/google-chart
+-->
+<polymer-element name="google-chart" attributes="type width height options cols rows data" assetpath="../app/bower_components/google-chart/">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <core-ajax id="ajax" handleas="json" url="{{data}}" on-core-response="{{externalDataLoaded}}"></core-ajax>
+    <div id="chartdiv" style="width: {{width}}; height: {{height}};
+      min-width: {{width}}; min-height: {{height}}; text-align: center;"></div>
+    <google-jsapi on-api-load="{{readyForAction}}"></google-jsapi>
+  </template>
+
+  <script>
+    Polymer({
+      /**
+       * Fired when the graph is displayed.
+       *
+       * @event google-chart-render
+       */
+
+
+      /**
+       * Sets the type of the chart.
+       *
+       * Should be one of:
+       * - `area`, `bar`, `bubble`, `candlestick`, `column`, `combo`,
+       *   `histogram`, `line`, `pie`, `scatter`, `stepped-area`
+       *
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/gallery">Google Visualization API reference (Chart Gallery)</a> for details.
+       *
+       * @attribute type
+       * @type string
+       */
+      type: 'column',
+
+      /**
+       * Sets the width of the chart on the page.
+       *
+       * @attribute width
+       * @type string
+       */
+      width: '400px',
+
+      /**
+       * Sets the height of the chart on the page.
+       *
+       * @attribute height
+       * @type string
+       */
+      height: '300px',
+
+      /**
+       * Sets the options for the chart.
+       *
+       * Example:
+       * <pre>{
+       *   title: "Chart title goes here",
+       *   hAxis: {title: "Categories"},
+       *   vAxis: {title: "Values", minValue: 0, maxValue: 2},
+       *   legend: "none"
+       * };</pre>
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/gallery">Google Visualization API reference (Chart Gallery)</a>
+       * for the options available to each chart type.
+       *
+       * @attribute options
+       * @type object
+       */
+      options: null,
+
+      /**
+       * Sets the data columns for this object.
+       *
+       * When specifying data with `cols` you must also specify `rows`, and
+       * not specify `data`.
+       *
+       * Example:
+       * <pre>[{label: "Categories", type: "string"},
+       *  {label: "Value", type: "number"}]</pre>
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/reference#DataTable_addColumn">Google Visualization API reference (addColumn)</a>
+       * for column definition format.
+       *
+       * @attribute cols
+       * @type array
+       */
+      cols: null,
+
+      /**
+       * Sets the data rows for this object.
+       *
+       * When specifying data with `rows` you must also specify `cols`, and
+       * not specify `data`.
+       *
+       * Example:
+       * <pre>[["Category 1", 1.0],
+       *  ["Category 2", 1.1]]</pre>
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/reference#addrow">Google Visualization API reference (addRow)</a>
+       * for row format.
+       *
+       * @attribute rows
+       * @type array
+       */
+      rows: null,
+
+      /**
+       * Sets the entire dataset for this object.
+       * Can be used to provide the data directly, or to provide a URL from
+       * which to request the data.
+       *
+       * When specifying data with `data` you must not specify `cols` or `rows`.
+       *
+       * Example:
+       * <pre>[["Categories", "Value"],
+       *  ["Category 1", 1.0],
+       *  ["Category 2", 1.1]]</pre>
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/reference#DataTable">Google Visualization API reference (DataTable constructor)</a>
+       * for data table format.
+       *
+       * @attribute data
+       * @type array or string
+       */
+      data: null,
+
+      chartTypes: null,
+
+      chartObject: null,
+
+      isReady: false,
+
+      created: function() {
+        this.chartTypes = {};
+        this.cols = [];
+        this.data = [];
+        this.options = {};
+        this.rows = [];
+      },
+
+      readyForAction: function(e, detail, sender) {
+        google.load("visualization", "1", {
+          packages: ['corechart'],
+          callback: function() {
+            this.isReady = true;
+            this.loadChartTypes();
+            this.loadData();
+          }.bind(this)
+        });
+      },
+
+      typeChanged: function() {
+        // Invalidate current chart object.
+        this.chartObject = null;
+        this.loadData();
+      },
+
+      observe: {
+        rows: 'loadData',
+        cols: 'loadData',
+        data: 'loadData',
+      },
+
+      drawChart: function(dataTable) {
+        if (!this.options) {
+          this.options = {};
+        }
+        this.options.height = this.height;
+        this.options.width = this.width;
+        if (!this.chartObject) {
+          var chartClass = this.chartTypes[this.type];
+          if (chartClass) {
+            this.chartObject = new chartClass(this.$.chartdiv);
+          }
+        }
+        if (this.chartObject) {
+          this.chartObject.draw(dataTable, this.options);
+          google.visualization.events.addOneTimeListener(this.chartObject,
+              'ready', function() {
+                  this.fire('google-chart-render');
+              }.bind(this));
+        } else {
+          this.$.chartdiv.innerHTML = 'Undefined chart type';
+        }
+      },
+
+      loadChartTypes: function() {
+        this.chartTypes = {
+          'area': google.visualization.AreaChart,
+          'bar': google.visualization.BarChart,
+          'bubble': google.visualization.BubbleChart,
+          'candlestick': google.visualization.CandlestickChart,
+          'column': google.visualization.ColumnChart,
+          'combo': google.visualization.ComboChart,
+          'histogram': google.visualization.Histogram,
+          'line': google.visualization.LineChart,
+          'pie': google.visualization.PieChart,
+          'scatter': google.visualization.ScatterChart,
+          'stepped-area': google.visualization.SteppedAreaChart
+        };
+      },
+
+      loadData: function() {
+        if (this.isReady) {
+          if (typeof this.data == 'string' || this.data instanceof String) {
+            // Load data asynchronously, from external URL.
+            this.$.ajax.go();
+          } else {
+            // Create a data table with provided data.
+            this.createDataTable();
+          }
+        }
+      },
+
+      externalDataLoaded: function(e, detail, sender) {
+        var dataTable =
+            google.visualization.arrayToDataTable(this.$.ajax.response);
+        this.drawChart(dataTable);
+      },
+
+      createDataTable: function() {
+        var dataTable = null;
+        if (this.rows && this.rows.length > 0 && this.cols &&
+            this.cols.length > 0) {
+          // Create the data table from cols and rows.
+          var dataTable = new google.visualization.DataTable();
+          dataTable.cols = this.cols;
+
+          for (var i = 0; i < this.cols.length; i++) {
+            dataTable.addColumn(this.cols[i]);
+          }
+
+          dataTable.addRows(this.rows);
+        } else if (this.data && this.data.length > 0) {
+          // Create the data table from the data attribute.
+          dataTable = google.visualization.arrayToDataTable(this.data);
+        }
+
+        if (dataTable) {
+          this.drawChart(dataTable);
+        }
+      }
+    });
+  </script>
+
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`core-icon-button` is an icon with button behaviors.
+
+    <core-icon-button src="star.png"></core-icon-button>
+
+`core-icon-button` includes a default icon set.  Use `icon` to specify 
+which icon from the icon set to use.
+
+    <core-icon-button icon="menu"></core-icon-button>
+
+See [`core-iconset`](#core-iconset) for more information about 
+how to use a custom icon set.
+
+@group Polymer Core Elements
+@element core-icon-button
+@homepage github.io
+-->
+
+
+
+
+<polymer-element name="core-icon-button" attributes="src icon active" assetpath="../app/bower_components/core-icon-button/">
+
+  <template>
+    <style>/*
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
+The complete set of authors may be found at http://polymer.github.io/AUTHORS
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+*/
+
+:host {
+  display: inline-block;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  border-radius: 2px;
+  padding: 7px;
+  margin: 2px;
+  vertical-align: middle;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+:host([disabled]) {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+:host(.outline) {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+:host(:hover:not([disabled])) {
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+:host(.selected:not([disabled])) {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+:host(:active:not([disabled]), .selected:active:not([disabled])) {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+:host(.core-dark-theme.outline) {
+  background-color: rgba(200, 200, 200, 0.05);
+  box-shadow: 0 0 0 1px rgba(200, 200, 200, 0.1);
+}
+
+:host(.core-dark-theme:hover) {
+  background-color: rgba(200, 200, 200, 0.05);
+  box-shadow: 0 1px 0 0 rgba(200, 200, 200, 0.12), 0 0 0 1px rgba(200, 200, 200, 0.1);
+}
+
+:host(.core-dark-theme.selected) {
+  background-color: rgba(220, 220, 220, 0.05);
+  box-shadow: inset 0 1px 0 0 rgba(200, 200, 200, 0.05), 0 0 0 1px rgba(200, 200, 200, 0.12);
+}
+
+:host(.core-dark-theme:active, .core-dark-theme.selected:active) {
+  background-color: rgba(200, 200, 200, 0.05);
+  box-shadow: inset 0 1px 0 0 rgba(200, 200, 200, 0.1), 0 0 0 1px rgba(200, 200, 200, 0.12);
+}
+
+core-icon {
+  pointer-events: none;
+}
+
+/* note: this is a polyfill aware selector */
+:host ::content > :not(core-icon) {
+  margin-left: 4px;
+}
+</style>
+    <core-icon src="{{src}}" icon="{{icon}}"></core-icon><content></content>
+  </template>
+
+  <script>
+
+    Polymer('core-icon-button', {
+
+      /**
+       * The URL of an image for the icon.  Should not use `icon` property
+       * if you are using this property.
+       *
+       * @attribute src
+       * @type string
+       * @default ''
+       */
+      src: '',
+
+      /**
+       * If true, border is placed around the button to indicate it's
+       * active state.
+       *
+       * @attribute active
+       * @type boolean
+       * @default false
+       */
+      active: false,
+
+      /**
+       * Specifies the icon name or index in the set of icons available in
+       * the icon set.  Should not use `src` property if you are using this
+       * property.
+       *
+       * @attribute icon
+       * @type string
+       * @default ''
+       */
+      icon: '',
+
+      activeChanged: function() {
+        this.classList.toggle('selected', this.active);
+      }
+
+    });
+
+  </script>
+
+</polymer-element>
+
+
+
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-object-row" attributes="bgColor object graph" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        background-color: {{ bgColor }};
+        width: 100%;
+        font-size: 1.2rem;
+        font-weight: 300;
+        font-family: Open Sans;
+      }
+      .object-row {
+        padding: 40px;
+        color: #444;
+      }
+      
+      polyfill-next-selector { content: '.object-row h2'; }
+      
+      .object-row ::content h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 300;
+      }
+
+      polyfill-next-selector { content: '.object-row img'; }
+      
+      .object-row ::content img {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        background: #444;
+        margin-right: 30px;
+      }
+
+      .chart-container{
+        margin-top: 10px;
+        background-color: rgba(255, 255, 255, 0.4);
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        border-radius: 10px;
+        padding-left: -15px;
+      }
+
+    </style>
+
+    <div class="object-row" layout="" vertical="">
+      <div layout="" horizontal="" center="" start="">
+        <content select="img"></content>
+        <div flex="">
+          <content select="h2"></content>
+          <content></content>
+          <template if="{{ graph }}">
+            <core-icon-button icon="drive-fusiontable" on-tap="{{toggleStats}}">
+              {{label | translate}}
+            </core-icon-button>
+          </template>
+          <template if="{{ hasBehavior() }}">
+            <core-icon-button icon="drive-fusiontable" on-tap="{{toggleActions}}">
+              {{labelActions | translate}}
+            </core-icon-button>
+          </template>
+        </div>
+      </div>
+      <template if="{{ showStats }}">
+        <div unresolved="" class="chart-container" layout="" horizontal="" center="" center-justified="">
+          <google-chart id="chart" height="200px" width="{{fullWidth()}}px" type="{{graph.type}}" options="{{graph.options}}" cols="{{graph.cols}}" rows="{{graph.rows}}">
+          </google-chart>
+        </div>
+      </template>
+      <template if="{{ showActions }}">
+        <template repeat="{{behaviour in object.behaviors}}">
+          <div layout="" horizontal="" center="">
+            {{behaviour.name}} : {{behaviour.value}}
+            
+            <template if="{{behaviour.type === &apos;boolean&apos;}}">
+              <core-icon-button>
+                TOGGLE
+              </core-icon-button>
+            </template>
+            <template if="{{behaviour.type === &apos;rangedint&apos;}}">
+              <div layout="" horizontal="" center="" unresolved="">
+                <paper-slider min="{{behavior.min}}" max="{{behavior.max}}" immediatevalue="{{behavior.value}}" editable="">
+                </paper-slider>
+                <core-icon-button>
+                  CHANGE
+                </core-icon-button>
+              </div>
+            </template>
+            
+          </div>
+        </template>
+      </template>
+      <paper-shadow z="1"></paper-shadow>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-object-row",{
+
+      showStats: false,
+
+      showActions: false,
+
+      label: "SHOW STATS",
+
+      labelActions: "SHOW ACTIONS",
+
+      hasBehavior: function(){
+        console.log(this.object);
+        var rwBehaviors = this.object.behaviors.filter(
+          function(behaviour){
+            return !behaviour.readOnly;
+          }
+        );
+        return rwBehaviors.length > 0;
+      },
+
+      toggleStats: function(){
+        this.showStats = !this.showStats;
+        this.showActions = false;
+        if(this.showStats){
+          this.label = "HIDE STATS";
+        } else {
+          this.label = "SHOW STATS";
+        }
+      },
+
+      toggleActions: function(){
+        console.log(this.object);
+        this.showActions = !this.showActions;
+        this.showStats = false;
+        if(this.showActions){
+          this.label = "HIDE ACTIONS";
+        } else {
+          this.label = "SHOW ACTIONS";
+        }
+      },
+
+      fullWidth: function(){
+        return window.innerWidth - 80;
+      },
+
+    });
+  </script>
+</polymer-element>
+
+
+<polymer-element name="x-websocket" attributes="url json jsonSend jsonReceive" constructor="XWebsocket" assetpath="../app/bower_components/x-websocket/dist/">
+	<template>
+		<style>
+			:host {
+				display: none;
+			}
+		</style>
+	</template>
+	<script type="text/javascript">
+		(function() {
+			Polymer("x-websocket", {
+				/**
+				 * Should both sent and received data be interpreted as json and encoded/decoded ? Defaults to false.
+				 * @public
+				 * @type {Boolean}
+				 */
+				json: false,
+				/**
+				 * Should sent data be json-encoded, even if {{json}} is falsy ? Defaults to false.
+				 * @public
+				 * @type {Boolean}
+				 */
+				jsonSend: false,
+				/**
+				 * Should received data be json-decoded, even if {{json}} is falsy ? Defaults to false.
+				 * @type {Boolean}
+				 */
+				jsonReceive: false,
+				/**
+				 * WebSocket object.
+				 * @private
+				 * @type {WebSocket}
+				 */
+				_ws: null,
+				/**
+				 * Send data through the WebSocket connection. Will optionally be json-encoded if {{json}} or {{jsonSend}} is truthy.
+				 * @public
+				 * @param  {*} data The data to send.
+				 */
+				send: function(data) {
+					if(!this._ws) {
+						throw new Error("x-websocket.send(...): not connected.");
+					}
+					if(this.json || this.jsonSend) {
+						data = JSON.stringify(data);
+					}
+					this._ws.send(data);
+				},
+				/**
+				 * Close the current connection. Optionally provide with a reason.
+				 * @public
+				 * @param {[String]} Optional closing reason to provide the server with.
+				 */
+				close: function(reason) {
+					if(this._ws) {
+						this._ws.close(reason);
+						this._ws = null;
+					}
+				},
+				/**
+				 * Underlying connection readyState getter.
+				 * @see {@link http://www.w3.org/TR/websockets/#dom-websocket-readystate}
+				 * @public
+				 * @type {Number}
+				 */
+				get readyState() {
+					if(this._ws) {
+						return this._ws.readyState;
+					}
+					else {
+						return -1;
+					}
+				},
+
+				/**
+				 * {{url}} change handler.
+				 * @private
+				 */
+				urlChanged: function() {
+					this._connect();
+				},
+
+				/**
+				 * Create a connection to the remote server identified by {{url}}.
+				 * @private
+				 */
+				_connect: function() {
+					if(!this.url) {
+						throw new Error("x-websocket.connect(...): no url.");
+					}
+					if(this._ws) {
+						throw new Error("x-websocket.connect(...): already connected.");
+					}
+					this._ws = new WebSocket(this.url);
+					this._ws.onopen = this._onwsopen.bind(this);
+					this._ws.onerror = this._onwserror.bind(this);
+					this._ws.onmessage = this._onwsmessage.bind(this);
+					this._ws.onclose = this._onwsclose.bind(this);
+				},
+				/**
+				 * WebSocket open event handler. Re-fires to the x-websocket element.
+				 * @private
+				 */
+				_onwsopen: function() {
+					this.fire("open");
+				},
+				/**
+				 * WebSocket error event handler. Re-fires to the x-websocket element.
+				 * @private
+				 */
+				_onwserror: function() {
+					this.fire("error");
+				},
+				/**
+				 * WebSocket message event handler. Re-fires to the x-websocket element, after optionally json-parsing the payload if {{json}} or {{jsonReceive}} is truthy.
+				 * @private
+				 */
+				_onwsmessage: function(event) {
+					var data = event.data;
+					if(this.json || this.jsonReceive) {
+						data = JSON.parse(data);
+					}
+					this.fire("message", { data: data });
+				},
+				/**
+				 * WebSocket close event handler.
+				 * @private
+				 */
+				_onwsclose: function(event) {
+					this.fire("error", { code: event.code, reason: event.reason });
+				},
+			});
+		})();
+	</script>
+</polymer-element>
+
+
+
+
+<polymer-element name="nautes-fd-websocket-api-service" attributes="wstype apiurl ssl" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <core-localstorage name="ssl" value="{{ ssl }}">
+    </core-localstorage>
+
+    <core-localstorage name="apiurl" value="{{apiurl}}">
+    </core-localstorage>
+
+    <x-websocket id="ws" on-message="{{onMessage}}">
+    </x-websocket>
+
+  </template>
+  <script>
+    Polymer("nautes-fd-websocket-api-service",{
+
+      reloadUrl: function(){
+        if(this.ssl != undefined && this.apiurl){
+          this.$.ws.url = (this.ssl ? "wss" : "ws") + "://" + this.apiurl + "ws/" + this.wstype +"/";
+        }
+      },
+
+      apiprotocolwsChanged: function(){
+        this.reloadUrl();
+      },
+
+      apiurlChanged: function(){
+        this.reloadUrl();
+      },
+
+      onMessage: function(event){
+        var data = event.detail.data;
+        data = data.split("|").pop();
+        if(data.trim() != ""){
+          data = {uuid: data, type: this.wstype};
+          this.fire("message", { data: data });
+        }
+        event.stopPropagation();
+      },
+
+      _parse: function(input){
+        var statements = input.substring(2, input.length -2).split("; ");
+        var output = {};
+
+        for (var i = 0; i < statements.length; i++) {
+          var statement = statements[i].split(" EQUALS ");
+          var leftSide = statement[0].split(".");
+          var rightSide = statement[1];
+          this._assign(output, leftSide, rightSide);
+        }
+
+        var data = JSON.stringify(output);
+        return JSON.parse(data);
+      },
+
+      _assign: function(obj, keyPath, value){
+         var lastKeyIndex = keyPath.length-1;
+         for (var i = 0; i < lastKeyIndex; ++i) {
+           key = keyPath[i];
+           if (!(key in obj)){
+             obj[key] = {};
+           }
+           obj = obj[key];
+         }
+         obj[keyPath[lastKeyIndex]] = value;
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+<polymer-element name="nautes-stats" attributes="stats graphs graphsArray" assetpath="../app/elements/">
+  <template>
+
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+
+    <fd-rest-element-service fdtype="commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run" fditems="{{ stats }}" toast="{{" }}="" method="POST">
+    </fd-rest-element-service>
+
+  </template>
+
+  <script>
+    Polymer("nautes-stats",{
+
+      graphs: {},
+
+      graphsArray: [],
+
+      statsChanged: function(){
+
+        if(this.stats && this.stats.properties && this.stats.properties.tuples){
+          var tuples = this.stats.properties.tuples.tuples;
+          this.graphs = {};
+          this.graphsArray = [];
+
+          for (var i=0; i<tuples.length; i++) {
+            var tuple = tuples[i];
+            if(tuple.behavior === "powered"){
+              var graph = null;
+              if(!(tuple.uuid in this.graphs)){
+                this.graphs[tuple.uuid] = {};
+                this.graphs[tuple.uuid].title = tuple.name;
+                this.graphs[tuple.uuid].behavior = tuple.behavior;
+                this.graphs[tuple.uuid].cols =  [{label:"Date", type:"string"}, {label: tuple.behavior, type:"number"}];
+                this.graphs[tuple.uuid].rows =  [];
+                this.graphs[tuple.uuid].options =  {
+                  backgroundColor: "transparent",
+                  hAxis: { 
+                    slantedText: true
+                  },
+                  vAxis: { 
+                    minValue:0,
+                    maxValue:1,
+                    gridlines:{count:2},
+                    ticks: [{v:1.00, f:'ON'}, {v:0.00, f:'OFF'}] 
+                  }
+                };
+                this.graphs[tuple.uuid].type = "stepped-area";
+              }
+              graph = this.graphs[tuple.uuid];
+
+              var strdate = tuple.datetime.replace("CEST","");
+              var milliseconds = Date.parse(strdate);
+              var date = new Date(milliseconds);
+
+              var value = (JSON.parse(tuple.behaviorValue) ? 1 : 0);
+
+              graph.rows.push([strdate, value]);
+
+            }
+
+          }
+
+          for(var uuid in this.graphs){
+            if(this.graphs.hasOwnProperty(uuid)){
+              var graph = this.graphs[uuid];
+
+              graph.rows = graph.rows.sort(function(a, b){
+                return b[0]-a[0];
+              });
+
+              this.graphsArray.push(graph);
+            }
+          }
+
+        }
+      },
+
+      handleStatsResponse: function(response){
+        console.log(response.detail.response);
+      },
+
+      go: function(){
+        this.$.statsRequest.go();
+      },
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-object-list" attributes="bgColor toast" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{ bgColor }};
+      }
+    </style>
+
+    <core-localstorage name="ssl" value="{{ ssl }}">
+    </core-localstorage>
+
+
+    <core-localstorage name="apiurl" value="{{ apiurl }}">
+    </core-localstorage>
+
+    <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
+    </core-localstorage>
+
+    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast="{{" }}="">
+    </fd-rest-element-service>
+
+    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
+    </nautes-fd-websocket-api-service>
+
+    <core-ajax id="objGetRequest" on-core-response="{{handleGetResponse}}" on-core-error="{{errorGetHandler}}" method="GET" handleas="json" withcredentials="{{credentialrequired}}">
+    </core-ajax>
+
+
+    <nautes-stats graphs="{{graphs}}"></nautes-stats>
+
+    <div layout="" vertical="" center="">
+      <template repeat="{{obj in objects}}">
+        <nautes-object-row bgcolor="{{bgColor}}" object="{{obj}}" graph="{{graphs[obj.uuid]}}">
+          <img src="{{getImg(obj)}}" width="50" height="50">
+          <h2>{{obj.name}}</h2>
+          <p>{{obj.description}}</p>
+        </nautes-object-row>
+      </template>
+    </div>    
+    
+  </template>
+
+
+  <script>
+    Polymer("nautes-object-list",{
+
+      objectUpdatingIndex: 0,
+
+      objectUpdating: {},
+
+      reloadUrl: function(){
+        if(this.ssl != undefined && this.apiurl && this.objectUpdating.uuid){
+          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.objectUpdating.uuid;
+        }
+      },
+
+      sslChanged: function(){
+        this.reloadUrl();
+      },
+
+      apiurlChanged: function(){
+        this.reloadUrl();
+      },
+
+      getImg: function(obj) {
+        var icon = obj.representation[obj.currentRepresentation].icon;
+        if(icon != null){
+          var src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + icon ;
+          return src;
+        }
+      },
+
+      updateObject: function(event){
+        var uuid = event.detail.data.uuid;
+
+        if(uuid){
+        
+          for (var i = 0; i < this.objects.length; i++) {
+            var obj = this.objects[i];
+
+            if (obj.uuid === uuid) {
+              console.log("Object List - Asynch update of: " + uuid);
+              this.objectUpdating = obj;
+              this.objectUpdatingIndex = i;
+              this.reloadUrl();
+              this.$.objGetRequest.go();
+            }
+
+          }
+        }
+      },
+
+      handleGetResponse: function(response){
+          this.objects[this.objectUpdatingIndex] = response.detail.response;
+      }
+      
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-trigger-row" attributes="bgColor trigger" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        background-color: {{bgColor}};
+        width: 100%;
+        font-size: 1.2rem;
+        font-weight: 300;
+        font-family: Open Sans;
+      }
+      
+      .trigger-row {
+        margin-bottom: 10px;
+        padding: 40px;
+        font-family: Tahoma;
+        color: #444;
+      }
+      
+      .trigger-row ::content h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 300;
+      }
+      
+      .trigger-row ::content img {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        background: #444;
+        margin: 10px;
+      }
+      .title{
+        font-weight: bold;
+      }
+      span{
+        line-height: 24px;
+        margin-right: 5px;
+        font-size: 17px;
+      }
+      .icon{
+        margin-left: 30px;
+        color: #444;
+        width: 70px;
+        height: 70px;
+      }
+    </style>
+    <div layout="" horizontal="" center="">
+      <core-icon class="icon" icon="image:flash-on"></core-icon>
+      <div class="trigger-row" layout="" vertical="" center-justified="">
+        <div layout="" horizontal="">
+            <span class="title">{{trigger.name}}: </span> <span> {{trigger.description}}</span>
+        </div>
+        <span>Channel: {{trigger.channel}}</span>
+      </div>
+      <paper-shadow z="1"></paper-shadow>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-trigger-row",{
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+<polymer-element name="nautes-trigger-list" attributes="bgColor toast" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+      }
+    </style>
+
+    <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div layout="" vertical="" center="">
+      <template repeat="{{trigger in triggers}}">
+        <nautes-trigger-row bgcolor="{{bgColor}}" trigger="{{trigger}}">
+        </nautes-trigger-row>
+      </template>
+    </div>    
+
+  </template>
+  <script>
+    Polymer("nautes-trigger-list",{
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+<polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequired ssl" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: absolute;
+        z-index: 1000;
+      }
+    </style>
+
+    <core-localstorage name="ssl" value="{{ ssl }}">
+    </core-localstorage>
+
+    <core-localstorage name="apiurl" value="{{ apiurl }}">
+    </core-localstorage>
+
+    <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
+    </core-localstorage>
+
+    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
+    </nautes-fd-websocket-api-service>
+
+    <img id="envObjectImg" on-tap="{{onTap}}" width="50" height="50" alt="{{ envObject.name }}" title="{{envObject.name}}">
+
+    <core-ajax id="objTapRequest" on-core-response="{{ handleTapResponse }}" on-core-error="{{ errorTapHandler }}" method="POST" withcredentials="{{ credentialrequired }}">
+    </core-ajax>
+
+    <core-ajax id="objGetRequest" on-core-response="{{ handleGetResponse }}" on-core-error="{{ errorGetHandler }}" method="GET" handleas="json" withcredentials="{{ credentialrequired }}">
+    </core-ajax>
+
+  </template>
+  <script>
+    Polymer("nautes-zone-object",{
+
+      reloadUrl: function(){
+        if(this.ssl != undefined && this.apiurl && this.envObject.uuid){
+          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid + "/click";
+          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid;
+        }
+      },
+
+      setImg: function(){
+        if(this.ssl != undefined && this.apiurl){
+          var src = this.getImg();
+          if(src){
+            this.$.envObjectImg.src = src;
+          }
+        }
+      },
+
+      envObjectChanged: function(){
+        if(this.envObject){
+          this.setImg();
+          this.style.left = this.envObject.representation[0].offset.x + "px";
+          this.style.top = this.envObject.representation[0].offset.y + "px";
+        }
+      },
+
+      sslChanged: function(){
+          this.setImg();
+          this.reloadUrl();
+      },
+
+      apiurlChanged: function(){
+          this.setImg();
+          this.reloadUrl();
+      },
+
+      errorGetHandler: function(event){
+          if(this.toast){
+            this.toast.text="There was a problem loading " + this.envObject.name + " data.";
+            this.toast.show();
+          }
+        },
+
+      errorTapHandler: function(event){
+          if(this.toast){
+            this.toast.text="There was a server problem during " + this.envObject.name + " interaction.";
+            this.toast.show();
+          }
+        },
+
+      handleGetResponse: function(response){
+          this.envObject = response.detail.response;
+        },
+
+      handleTapResponse: function(response){
+          this.$.objGetRequest.go();
+        },
+
+      onTap: function(){
+          this.$.objTapRequest.go();
+        },
+
+      updateObject: function(event){
+          var uuid = event.detail.data.uuid;
+          if(uuid){
+            var obj = this.envObject;
+            if (obj.uuid === uuid) {
+              console.log("Environment Zone - Asynch update of: "+uuid);
+              this.$.objGetRequest.go();
+            }
+          }
+        },
+
+      getImg: function() {
+        var obj = this.envObject;
+        if(obj){
+          var icon = obj.representation[obj.currentRepresentation].icon;
+          if(icon){
+            var src = (this.ssl ? "https" : "http") + "://" + this.apiurl + "resources/" + icon;
+            return src;
+          } 
+        }
+      }
+      
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+<polymer-element name="nautes-zone" attributes="zone canvas toast" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #title{
+        position: absolute;
+        z-index: 12;
+        background-color: rgba(100, 100, 100, 0.7);
+        color: #fff;
+      }
+    </style>
+    <div id="title">
+      {{zone.name}}
+    </div>
+    <template repeat="{{envObject in zone.objects}}">
+      <nautes-zone-object envobject="{{envObject}}" toast="{{toast}}"></nautes-zone-object>
+    </template>
+  </template>
+  <script>
+    Polymer("nautes-zone",{
+      zoneChanged: function(){
+        if(this.zone){
+          this.$.title.style.left = this.zone.shape.points[0].x +"px";
+          this.$.title.style.top = this.zone.shape.points[0].y +"px";
+        }
+      },
+
+      canvasChanged: function() {
+          var poly = this.zone.shape.points;
+          var canvas = this.canvas;
+          var context = canvas.getContext('2d');
+
+          var ranR = Math.floor(Math.random() * 255);
+          var ranG = Math.floor(Math.random() * 255);
+          var ranB = Math.floor(Math.random() * 255);
+
+          context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.2)";
+          context.beginPath();
+          context.moveTo(poly[0].x, poly[0].y);
+          for( item=1 ; item < poly.length ; item++ ){
+              context.lineTo( poly[item].x , poly[item].y );
+          }
+          context.closePath();
+          context.fill();
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+<polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiurl ssl" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        color: #444;
+        background: {{bgColor}};
+        position: relative;
+        font-family: Verdana;
+      }
+      canvas{
+        position: absolute;
+        z-index: 11;
+      }
+    </style>
+    
+    <core-localstorage name="ssl" value="{{ ssl }}">
+    </core-localstorage>
+
+    <core-localstorage name="apiurl" value="{{ apiurl }}">
+    </core-localstorage>
+
+    <div layout="" vertical="" center="">
+      <h2>{{environment.name}}</h2>
+      <div id="container" relative="">
+        <canvas id="environmentCanvas" width="{{environment.width}}px" height="{{environment.height}}px"></canvas>
+        <img id="environmentImg" width="{{environment.width}}px" height="{{environment.height}}px">
+        <template repeat="{{zone in environment.zones}}">
+          <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
+        </template>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer("nautes-environment-row",{
+
+      scaleFactor: 1.0,
+
+      scaleFactorChanged: function(){
+        if(this.scaleFactor){
+          var scaleStr = "scale("+this.scaleFactor+ ","+this.scaleFactor+")";
+          this.style.transform = scaleStr;
+          this.style.WebkitTransform = scaleStr;
+          this.style.msTransform = scaleStr;
+
+          var verticalOffset = - (this.environment.height * (1 - this.scaleFactor))/2 + 20;
+          this.style.top = verticalOffset+"px";
+        }
+      },
+
+      setEnvImg: function(){
+        if(this.ssl != undefined && this.apiurl){
+          var src = this.getImg();
+          if(src){
+            this.$.environmentImg.src = src;
+          }
+        }
+      },
+
+      sslChanged: function(){
+        this.setEnvImg();
+      },
+
+      apiurlChanged: function(){
+        this.setEnvImg();
+      },
+
+      ready: function(){
+        var element = this;
+        element.resize();
+        window.addEventListener('resize', function(event){
+          element.resize();
+        });
+      },
+
+      resize: function(){
+        var element = this;
+        this.scaleFactor = element.getScaleFactor();
+      },
+
+      getImg: function() {
+        var src =  (this.ssl ? "https" : "http") + "://" + this.apiurl + 'resources/' + this.environment.backgroundImage;
+        return src;
+      },
+      
+      getScaleFactor: function(){
+        var scaleFactorX =  (window.innerWidth - 100) / this.environment.width;
+        var scaleFactorY =  (window.innerHeight - 150) / this.environment.height;
+        var scaleFactor = Math.min(scaleFactorX,scaleFactorY,1);
+        return scaleFactor;
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+<fd-rest-element-service id="triggersService" fdtype="triggers" fditems="{{triggers}}"></fd-rest-element-service>
+
+<polymer-element name="nautes-environment" attributes="bgColor toast" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+        width: 100%;
+        overflow: hidden;
+      }
+    </style>
+
+    <fd-rest-element-service fdtype="environments" fditems="{{environments}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div relative="">
+      <template repeat="{{environment in environments}}">
+        <nautes-environment-row bgcolor="{{bgColor}}" environment="{{environment}}" toast="{{toast}}">
+        </nautes-environment-row>
+      </template>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-environment",{
+      resize: function(){
+        var maxHeight = window.innerHeight-80;
+        this.style.maxHeight = maxHeight + "px";
+      },
+
+      ready: function(){
+        var element = this;
+        element.resize();
+        window.addEventListener('resize', function(event){
+          element.resize();
+        });
+      }
+    });
+  </script>
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
 `paper-radio-button` is a button that can be either checked or unchecked.
 User can tap the radio button to check it.  But it cannot be unchecked by
 tapping once checked.
@@ -11174,6 +11973,77 @@ Example:
   </script>
 </polymer-element>
 
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`paper-radio-group` allows user to select only one radio button from a set.
+Checking one radio button that belongs to a radio group unchecks any 
+previously checked radio button within the same group. Use
+`selected` to get or set the selected radio button.
+
+Example:
+
+    <paper-radio-group selected="small">
+      <paper-radio-button name="small" label="Small"></paper-radio-button>
+      <paper-radio-button name="medium" label="Medium"></paper-radio-button>
+      <paper-radio-button name="large" label="Large"></paper-radio-button>
+    </paper-radio-group>
+
+See <a href="../paper-radio-button/">paper-radio-button</a> for more
+information about `paper-radio-button`.
+
+@group Paper Elements
+@element paper-radio-group
+@extends core-selector
+@homepage github.io
+-->
+
+
+
+
+<polymer-element name="paper-radio-group" extends="core-selector" role="radiogroup" assetpath="../app/bower_components/paper-radio-group/">
+
+  <template>
+  
+    <style>
+    
+      :host {
+        display: inline-block;
+      }
+  
+      polyfill-next-selector { content: ':host > *'; }
+      ::content > * {
+        padding: 12px;
+      }
+    
+    </style>
+  
+    <shadow></shadow>
+    
+  </template>
+  
+  <script>
+  
+    Polymer('paper-radio-group', {
+      
+      selectedAttribute: 'checked',
+      activateEvent: 'paper-radio-button-activate'
+      
+    });
+  
+  </script>
+  
+</polymer-element>
+
+
+
 
 
 
@@ -11226,18 +12096,29 @@ Example:
       <div class="row" layout="" horizonal="" center="" start="">
         <core-localstorage id="LScr" name="credentialrequired" value="{{credentialrequired}}">
         </core-localstorage>
-        CREDENTIAL REQUIRED: <paper-toggle-button checked="{{newCredentialRequired}}"></paper-toggle-button>
+          {{"cr" | translate }}:  <paper-toggle-button checked="{{newCredentialRequired}}">
+                                  </paper-toggle-button>
       </div>
 
       <div class="row" layout="" horizonal="" center="" start="">
         <core-localstorage id="LSssl" name="ssl" value="{{ssl}}">
         </core-localstorage>
-        SSL: <paper-toggle-button checked="{{newSSL}}"></paper-toggle-button>
+        SSL:  <paper-toggle-button checked="{{newSSL}}">
+              </paper-toggle-button>
       </div>
 
-      <div class="row-fab" horizontal="" end-justified="" layout="">
-        <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
+      <div class="row" layout="" horizonal="" center="" start="">
+        <core-localstorage id="LSlocale" name="locale" value="{{locale}}">
+        </core-localstorage>
+        {{"language" | translate}}: <paper-radio-group selected="{{newLocale}}">
+                                      <paper-radio-button name="en-US" label="English">
+                                      </paper-radio-button>
+                                      <paper-radio-button name="it-IT" label="Italiano">
+                                      </paper-radio-button>
+                                    </paper-radio-group>
       </div>
+      
+      <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
 
     </div>
 
@@ -11265,19 +12146,21 @@ Example:
           this.newSSL = false;
         }
 
-      },
+        if(localStorage["locale"]){
+          this.newLocale = JSON.parse(localStorage["locale"]);
+        }
 
-      newAPIUrlChanged: function(){
-        console.log(this.newAPIUrl);
       },
 
       applyChanges: function(){
 
-        console.log(this.newAPIUrl);
-
         if(this.newAPIUrl != ""){
           this.$.LSapiurl.value = this.newAPIUrl;
         }
+
+        this.$.LSlocale.value = this.newLocale;
+
+        console.log(this.newLocale);
 
         this.$.LScr.value = this.newCredentialRequired;
         
@@ -12457,7 +13340,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       elementsChanged: function(){
-        console.log("sorting..", this.elements.length);
+        
         if(this.elements){
           var sortedElements = {};
           for (var i = 0; i < this.elements.length; i++) {
@@ -12474,75 +13357,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     });
   </script>
-</polymer-element>
-
-<!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-`paper-radio-group` allows user to select only one radio button from a set.
-Checking one radio button that belongs to a radio group unchecks any 
-previously checked radio button within the same group. Use
-`selected` to get or set the selected radio button.
-
-Example:
-
-    <paper-radio-group selected="small">
-      <paper-radio-button name="small" label="Small"></paper-radio-button>
-      <paper-radio-button name="medium" label="Medium"></paper-radio-button>
-      <paper-radio-button name="large" label="Large"></paper-radio-button>
-    </paper-radio-group>
-
-See <a href="../paper-radio-button/">paper-radio-button</a> for more
-information about `paper-radio-button`.
-
-@group Paper Elements
-@element paper-radio-group
-@extends core-selector
-@homepage github.io
--->
-
-
-
-
-<polymer-element name="paper-radio-group" extends="core-selector" role="radiogroup" assetpath="../app/bower_components/paper-radio-group/">
-
-  <template>
-  
-    <style>
-    
-      :host {
-        display: inline-block;
-      }
-  
-      polyfill-next-selector { content: ':host > *'; }
-      ::content > * {
-        padding: 12px;
-      }
-    
-    </style>
-  
-    <shadow></shadow>
-    
-  </template>
-  
-  <script>
-  
-    Polymer('paper-radio-group', {
-      
-      selectedAttribute: 'checked',
-      activateEvent: 'paper-radio-button-activate'
-      
-    });
-  
-  </script>
-  
 </polymer-element>
 
 
@@ -12807,7 +13621,7 @@ information about `paper-radio-button`.
             <div class="box commands" layout="" vertical="" center="">
               <template repeat="{{commandNR, i in newReaction.commands}}">
                 <div relative="">
-                  <core-icon class="icon-remove" icon="clear">
+                  <core-icon index="{{i}}" class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
                   </core-icon>
                   <nautes-radio-select selected="0" image="{{channelImages[commandNR.receiver]}}" selectedoption="{{commandNR}}" options="{{sortedCommands[commandNR.receiver]}}" arrayindex="{{i}}" arraytoset="{{utilityArray}}">
                   </nautes-radio-select>
@@ -12886,7 +13700,7 @@ information about `paper-radio-button`.
           <div class="box commands" layout="" vertical="" center="">
             <template repeat="{{commandNR, i in newReaction.commands}}">
               <div relative="">
-                <core-icon class="icon-remove" icon="clear">
+                <core-icon index="{{i}}" class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
                 </core-icon>
                 <nautes-radio-select selected="0" image="{{channelImages[commandNR.receiver]}}" selectedoption="{{commandNR}}" options="{{sortedCommands[commandNR.receiver]}}" arrayindex="{{i}}" arraytoset="{{utilityArray}}">
                 </nautes-radio-select>
@@ -12915,13 +13729,6 @@ information about `paper-radio-button`.
   <script>
 
     Polymer("nautes-reaction-add",{
-      observe: {
-        "newReaction.trigger": "log"
-      },
-
-      log: function(){
-        console.log(this.newReaction.trigger);
-      },
 
       sortedTriggersChanged: function() {
         if(this.sortedTriggers){
@@ -12940,6 +13747,12 @@ information about `paper-radio-button`.
         this.triggerSet = false;
         this.canSendReaction = false;
         this.newReaction.trigger = {};
+      },
+
+      removeCommand: function(event, detail, sender){
+        var index = sender.getAttribute("index");
+        this.utilityArray.splice(index, 1);
+        this.newReaction.commands.splice(index, 1);
       },
 
       clearNewReaction: function(){
@@ -13139,6 +13952,7 @@ information about `paper-radio-button`.
     });
   </script>
 </polymer-element>
+
 
 
 
