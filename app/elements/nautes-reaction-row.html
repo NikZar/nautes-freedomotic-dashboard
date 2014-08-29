@@ -72,6 +72,7 @@
       method="DELETE" 
       fdtype="reactions/{{reaction.uuid}}"  
       on-rest-response="{{removed}}"
+      on-rest-error="{{notRemoved}}"
       toast="{{toast}}">
     </fd-rest-element-service>
 
@@ -105,11 +106,16 @@
 
       removeReaction: function(){
         this.$.deleteReactionService.go();
+        this.style.display = "none";
       },
 
       removed: function(){
         console.log("Reaction Removed");
         this.fire("remove");
+      }, 
+
+      notRemoved: function(){
+        this.style.display = "block";
       }
 
     });

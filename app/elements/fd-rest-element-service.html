@@ -89,6 +89,7 @@
         this.toast.text="There was a problem loading "+this.fdtype+" data.";
         this.toast.show();
       }
+      this.fire("rest-error", event)
     },
 
     go: function(){
