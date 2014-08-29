@@ -239,11 +239,11 @@
                     arrayToSet="{{utilityArray}}">
                   </nautes-radio-select>
                 </div>
-
               </template>
               <div id="dropCommands" class="drop" flex layout vertical center center-justified>
                 <div id="dropCommands">DRAG COMMANDS HERE</div>
-                <core-icon id="dropCommands" class="dropicon" icon="add"></core-icon>
+                <core-icon id="dropCommands" class="dropicon" icon="add">
+                </core-icon>
               </div>
             </div>
 
@@ -306,20 +306,19 @@
           </div>
 
           <div class="box commands">
-              <div class="list-title">
-                COMMAND LIST
-              </div>
-              <div style="background-color: #f88;">
-                <core-drag-drop on-drag-start="{{dragStartHandler}}">
-                </core-drag-drop>
-                <template repeat="{{receiver in commandReceivers}}">
-                  <nautes-channel id="command" 
-                    style="background-color: #f88;" 
-                    channel="{{receiver}}"
-                    draggable="true">
-                  </nautes-channel>
-                </template>
-              </div>
+            <div class="list-title">
+              COMMAND LIST
+            </div>
+            <div style="background-color: #f88;">
+              <core-drag-drop on-drag-start="{{dragStartHandler}}">
+              </core-drag-drop>
+              <template repeat="{{receiver in commandReceivers}}">
+                <nautes-channel id="command" 
+                  style="background-color: #f88;" 
+                  channel="{{receiver}}"
+                  draggable="true">
+                </nautes-channel>
+              </template>
             </div>
           </div>
 

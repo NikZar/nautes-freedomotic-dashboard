@@ -24,12 +24,12 @@
     </style>
 
     <div layout horizontal center>
-      <template if="{{behavior.type === 'boolean'}}">
+      <template if="{{behavior['@class'] === 'com.freedomotic.model.object.BooleanBehavior'}}">
         <core-icon-button icon="create" on-tap="{{toggle}}">
           TOGGLE
         </core-icon-button>
       </template>
-      <template if="{{behavior.type === 'rangedint'}}">
+      <template if="{{behavior['@class'] === 'com.freedomotic.model.object.RangedIntBehavior'}}">
         <core-icon-button icon="create" on-tap="{{submit}}">
           CHANGE
         </core-icon-button>

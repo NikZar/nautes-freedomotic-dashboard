@@ -1633,7 +1633,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       setRequestHeaders: function(xhr, headers) {
         if (headers) {
           for (var name in headers) {
-            xhr.setRequestHeader(name, headers[name]);
+            xhr.setRequestHeader("Content-Type", headers[name]);
           }
         }
       }
@@ -1884,7 +1884,7 @@ element.
       try {
         return JSON.parse(r);
       } catch (x) {
-        console.warn('core-ajax caught an exception trying to parse reponse as JSON:');
+        console.warn('core-ajax caught an exception trying to parse response as JSON:');
         console.warn('url:', this.url);
         console.warn(x);
         return r;
@@ -1949,7 +1949,10 @@ element.
       if (args.headers && typeof(args.headers) == 'string') {
         args.headers = JSON.parse(args.headers);
       }
-      if (this.contentType) {
+      var hasContentType = Object.keys(args.headers).some(function (header) {
+        return header.toLowerCase() === 'content-type';
+      });
+      if (!hasContentType && this.contentType) {
         args.headers['Content-Type'] = this.contentType;
       }
       if (this.handleAs === 'arraybuffer' || this.handleAs === 'blob' ||
@@ -1967,7 +1970,6 @@ element.
 
 </script>
 </polymer-element>
-
 
 
 
@@ -10461,12 +10463,12 @@ core-icon {
     </style>
 
     <div layout="" horizontal="" center="">
-      <template if="{{behavior.type === &apos;boolean&apos;}}">
+      <template if="{{behavior[&apos;@class&apos;] === &apos;com.freedomotic.model.object.BooleanBehavior&apos;}}">
         <core-icon-button icon="create" on-tap="{{toggle}}">
           TOGGLE
         </core-icon-button>
       </template>
-      <template if="{{behavior.type === &apos;rangedint&apos;}}">
+      <template if="{{behavior[&apos;@class&apos;] === &apos;com.freedomotic.model.object.RangedIntBehavior&apos;}}">
         <core-icon-button icon="create" on-tap="{{submit}}">
           CHANGE
         </core-icon-button>
@@ -12542,6 +12544,8 @@ information about `paper-radio-button`.
 
       core-icon-button{
         border: 1px solid rgba(64,64,64,0.3);
+        width: 120px;
+        text-align: center;
       }
 
       .reactionbtn {
@@ -12570,9 +12574,18 @@ information about `paper-radio-button`.
 
       <div class="header" layout="" vertical="" center="">
         <div layout="" horizontal="" center="">
-          <core-icon-button class="reactionbtn" icon="add-box" on-tap="{{addReaction}}">
-            REACTION
-          </core-icon-button>
+
+          <template if="{{!showAddReaction}}">
+            <core-icon-button class="reactionbtn" icon="add-box" on-tap="{{addReaction}}">
+              REACTION
+            </core-icon-button>
+          </template>
+
+          <template if="{{!showList}}">
+            <core-icon-button class="reactionbtn" icon="send" on-tap="{{showReactionList}}">
+              LIST
+            </core-icon-button>
+          </template>
           <!--
           <core-icon-button class="trigger" icon="add-box" on-tap="{{addTrigger}}">
             TRIGGER
@@ -12608,9 +12621,14 @@ information about `paper-radio-button`.
       showAddReaction: false,
 
       addReaction: function(){
-        this.showList = !this.showList;
+        this.showList = false;
         this.showAddReaction = !this.showAddReaction;
-      }
+      },
+
+      showReactionList: function(){
+        this.showList = !this.showList;
+        this.showAddReaction = false;
+      },
 
     });
   </script>
@@ -12679,12 +12697,12 @@ information about `paper-radio-button`.
     <paper-toast id="toast" text="There was a problem loading data.">
     </paper-toast>
 
-    <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition">
+    <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition cross-fade">
       
-      <nautes-dashboard name="dashboard" selected="{{selected}}" selectedbox="{{selectedBox}}" smallquery="max-width: 640px" hero=""></nautes-dashboard>
+      <nautes-dashboard name="dashboard" selected="{{selected}}" selectedbox="{{selectedBox}}" smallquery="max-width: 640px"></nautes-dashboard>
       
       <section name="environment" on-page-back="{{back}}">
-       <nautes-dashboard-page selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="environment" cross-fade="">
+       <nautes-dashboard-page selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="environment">
         <nautes-environment bgcolor="{{selectedBox.color}}" toast="{{$.toast}}">
         </nautes-environment>
        </nautes-dashboard-page>
@@ -13671,7 +13689,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   </nautes-radio-select>
                 </div>
               </template>
-
               <div id="dropTrigger" class="drop" flex="" layout="" vertical="" center="" center-justified="">
                 <div id="dropTrigger">
                   DRAG ONE TRIGGER HERE
@@ -13679,7 +13696,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <core-icon id="dropTrigger" class="dropicon" icon="add">
                 </core-icon>
               </div>
-
             </div>
 
             <div class="box commands" layout="" vertical="" center="">
@@ -13735,7 +13751,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 </nautes-radio-select>
               </div>
             </template>
-
             <div id="dropTrigger" class="drop" flex="" layout="" vertical="" center="" center-justified="">
               <div id="dropTrigger">
                 DRAG ONE TRIGGER HERE
@@ -13743,7 +13758,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <core-icon id="dropTrigger" class="dropicon" icon="add">
               </core-icon>
             </div>
-
           </div>
 
           <div class="box commands">
@@ -13769,7 +13783,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <nautes-radio-select selected="0" image="{{channelImages[commandNR.receiver]}}" selectedoption="{{commandNR}}" options="{{sortedCommands[commandNR.receiver]}}" arrayindex="{{i}}" arraytoset="{{utilityArray}}">
                 </nautes-radio-select>
               </div>
-
             </template>
             <div id="dropCommands" class="drop" flex="" layout="" vertical="" center="" center-justified="">
               <div id="dropCommands">DRAG COMMANDS HERE</div>
