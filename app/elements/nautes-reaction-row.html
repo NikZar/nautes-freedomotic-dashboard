@@ -77,7 +77,7 @@
     </fd-rest-element-service>
 
     <div layout horizontal center>
-      <core-icon index="{{i}}" class="icon-remove" icon="clear" on-tap="{{removeReaction}}">
+      <core-icon class="icon-remove" icon="clear" on-tap="{{removeReaction}}">
       </core-icon>
       <core-icon class="icon" icon="send"></core-icon>
       <div class="reaction-row" layout vertical center-justified>
@@ -110,7 +110,6 @@
       },
 
       removed: function(){
-        console.log("Reaction Removed");
         this.fire("remove");
       }, 
 

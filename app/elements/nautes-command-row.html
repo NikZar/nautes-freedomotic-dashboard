@@ -1,0 +1,123 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icons/image-icons.html">
+<link rel="import" href="../bower_components/core-icons/hardware-icons.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/fd-rest-element-service.html">
+
+
+<polymer-element name="nautes-command-row" attributes="command bgColor">
+  <template>
+    <style>
+
+      :host {
+        display: block;
+        position: relative;
+        background-color: {{bgColor}};
+        width: 100%;
+        font-size: 1.2rem;
+        font-weight: 300;
+        font-family: Open Sans;
+      }
+
+      .command-row {
+        margin-bottom: 10px;
+        padding: 20px;
+        color: #444;
+        min-height: 70px;
+      }
+
+      .icon{
+        margin-left: 30px;
+        color: #444;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 3px solid #444;
+      }
+
+      .icon-remove{
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        border-radius: 50%;
+        border: 2px solid #444;
+        color: #444;
+      }
+
+      .receiver{
+        font-size: 0.5em;
+      }
+
+      paper-ripple {
+        z-index: 1;
+        color: #aaaaff;
+      }
+
+    </style>
+
+    <fd-rest-element-service id="deleteCommandService" 
+      auto="false"
+      method="DELETE" 
+      fdtype="commands/user/{{command.uuid}}"  
+      on-rest-response="{{removed}}"
+      on-rest-error="{{notRemoved}}"
+      toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <fd-rest-element-service id="runCommandService" 
+      auto="false"
+      method="POST" 
+      fdtype="commands/user/{{command.uuid}}/run"  
+      on-rest-response="{{successHandler}}"
+      toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div layout horizontal center start>
+      <core-icon class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
+      </core-icon>
+      <core-icon class="icon" icon="hardware:gamepad" on-tap="{{run}}">
+        <paper-ripple class="circle" fit></paper-ripple>
+      </core-icon>
+      <div class="command-row" layout vertical center-justified>
+        <div>{{command.name}}</div>
+        <div class="receiver">{{command.receiver}}</div>
+      </div>
+      <paper-shadow z="1"></paper-shadow>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-command-row",{
+
+      removeCommand: function(){
+        this.$.deleteCommandService.go();
+        this.style.display = "none";
+      },
+
+      removed: function(){
+        this.fire("remove");
+      }, 
+
+      notRemoved: function(){
+        this.style.display = "block";
+      },
+
+      run: function(){
+        this.$.runCommandService.go();
+      },
+
+      successHandler: function(event){
+        if(this.toast){
+          this.toast.text= this.command.name + " runned with success! ";
+          this.toast.show();
+        }
+      }
+
+    });
+  </script>
+</polymer-element>

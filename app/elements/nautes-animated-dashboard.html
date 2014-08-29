@@ -18,6 +18,7 @@
 <link rel="import" href="../elements/nautes-fd-info.html">
 <link rel="import" href="../elements/nautes-asynch-messages-list.html">
 <link rel="import" href="../elements/nautes-reactions.html">
+<link rel="import" href="../elements/nautes-commands.html">
 
 
 <polymer-element name="nautes-animated-dashboard" attributes="selected">
@@ -73,7 +74,14 @@
       </section>
 
       <section name="commands" on-page-back="{{back}}">
-       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="commands">
+       <nautes-dashboard-page 
+        selected="{{selected}}" 
+        selectedBox="{{selectedBox}}" 
+        hero hero-id="commands">
+        <nautes-commands 
+          bgColor="{{selectedBox.bgcolor}}" 
+          toast="{{$.toast}}">
+        </nautes-commands>
        </nautes-dashboard-page>
       </section>
 
