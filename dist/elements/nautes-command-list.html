@@ -1,8 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
-<link rel="import" href="../elements/nautes-reaction-row.html">
-
-<polymer-element name="nautes-reaction-list" attributes="toast bgColor">
+<polymer-element name="nautes-command-list" attributes="toast bgColor">
   <template>
     <style>
       :host {
@@ -12,28 +10,28 @@
       }
     </style>
 
-    <fd-rest-element-service id="getReactionsService"
-      fdtype="OLDreactions" 
-      fditems="{{reactions}}" 
+    <fd-rest-element-service id="getCommandsService"
+      fdtype="commands/user" 
+      fditems="{{commands}}" 
       toast="{{toast}}">
     </fd-rest-element-service>
 
     <div layout vertical center>
-      <template repeat="{{reaction in reactions}}">
-        <nautes-reaction-row 
+      <template repeat="{{command in commands}}">
+        <nautes-command-row 
           toast="{{toast}}"
           bgColor="{{bgColor}}" 
-          reaction="{{reaction}}"
+          command="{{command}}"
           on-remove="{{reloadList}}">
-        </nautes-reaction-row>
+        </nautes-command-row>
       </template>
     </div>    
   </template>
   <script>
-    Polymer("nautes-reaction-list",{
+    Polymer("nautes-command-list",{
       
       reloadList: function(){
-        this.$.getReactionsService.go();
+        this.$.getCommandsService.go();
       }
 
     });

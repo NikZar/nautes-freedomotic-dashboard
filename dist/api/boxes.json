@@ -3,55 +3,70 @@
 		"title": "Environment",
 		"description": "This section gives you all the information about your Environment",
 		"img": "home",
-		"color": "#eeffee"
+		"color": "#BDFFCD",
+		"bgcolor": "#dfd"
 	},
 	{
 		"title": "Reactions",
 		"description": "This section lets you define Reactions on different triggers",
 		"img": "send",
-		"color": "#ffeeee"
+		"color": "#fcc",
+		"bgcolor": "#fdd"
 	},
 	{
 		"title": "Triggers",
 		"description": "This section lets you define Triggers to handle environment changes",
 		"img": "image:flash-on",
-		"color": "#eeeeff"
+		"color": "#BDCDFF",
+		"bgcolor": "#cdf"
 	},
 	{
 		"title": "Settings",
 		"description": "This section contains general dashboard Settings",
 		"img": "settings",
-		"color": "#eeeeee"
+		"color": "#eee",
+		"bgcolor": "#eee"
 	},
 	{
 		"title": "Info",
 		"description": "This section contains general usage Information",
 		"img": "info-outline",
-		"color": "#aaa"
+		"color": "#aaa",
+		"bgcolor": "#aaa"
 	},
 	{
 		"title": "Messages",
 		"description": "This section contains the list of Messages received",
 		"img": "list",
-		"color": "#ffb"
+		"color": "#ffa",
+		"bgcolor": "#ffb"
 	},
 	{
 		"title": "Objects",
 		"description": "This section contains the list of your Objects",
 		"img": "image:camera",
-		"color": "#bef"
+		"color": "#bef",
+		"bgcolor": "#bef"
 	},
 	{
 		"title": "Family",
 		"description": "This section contains the list of users",
 		"img": "social:people",
-		"color": "#ccf"
+		"color": "#ccf",
+		"bgcolor": "#ccf"
 	},
 	{
 		"title": "Alerts",
 		"description": "Send an alert to the medical platform",
 		"img": "warning",
-		"color": "#fcc"
+		"color": "#fb8",
+		"bgcolor": "#fb9"
+	},
+	{
+		"title": "Commands",
+		"description": "Manually run a user command",
+		"img": "hardware:gamepad",
+		"color": "#f88",
+		"bgcolor": "#faa"
 	}
-
 ]

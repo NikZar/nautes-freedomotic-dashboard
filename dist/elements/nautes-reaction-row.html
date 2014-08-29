@@ -4,8 +4,9 @@
 <link rel="import" href="../bower_components/core-icons/image-icons.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/fd-rest-element-service.html">
 
-<polymer-element name="nautes-reaction-row" attributes="bgColor reaction">
+<polymer-element name="nautes-reaction-row" attributes="bgColor reaction toast">
   <template>
     <style>
 
@@ -40,7 +41,7 @@
       }
 
       .trigger {
-        color: #c8c;
+        color: #89f;
       }
 
       .condition {
@@ -55,9 +56,29 @@
         margin-right: 5px;
       }
 
+      .icon-remove{
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        border-radius: 50%;
+        border: 2px solid #444;
+        color: #444;
+      }
+
     </style>
 
+    <fd-rest-element-service id="deleteReactionService" 
+      auto="false"
+      method="DELETE" 
+      fdtype="reactions/{{reaction.uuid}}"  
+      on-rest-response="{{removed}}"
+      on-rest-error="{{notRemoved}}"
+      toast="{{toast}}">
+    </fd-rest-element-service>
+
     <div layout horizontal center>
+      <core-icon class="icon-remove" icon="clear" on-tap="{{removeReaction}}">
+      </core-icon>
       <core-icon class="icon" icon="send"></core-icon>
       <div class="reaction-row" layout vertical center-justified>
         <div layout horizontal center>
@@ -82,6 +103,19 @@
   </template>
   <script>
     Polymer("nautes-reaction-row",{
+
+      removeReaction: function(){
+        this.$.deleteReactionService.go();
+        this.style.display = "none";
+      },
+
+      removed: function(){
+        this.fire("remove");
+      }, 
+
+      notRemoved: function(){
+        this.style.display = "block";
+      }
 
     });
   </script>

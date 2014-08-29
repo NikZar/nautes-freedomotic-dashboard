@@ -1,12 +1,13 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icons/hardware-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
-<link rel="import" href="../elements/nautes-reaction-list.html">
+<link rel="import" href="../elements/nautes-command-list.html">
 <link rel="import" href="../elements/nautes-open-sans.html">
 
-<polymer-element name="nautes-reactions" attributes="bgColor toast">
-  <template>
+<polymer-element name="nautes-commands" attributes="">
+<template>
     <style>
       
       :host {
@@ -29,21 +30,6 @@
         text-align: center;
       }
 
-      .reactionbtn {
-        margin: 5px;
-        background-color: #fcc;
-      }
-
-      .triggerbtn {
-        margin: 5px;
-        background-color: #fdf;
-      }
-
-      .conditionbtn {
-        margin: 5px;
-        background-color: #cfc;
-      }
-
       .commandbtn {
         margin: 5px;
         background-color: #f88;
@@ -56,14 +42,20 @@
       <div class="header" layout vertical center>
         <div layout horizontal center>
 
-          <template if="{{!showAddReaction}}">
-            <core-icon-button class="reactionbtn" icon="add-box" on-tap="{{addReaction}}">
-              REACTION
+          <template if="{{!showAddCommand}}">
+            <core-icon-button 
+              class="commandbtn" 
+              icon="add-box" 
+              on-tap="{{addCommand}}">
+              COMMAND
             </core-icon-button>
           </template>
 
           <template if="{{!showList}}">
-            <core-icon-button class="reactionbtn" icon="send" on-tap="{{showReactionList}}">
+            <core-icon-button 
+              class="commandbtn" 
+              icon="hardware:gamepad" 
+              on-tap="{{showCommandList}}">
               LIST
             </core-icon-button>
           </template>
@@ -72,33 +64,38 @@
       </div>
     
       <template if="{{showList}}">
-        <nautes-reaction-list bgColor="{{bgColor}}" toast="{{toast}}">
-        </nautes-reaction-list>
+        <nautes-command-list 
+          bgColor="{{bgColor}}" 
+          toast="{{toast}}">
+        </nautes-command-list>
       </template>
 
-      <template if="{{showAddReaction}}">
-        <nautes-reaction-add smallQuery="max-width: 640px" bgColor="{{bgColor}}" toast="{{toast}}">
-        </nautes-reaction-add>
+      <template if="{{showAddCommand}}">
+        <nautes-command-add 
+          smallQuery="max-width: 640px" 
+          bgColor="{{bgColor}}" 
+          toast="{{toast}}">
+        </nautes-command-add>
       </template>
 
     </div>
 
   </template>
   <script>
-    Polymer("nautes-reactions",{
-      
+    Polymer("nautes-commands",{
+
       showList: true,
 
-      showAddReaction: false,
+      showAddCommand: false,
 
       addReaction: function(){
         this.showList = false;
-        this.showAddReaction = !this.showAddReaction;
+        this.showAddCommand = !this.showAddCommand;
       },
 
       showReactionList: function(){
         this.showList = !this.showList;
-        this.showAddReaction = false;
+        this.showAddCommand = false;
       }
 
     });

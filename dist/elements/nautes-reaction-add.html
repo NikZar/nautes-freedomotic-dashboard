@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/core-drag-drop/core-drag-drop.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icons/hardware-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="../bower_components/core-media-query/core-media-query.html">
 
@@ -53,7 +54,7 @@
       }
 
       .triggers {
-        background-color: #fdf;
+        background-color: #BDCDFF;
       }
 
       .conditions {
@@ -100,6 +101,12 @@
       ::-webkit-scrollbar { 
         display: none; 
       }
+
+      .icon{
+        height: 100px;
+        width: 100px;
+        color: #aaD;
+      }
     </style>
     
     <core-media-query
@@ -142,15 +149,9 @@
     </fd-rest-element-service>
 
     <div hidden>
-      <div id="triggerIcon" layout vertical center center-justified>
-        <core-icon class="icon" icon="image:flash-on"></core-icon>
-      </div>
-      <div id="conditionIcon">
-        <core-icon class="icon" icon="send"></core-icon>
-      </div>
-      <div id="commandIcon">
-        <core-icon class="icon" icon="send"></core-icon>
-      </div>
+        <core-icon id="triggerIcon" class="icon" icon="image:flash-on"></core-icon>
+        <core-icon id="conditionIcon" class="icon" icon="send"></core-icon>  
+        <core-icon id="commandIcon" class="icon" icon="hardware:gamepad"></core-icon>
     </div>
 
     <div vertical layout center>
@@ -163,12 +164,12 @@
             <div class="list-title">
               TRIGGER LIST
             </div>
-            <div style="background-color: #fdf;">
+            <div>
               <core-drag-drop on-drag-start="{{dragStartHandler}}">
               </core-drag-drop>
               <template repeat="{{channel in triggerChannels}}">
                 <nautes-channel id="trigger" 
-                  style="background-color: #fdf;" 
+                  style="background-color: #BDCDFF;" 
                   channel="{{channel}}"
                   draggable="true">
                 </nautes-channel>
@@ -486,6 +487,8 @@
               dragInfo.avatar.removeChild(dragInfo.avatar.firstChild);
           }
           if(icon){
+            icon.style.width = "32px";
+            icon.style.height = "32px";
             dragInfo.avatar.appendChild(icon);
           }
 
