@@ -67,19 +67,19 @@
       
       <section name="environment" on-page-back="{{back}}">
        <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="environment">
-        <nautes-environment bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
+        <nautes-environment bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
         </nautes-environment>
        </nautes-dashboard-page>
       </section>
 
-      <section name="family" on-page-back="{{back}}">
-       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="family">
+      <section name="commands" on-page-back="{{back}}">
+       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="commands">
        </nautes-dashboard-page>
       </section>
 
       <section name="objects" on-page-back="{{back}}" fit>
        <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="objects">
-          <nautes-object-list bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
+          <nautes-object-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
           </nautes-object-list>
        </nautes-dashboard-page>
       </section>
@@ -91,20 +91,20 @@
 
       <section name="reactions">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="reactions">
-        <nautes-reactions bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
-        <nautes-reactions>
+        <nautes-reactions bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+        </nautes-reactions>
        </nautes-dashboard-page>
       </section>
 
       <section name="messages">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="messages">
-        <nautes-asynch-messages-list bgColor="{{selectedBox.color}}" toast="{{$.toast}}"></nautes-asynch-messages-list>
+        <nautes-asynch-messages-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}"></nautes-asynch-messages-list>
        </nautes-dashboard-page>
       </section>
 
       <section name="info">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="info">
-        <nautes-fd-info bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
+        <nautes-fd-info bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
         </nautes-fd-info>
        </nautes-dashboard-page>
       </section>
@@ -117,7 +117,7 @@
 
       <section name="triggers">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="triggers">
-        <nautes-trigger-list bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
+        <nautes-trigger-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
         </nautes-trigger-list>
        </nautes-dashboard-page>
       </section>

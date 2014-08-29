@@ -1,18 +1,22 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../elements/nautes-zone-object.html">
+<link rel="import" href="../elements/nautes-open-sans.html">
 
 <polymer-element name="nautes-zone" attributes="zone canvas toast">
   <template>
     <style>
       :host {
         display: block;
+        font-size: 1.2em;
+        color: #fff;
+        font-family: Open Sans;
       }
       #title{
         position: absolute;
-        z-index: 12;
-        background-color: rgba(100, 100, 100, 0.7);
-        color: #fff;
+        z-index: 4;
+        background-color: {{bgColor}};
+        padding: 4px;
       }
     </style>
     <div id="title">
@@ -24,6 +28,9 @@
   </template>
   <script>
     Polymer("nautes-zone",{
+      
+      bgColor: "rgba(100, 100, 100, 0.7)",
+
       zoneChanged: function(){
         if(this.zone){
           this.$.title.style.left = this.zone.shape.points[0].x +"px";
@@ -40,7 +47,8 @@
           var ranG = Math.floor(Math.random() * 255);
           var ranB = Math.floor(Math.random() * 255);
 
-          context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.2)";
+          this.bgColor = "rgba("+ranR+","+ranG+","+ranB+",0.7)";
+          context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.15)";
           context.beginPath();
           context.moveTo(poly[0].x, poly[0].y);
           for( item=1 ; item < poly.length ; item++ ){
