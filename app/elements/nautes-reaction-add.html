@@ -53,7 +53,7 @@
       }
 
       .triggers {
-        background-color: #fdf;
+        background-color: #BDCDFF;
       }
 
       .conditions {
@@ -163,12 +163,12 @@
             <div class="list-title">
               TRIGGER LIST
             </div>
-            <div style="background-color: #fdf;">
+            <div>
               <core-drag-drop on-drag-start="{{dragStartHandler}}">
               </core-drag-drop>
               <template repeat="{{channel in triggerChannels}}">
                 <nautes-channel id="trigger" 
-                  style="background-color: #fdf;" 
+                  style="background-color: #BDCDFF;" 
                   channel="{{channel}}"
                   draggable="true">
                 </nautes-channel>
