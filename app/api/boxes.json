@@ -18,7 +18,7 @@
 		"description": "This section lets you define Triggers to handle environment changes",
 		"img": "image:flash-on",
 		"color": "#BDCDFF",
-		"bgcolor": "#BDCDFF"
+		"bgcolor": "#cdf"
 	},
 	{
 		"title": "Settings",
