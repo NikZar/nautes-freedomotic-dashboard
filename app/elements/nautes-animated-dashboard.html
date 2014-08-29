@@ -61,12 +61,12 @@
     <paper-toast id="toast" text="There was a problem loading data.">
     </paper-toast>
 
-    <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition">
+    <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition cross-fade">
       
-      <nautes-dashboard name="dashboard" selected="{{selected}}" selectedBox="{{selectedBox}}" smallQuery="max-width: 640px" hero></nautes-dashboard>
+      <nautes-dashboard name="dashboard" selected="{{selected}}" selectedBox="{{selectedBox}}" smallQuery="max-width: 640px"></nautes-dashboard>
       
       <section name="environment" on-page-back="{{back}}">
-       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="environment" cross-fade>
+       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="environment">
         <nautes-environment bgColor="{{selectedBox.color}}" toast="{{$.toast}}">
         </nautes-environment>
        </nautes-dashboard-page>
