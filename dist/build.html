@@ -12544,7 +12544,7 @@ information about `paper-radio-button`.
 
       core-icon-button{
         border: 1px solid rgba(64,64,64,0.3);
-        width: 120px;
+        min-width: 110px;
         text-align: center;
       }
 
@@ -12586,17 +12586,7 @@ information about `paper-radio-button`.
               LIST
             </core-icon-button>
           </template>
-          <!--
-          <core-icon-button class="trigger" icon="add-box" on-tap="{{addTrigger}}">
-            TRIGGER
-          </core-icon-button>
-          <core-icon-button class="condition" icon="add-box" on-tap="{{addCondition}}">
-            CONDITION
-          </core-icon-button>
-          <core-icon-button class="command" icon="add-box" on-tap="{{addCommand}}">
-            COMMAND
-          </core-icon-button>
-          -->
+          
         </div>
       </div>
     
@@ -13706,11 +13696,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   <nautes-radio-select selected="0" image="{{channelImages[commandNR.receiver]}}" selectedoption="{{commandNR}}" options="{{sortedCommands[commandNR.receiver]}}" arrayindex="{{i}}" arraytoset="{{utilityArray}}">
                   </nautes-radio-select>
                 </div>
-
               </template>
               <div id="dropCommands" class="drop" flex="" layout="" vertical="" center="" center-justified="">
                 <div id="dropCommands">DRAG COMMANDS HERE</div>
-                <core-icon id="dropCommands" class="dropicon" icon="add"></core-icon>
+                <core-icon id="dropCommands" class="dropicon" icon="add">
+                </core-icon>
               </div>
             </div>
 
@@ -13761,19 +13751,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </div>
 
           <div class="box commands">
-              <div class="list-title">
-                COMMAND LIST
-              </div>
-              <div style="background-color: #f88;">
-                <core-drag-drop on-drag-start="{{dragStartHandler}}">
-                </core-drag-drop>
-                <template repeat="{{receiver in commandReceivers}}">
-                  <nautes-channel id="command" style="background-color: #f88;" channel="{{receiver}}" draggable="true">
-                  </nautes-channel>
-                </template>
-              </div>
+            <div class="list-title">
+              COMMAND LIST
             </div>
-          </template></div>
+            <div style="background-color: #f88;">
+              <core-drag-drop on-drag-start="{{dragStartHandler}}">
+              </core-drag-drop>
+              <template repeat="{{receiver in commandReceivers}}">
+                <nautes-channel id="command" style="background-color: #f88;" channel="{{receiver}}" draggable="true">
+                </nautes-channel>
+              </template>
+            </div>
+          </div>
 
           <div class="box commands" layout="" vertical="" center="">
             <template repeat="{{commandNR, i in newReaction.commands}}">
@@ -13800,9 +13789,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       </template>
 
-    
+    </div>
 
-  
+  </template>
   <script>
 
     Polymer("nautes-reaction-add",{
