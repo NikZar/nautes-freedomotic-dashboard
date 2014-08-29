@@ -25,6 +25,8 @@
 
       core-icon-button{
         border: 1px solid rgba(64,64,64,0.3);
+        width: 120px;
+        text-align: center;
       }
 
       .reactionbtn {
@@ -53,9 +55,18 @@
 
       <div class="header" layout vertical center>
         <div layout horizontal center>
-          <core-icon-button class="reactionbtn" icon="add-box" on-tap="{{addReaction}}">
-            REACTION
-          </core-icon-button>
+
+          <template if="{{!showAddReaction}}">
+            <core-icon-button class="reactionbtn" icon="add-box" on-tap="{{addReaction}}">
+              REACTION
+            </core-icon-button>
+          </template>
+
+          <template if="{{!showList}}">
+            <core-icon-button class="reactionbtn" icon="send" on-tap="{{showReactionList}}">
+              LIST
+            </core-icon-button>
+          </template>
           <!--
           <core-icon-button class="trigger" icon="add-box" on-tap="{{addTrigger}}">
             TRIGGER
@@ -91,9 +102,14 @@
       showAddReaction: false,
 
       addReaction: function(){
-        this.showList = !this.showList;
+        this.showList = false;
         this.showAddReaction = !this.showAddReaction;
-      }
+      },
+
+      showReactionList: function(){
+        this.showList = !this.showList;
+        this.showAddReaction = false;
+      },
 
     });
   </script>

@@ -103,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       setRequestHeaders: function(xhr, headers) {
         if (headers) {
           for (var name in headers) {
-            xhr.setRequestHeader(name, headers[name]);
+            xhr.setRequestHeader("Content-Type", headers[name]);
           }
         }
       }

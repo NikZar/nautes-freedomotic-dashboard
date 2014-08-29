@@ -213,7 +213,6 @@
                   </nautes-radio-select>
                 </div>
               </template>
-
               <div id="dropTrigger" class="drop" flex layout vertical center center-justified>
                 <div id="dropTrigger">
                   DRAG ONE TRIGGER HERE
@@ -224,7 +223,6 @@
                  >
                 </core-icon>
               </div>
-
             </div>
 
             <div class="box commands" layout vertical center>
@@ -252,7 +250,10 @@
           </div>
           <div>
             <template if="{{canSendReaction}}">
-              <core-icon-button class="reaction" icon="add-box" on-tap="{{sendReaction}}">
+              <core-icon-button 
+                class="reaction" 
+                icon="add-box" 
+                on-tap="{{sendReaction}}">
                ADD REACTION
               </core-icon-button>
             </template>
@@ -293,7 +294,6 @@
                 </nautes-radio-select>
               </div>
             </template>
-
             <div id="dropTrigger" class="drop" flex layout vertical center center-justified>
               <div id="dropTrigger">
                 DRAG ONE TRIGGER HERE
@@ -303,7 +303,6 @@
                 icon="add">
               </core-icon>
             </div>
-
           </div>
 
           <div class="box commands">
@@ -338,7 +337,6 @@
                   arrayToSet="{{utilityArray}}">
                 </nautes-radio-select>
               </div>
-
             </template>
             <div id="dropCommands" class="drop" flex layout vertical center center-justified>
               <div id="dropCommands">DRAG COMMANDS HERE</div>
