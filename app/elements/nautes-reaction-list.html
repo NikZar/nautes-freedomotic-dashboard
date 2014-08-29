@@ -12,18 +12,30 @@
       }
     </style>
 
-    <fd-rest-element-service fdtype="OLDreactions" fditems="{{reactions}}" toast="{{toast}}">
+    <fd-rest-element-service id="getReactionsService"
+      fdtype="OLDreactions" 
+      fditems="{{reactions}}" 
+      toast="{{toast}}">
     </fd-rest-element-service>
 
     <div layout vertical center>
       <template repeat="{{reaction in reactions}}">
-        <nautes-reaction-row bgColor="{{bgColor}}" reaction="{{reaction}}">
+        <nautes-reaction-row 
+          toast="{{toast}}"
+          bgColor="{{bgColor}}" 
+          reaction="{{reaction}}"
+          on-remove="{{reloadList}}">
         </nautes-reaction-row>
       </template>
     </div>    
   </template>
   <script>
     Polymer("nautes-reaction-list",{
+      
+      reloadList: function(){
+        console.log("Reloading List");
+        this.$.getReactionsService.go();
+      }
 
     });
   </script>

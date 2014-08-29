@@ -78,8 +78,9 @@
       }
     },
 
-    elementsLoaded: function() {
+    elementsLoaded: function(event) {
       console.log("Loaded " + this.fdtype + " data:", this.fditems);
+      this.fire("rest-response", event)
     },
     
     errorHandler: function(event){
@@ -88,6 +89,7 @@
         this.toast.text="There was a problem loading "+this.fdtype+" data.";
         this.toast.show();
       }
+      this.fire("rest-error", event)
     },
 
     go: function(){
