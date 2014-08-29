@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icons/image-icons.html">
 <link rel="import" href="../bower_components/core-icons/hardware-icons.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/fd-rest-element-service.html">
@@ -24,28 +26,18 @@
 
       .command-row {
         margin-bottom: 10px;
-        padding: 40px;
+        padding: 20px;
         color: #444;
-        text-transform: lowercase;
-      }
-      
-      span{
-        line-height: 24px;
-        margin-right: 5px;
-        font-size: 17px;
+        min-height: 70px;
       }
 
       .icon{
-        margin-left: 20px;
+        margin-left: 30px;
         color: #444;
         width: 70px;
         height: 70px;
         border-radius: 50%;
         border: 3px solid #444;
-      }
-
-      span {
-        margin-right: 5px;
       }
 
       .icon-remove{
@@ -55,6 +47,15 @@
         border-radius: 50%;
         border: 2px solid #444;
         color: #444;
+      }
+
+      .receiver{
+        font-size: 0.5em;
+      }
+
+      paper-ripple {
+        z-index: 1;
+        color: #aaaaff;
       }
 
     </style>
@@ -76,13 +77,15 @@
       toast="{{toast}}">
     </fd-rest-element-service>
 
-    <div layout horizontal center>
-      <core-icon index="{{i}}" class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
+    <div layout horizontal center start>
+      <core-icon class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
       </core-icon>
       <core-icon class="icon" icon="hardware:gamepad" on-tap="{{run}}">
+        <paper-ripple class="circle" fit></paper-ripple>
       </core-icon>
-      <div class="command-row" flex>
-        {{command.name}}
+      <div class="command-row" layout vertical center-justified>
+        <div>{{command.name}}</div>
+        <div class="receiver">{{command.receiver}}</div>
       </div>
       <paper-shadow z="1"></paper-shadow>
     </div>
