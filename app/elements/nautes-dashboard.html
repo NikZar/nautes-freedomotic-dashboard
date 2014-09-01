@@ -96,10 +96,10 @@
         </nautes-box>
 
         <nautes-box 
-          target="{{boxesObjects.triggers.title}}"  
-          box="{{boxesObjects.triggers}}" 
+          target="{{boxesObjects.family.title}}"  
+          box="{{boxesObjects.family}}" 
           on-tap="{{boxTap}}" 
-          hero hero-id="triggers"
+          hero hero-id="family"
           class="smallrow">
         </nautes-box> 
 
@@ -143,7 +143,7 @@
           <nautes-box target="{{boxesObjects.settings.title}}"  box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" flex hero hero-id="settings"></nautes-box>
         </div>
         <div class="column" flex vertical layout>
-          <nautes-box target="{{boxesObjects.triggers.title}}"  box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" flex hero hero-id="triggers"></nautes-box>
+          <nautes-box target="{{boxesObjects.family.title}}"  box="{{boxesObjects.family}}" on-tap="{{boxTap}}" flex hero hero-id="family"></nautes-box>
           <nautes-box target="{{boxesObjects.messages.title}}"  box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" flex hero hero-id="messages"></nautes-box>
           <nautes-box target="{{boxesObjects.reactions.title}}"  box="{{boxesObjects.reactions}}" on-tap="{{boxTap}}" flex two hero hero-id="reactions"></nautes-box>
         </div>
@@ -158,9 +158,6 @@
         this.selected = sender.getAttribute("target").toLowerCase();
         this.selectedBox = this.boxesObjects[this.selected];
 
-        setTimeout(function() {
-          this.page = 1;
-        }.bind(this), 200);
       }
     });
   </script>

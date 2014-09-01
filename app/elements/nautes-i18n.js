@@ -59,7 +59,19 @@ var locale = {
 	"hide stats" : {
 		"en-US": "hide stats",
 		"it-IT": "nascondi statistiche"
-	}
+	},
+	"setupinfo" : {
+		"en-US": "Info",
+		"it-IT": "Informazioni"
+	},
+	"setupsettings" : {
+		"en-US": "Settings",
+		"it-IT": "Impostazioni"
+	},
+	"setupobjects" : {
+		"en-US": "Objects",
+		"it-IT": "Oggetti"
+	},
 	
 }
 
