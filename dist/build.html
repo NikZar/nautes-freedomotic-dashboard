@@ -12529,8 +12529,8 @@ information about `paper-radio-button`.
 
       .icon-remove{
         position: absolute;
-        right: 15px;
-        top: 15px;
+        right: 10px;
+        top: 10px;
         border-radius: 50%;
         border: 2px solid #444;
         color: #444;
@@ -13512,15 +13512,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style>
       :host {
         display: inline-block;
-        color: #444;
       }
-      .icon{
+      .iconChn{
         width: 55px;
         height: 55px;
         color: black;
       }
     </style>
-    <core-icon id="icon" alt="{{channel}}" class="icon" icon="{{icon}}" src="{{localicon}}"></core-icon>
+    <core-icon id="icon" alt="{{channel}}" class="iconChn" icon="{{icon}}" src="{{localicon}}"></core-icon>
   </template>
   <script>
     Polymer("nautes-channel",{
@@ -13627,7 +13626,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<polymer-element name="nautes-sorter" attributes="property elements sortedElements" assetpath="../app/elements/">
+<polymer-element name="nautes-sorter" attributes="property elements sortedElements filter" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -13650,11 +13649,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var sortedElements = {};
           for (var i = 0; i < this.elements.length; i++) {
             var element = this.elements[i];
-            var key = element[this.property];
-            if(!(key in sortedElements)){
-              sortedElements[key] = [];
+            
+            if(!this.filter || (this.filter && this.filter(element) )){
+              var key = element[this.property];
+              if(!(key in sortedElements)){
+                sortedElements[key] = [];
+              }
+              sortedElements[key].push(element);
             }
-            sortedElements[key].push(element);
+            
           }
         }
         this.sortedElements = sortedElements;
@@ -13845,7 +13848,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}">
     </fd-rest-element-service>
 
-    <nautes-sorter id="triggerSorter" property="channel" elements="{{triggers}}" sortedelements="{{sortedTriggers}}">
+    <nautes-sorter id="triggerSorter" property="channel" elements="{{triggers}}" sortedelements="{{sortedTriggers}}" filter="{{allowedTrigger}}">
     </nautes-sorter>
 
     <fd-rest-element-service fdtype="commands/user" fditems="{{commands}}" toast="{{toast}}">
@@ -14168,6 +14171,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
+      allowedTrigger: function(element){
+        return !element.hardwareLevel;
+      },
+
       channelImages: {
         "app.event.sensor.calendar.event.schedule": {
           icon: "device:access-time",
@@ -14325,8 +14332,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </fd-rest-element-service>
 
     <div layout="" horizontal="" center="" start="">
-      <core-icon class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
-      </core-icon>
+      <template if="{{command.editable}}">
+        <core-icon class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
+        </core-icon>
+      </template>
       <core-icon class="icon" icon="hardware:gamepad" on-tap="{{run}}">
         <paper-ripple class="circle" fit=""></paper-ripple>
       </core-icon>

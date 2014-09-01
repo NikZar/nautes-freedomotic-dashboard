@@ -78,8 +78,10 @@
     </fd-rest-element-service>
 
     <div layout horizontal center start>
-      <core-icon class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
-      </core-icon>
+      <template if="{{command.editable}}">
+        <core-icon class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
+        </core-icon>
+      </template>
       <core-icon class="icon" icon="hardware:gamepad" on-tap="{{run}}">
         <paper-ripple class="circle" fit></paper-ripple>
       </core-icon>
