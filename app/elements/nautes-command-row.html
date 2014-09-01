@@ -42,8 +42,8 @@
 
       .icon-remove{
         position: absolute;
-        right: 15px;
-        top: 15px;
+        right: 10px;
+        top: 10px;
         border-radius: 50%;
         border: 2px solid #444;
         color: #444;
@@ -83,7 +83,7 @@
       <core-icon class="icon" icon="hardware:gamepad" on-tap="{{run}}">
         <paper-ripple class="circle" fit></paper-ripple>
       </core-icon>
-      <div class="command-row" layout vertical center-justified>
+      <div class="command-row" flex>
         <div>{{command.name}}</div>
         <div class="receiver">{{command.receiver}}</div>
       </div>

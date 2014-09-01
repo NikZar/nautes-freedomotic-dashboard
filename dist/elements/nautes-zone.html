@@ -15,7 +15,6 @@
       #title{
         position: absolute;
         z-index: 4;
-        background-color: {{bgColor}};
         padding: 4px;
       }
     </style>
@@ -47,7 +46,7 @@
           var ranG = Math.floor(Math.random() * 255);
           var ranB = Math.floor(Math.random() * 255);
 
-          this.bgColor = "rgba("+ranR+","+ranG+","+ranB+",0.7)";
+          this.$.title.style.backgroundColor = "rgba("+ranR+","+ranG+","+ranB+",0.7)";
           context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.15)";
           context.beginPath();
           context.moveTo(poly[0].x, poly[0].y);
