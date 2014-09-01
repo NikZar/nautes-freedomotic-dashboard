@@ -124,7 +124,8 @@
       id="triggerSorter"
       property="channel" 
       elements="{{triggers}}" 
-      sortedElements="{{sortedTriggers}}">
+      sortedElements="{{sortedTriggers}}"
+      filter="{{allowedTrigger}}">
     </nautes-sorter>
 
     <fd-rest-element-service 
@@ -497,6 +498,10 @@
         } else {
           e.detail = null;
         }
+      },
+
+      allowedTrigger: function(element){
+        return !element.hardwareLevel;
       },
 
       channelImages: {

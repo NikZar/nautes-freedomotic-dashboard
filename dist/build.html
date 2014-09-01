@@ -4479,12 +4479,10 @@ To style the background, text and hover color, apply the `background` and
       position: relative;
       z-index: 1;
       font-family: Open Sans;
-      
-      -webkit-user-select: none;  /* Chrome all / Safari all */
-      -moz-user-select: none;     /* Firefox all */
-      -ms-user-select: none;      /* IE 10+ */
-
-      /* No support for these yet, use at own risk */
+      /* Disables Selection (Annoying on mobile devices...) */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
       -o-user-select: none;
       user-select: none;
     }
@@ -11418,8 +11416,6 @@ core-icon {
   </template>
   <script>
     Polymer("nautes-zone",{
-      
-      bgColor: "rgba(100, 100, 100, 0.7)",
 
       zoneChanged: function(){
         if(this.zone){
@@ -11438,7 +11434,7 @@ core-icon {
           var ranB = Math.floor(Math.random() * 255);
 
           this.$.title.style.backgroundColor = "rgba("+ranR+","+ranG+","+ranB+",0.7)";
-          context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.15)";
+          context.fillStyle = "rgba("+ranR+","+ranG+","+ranB+",0.2)";
           context.beginPath();
           context.moveTo(poly[0].x, poly[0].y);
           for( item=1 ; item < poly.length ; item++ ){
