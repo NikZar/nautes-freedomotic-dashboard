@@ -1,10 +1,7 @@
 {
 	"name": "google-code-prettify",
 	"version": "1.0.1",
-	"main": [
-		"./bin/prettify.min.css",
-		"./bin/prettify.min.js"
-	],
+	"main": "./src/prettify.js",
 	"dependencies": {},
 	"ignore": [
 		"closure-compiler",
