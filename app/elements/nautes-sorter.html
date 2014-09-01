@@ -1,6 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
-<polymer-element name="nautes-sorter" attributes="property elements sortedElements">
+<polymer-element name="nautes-sorter" attributes="property elements sortedElements filter">
   <template>
     <style>
       :host {
@@ -23,11 +23,15 @@
           var sortedElements = {};
           for (var i = 0; i < this.elements.length; i++) {
             var element = this.elements[i];
-            var key = element[this.property];
-            if(!(key in sortedElements)){
-              sortedElements[key] = [];
+            
+            if(!this.filter || (this.filter && this.filter(element) )){
+              var key = element[this.property];
+              if(!(key in sortedElements)){
+                sortedElements[key] = [];
+              }
+              sortedElements[key].push(element);
             }
-            sortedElements[key].push(element);
+            
           }
         }
         this.sortedElements = sortedElements;
