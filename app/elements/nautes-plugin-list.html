@@ -1,0 +1,43 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<polymer-element name="nautes-plugin-list" attributes="toast bgColor">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+        width: 100%;
+      }
+    </style>
+
+    <fd-rest-element-service id="getPluginsService"
+      fdtype="plugins" 
+      fditems="{{plugins}}" 
+      toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div layout vertical center>
+      <template repeat="{{plugin in plugins}}">
+        <nautes-plugin-row 
+          toast="{{toast}}"
+          bgColor="{{bgColor}}" 
+          plugin="{{plugin}}"
+          on-remove="{{reloadList}}"
+          on-start="{{reloadList}}"
+          on-stop="{{reloadList}}">
+        </nautes-plugin-row>
+      </template>
+    </div>    
+  </template>
+  <script>
+
+    Polymer("nautes-plugin-list",{
+      
+      reloadList: function(){
+        this.$.getPluginsService.go();
+      }
+
+    });
+
+  </script>
+</polymer-element>

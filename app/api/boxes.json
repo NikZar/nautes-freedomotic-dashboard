@@ -103,13 +103,13 @@
 		"description": "This section lets you manage your Plugins",
 		"img": "extension",
 		"iconcolor": "#f66",
-		"tooltipcolor": "#faa",
+		"tooltipcolor": "#f66",
 		"color": "#222",
-		"bgcolor": "#faa"
+		"bgcolor": "#f88"
 	},
 	{
 		"title": "Rooms",
-		"description": "This section lets you define Triggers to handle environment changes",
+		"description": "This section lets you configure environment Rooms",
 		"img": "view-quilt",
 		"iconcolor": "#afa",
 		"tooltipcolor": "#afa",
@@ -118,7 +118,7 @@
 	},
 	{
 		"title": "SetupObjects",
-		"description": "This section lets you define Triggers to handle environment changes",
+		"description": "This section lets you configure environment Objects",
 		"img": "image:camera",
 		"iconcolor": "#adf",
 		"tooltipcolor": "#adf",
@@ -127,7 +127,7 @@
 	},
 	{
 		"title": "Marketplace",
-		"description": "This section lets you define Triggers to handle environment changes",
+		"description": "This section lets you install extensions from the Marketplace",
 		"img": "store",
 		"iconcolor": "#fb8",
 		"tooltipcolor": "#fb8",
