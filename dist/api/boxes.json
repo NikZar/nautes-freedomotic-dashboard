@@ -3,6 +3,7 @@
 		"title": "Environment",
 		"description": "This section gives you all the information about your Environment",
 		"img": "home",
+		"iconcolor": "#444",
 		"color": "#BDFFCD",
 		"bgcolor": "#dfd"
 	},
@@ -10,20 +11,15 @@
 		"title": "Reactions",
 		"description": "This section lets you define Reactions on different triggers",
 		"img": "send",
+		"iconcolor": "#444",
 		"color": "#fcc",
 		"bgcolor": "#fdd"
-	},
-	{
-		"title": "Triggers",
-		"description": "This section lets you define Triggers to handle environment changes",
-		"img": "image:flash-on",
-		"color": "#BDCDFF",
-		"bgcolor": "#cdf"
 	},
 	{
 		"title": "Settings",
 		"description": "This section contains general dashboard Settings",
 		"img": "settings",
+		"iconcolor": "#444",
 		"color": "#eee",
 		"bgcolor": "#eee"
 	},
@@ -31,6 +27,7 @@
 		"title": "Info",
 		"description": "This section contains general usage Information",
 		"img": "info-outline",
+		"iconcolor": "#444",
 		"color": "#aaa",
 		"bgcolor": "#aaa"
 	},
@@ -38,6 +35,7 @@
 		"title": "Messages",
 		"description": "This section contains the list of Messages received",
 		"img": "list",
+		"iconcolor": "#444",
 		"color": "#ffa",
 		"bgcolor": "#ffb"
 	},
@@ -45,6 +43,7 @@
 		"title": "Objects",
 		"description": "This section contains the list of your Objects",
 		"img": "image:camera",
+		"iconcolor": "#444",
 		"color": "#bef",
 		"bgcolor": "#bef"
 	},
@@ -52,6 +51,7 @@
 		"title": "Family",
 		"description": "This section contains the list of users",
 		"img": "social:people",
+		"iconcolor": "#444",
 		"color": "#ccf",
 		"bgcolor": "#ccf"
 	},
@@ -59,6 +59,7 @@
 		"title": "Alerts",
 		"description": "Send an alert to the medical platform",
 		"img": "warning",
+		"iconcolor": "#444",
 		"color": "#fb8",
 		"bgcolor": "#fb9"
 	},
@@ -66,7 +67,80 @@
 		"title": "Commands",
 		"description": "Manually run a user command",
 		"img": "hardware:gamepad",
+		"iconcolor": "#444",
 		"color": "#f88",
 		"bgcolor": "#faa"
+	},
+	{
+		"title": "Triggers",
+		"description": "This section lets you define Triggers to handle environment changes",
+		"img": "image:flash-on",
+		"iconcolor": "#b9f",
+		"color": "#222",
+		"bgcolor": "#b9e"
+	},
+	{
+		"title": "Users",
+		"description": "This section lets you define Triggers to handle environment changes",
+		"img": "social:people",
+		"iconcolor": "#fcf",
+		"color": "#222",
+		"bgcolor": "#fcf"
+	},
+	{
+		"title": "Plugins",
+		"description": "This section lets you manage your Plugins",
+		"img": "extension",
+		"iconcolor": "#f66",
+		"color": "#222",
+		"bgcolor": "#faa"
+	},
+	{
+		"title": "Rooms",
+		"description": "This section lets you define Triggers to handle environment changes",
+		"img": "view-quilt",
+		"iconcolor": "#afa",
+		"color": "#222",
+		"bgcolor": "#cdf"
+	},
+	{
+		"title": "SetupObjects",
+		"description": "This section lets you define Triggers to handle environment changes",
+		"img": "image:camera",
+		"iconcolor": "#adf",
+		"color": "#222",
+		"bgcolor": "#adf"
+	},
+	{
+		"title": "Marketplace",
+		"description": "This section lets you define Triggers to handle environment changes",
+		"img": "store",
+		"iconcolor": "#fb8",
+		"color": "#222",
+		"bgcolor": "#fb9"
+	},
+	{
+		"title": "System",
+		"description": "This section lets you manage your System",
+		"img": "settings-applications",
+		"iconcolor": "#ffa",
+		"color": "#222",
+		"bgcolor": "#ffa"
+	},
+	{
+		"title": "SetupSettings",
+		"description": "This section contains general dashboard Settings",
+		"img": "settings",
+		"iconcolor": "#eee",
+		"color": "#222",
+		"bgcolor": "#eee"
+	},
+	{
+		"title": "SetupInfo",
+		"description": "This section contains general usage Information",
+		"img": "info-outline",
+		"iconcolor": "#aaa",
+		"color": "#222",
+		"bgcolor": "#aaa"
 	}
 ]
