@@ -12,7 +12,6 @@
 <link rel="import" href="../elements/nautes-dashboard.html">
 <link rel="import" href="../elements/nautes-dashboard-page.html">
 <link rel="import" href="../elements/nautes-object-list.html">
-<link rel="import" href="../elements/nautes-trigger-list.html">
 <link rel="import" href="../elements/nautes-environment.html">
 <link rel="import" href="../elements/nautes-settings.html">
 <link rel="import" href="../elements/nautes-fd-info.html">
@@ -123,10 +122,8 @@
        </nautes-dashboard-page>
       </section>
 
-      <section name="triggers">
-       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="triggers">
-        <nautes-trigger-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
-        </nautes-trigger-list>
+      <section name="family">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="family">
        </nautes-dashboard-page>
       </section>
     </core-animated-pages>

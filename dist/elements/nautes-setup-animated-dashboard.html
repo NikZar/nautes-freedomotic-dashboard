@@ -9,20 +9,19 @@
 <link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.css">
 <link rel="import" href="../bower_components/flatiron-director/flatiron-director.html">
 
-<link rel="import" href="../elements/nautes-dashboard.html">
+<link rel="import" href="../elements/nautes-setup-dashboard.html">
 <link rel="import" href="../elements/nautes-dashboard-page.html">
-<link rel="import" href="../elements/nautes-object-list.html">
-<link rel="import" href="../elements/nautes-environment.html">
+
+<link rel="import" href="../elements/nautes-trigger-list.html">
 <link rel="import" href="../elements/nautes-settings.html">
 <link rel="import" href="../elements/nautes-fd-info.html">
-<link rel="import" href="../elements/nautes-asynch-messages-list.html">
-<link rel="import" href="../elements/nautes-reactions.html">
-<link rel="import" href="../elements/nautes-commands.html">
 
 
-<polymer-element name="nautes-animated-dashboard" attributes="selected">
+
+<polymer-element name="nautes-setup-animated-dashboard" attributes="selected">
   <template>
     <style>
+    
       :host {
         display: block;
         height: 100% !IMPORTANT;
@@ -63,74 +62,67 @@
 
     <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition cross-fade">
       
-      <nautes-dashboard name="dashboard" selected="{{selected}}" selectedBox="{{selectedBox}}" smallQuery="max-width: 640px"></nautes-dashboard>
+      <nautes-setup-dashboard name="dashboard" selected="{{selected}}" selectedBox="{{selectedBox}}" smallQuery="max-width: 640px"></nautes-dashboard>
       
-      <section name="environment" on-page-back="{{back}}">
-       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="environment">
+      <section name="setupobjects" on-page-back="{{back}}">
+       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="setupobjects">
         <nautes-environment bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
         </nautes-environment>
        </nautes-dashboard-page>
       </section>
 
-      <section name="commands" on-page-back="{{back}}">
+      <section name="plugins" on-page-back="{{back}}">
        <nautes-dashboard-page 
         selected="{{selected}}" 
         selectedBox="{{selectedBox}}" 
-        hero hero-id="commands">
-        <nautes-commands 
-          bgColor="{{selectedBox.bgcolor}}" 
-          toast="{{$.toast}}">
-        </nautes-commands>
+        hero hero-id="plugins">
        </nautes-dashboard-page>
       </section>
 
-      <section name="objects" on-page-back="{{back}}" fit>
-       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="objects">
-          <nautes-object-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
-          </nautes-object-list>
+      <section name="users" on-page-back="{{back}}" fit>
+       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="users">
        </nautes-dashboard-page>
       </section>
 
-      <section name="alerts" on-page-back="{{back}}">
-       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="alerts">
+      <section name="system" on-page-back="{{back}}">
+       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="system">
        </nautes-dashboard-page>
       </section>
 
-      <section name="reactions">
-       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="reactions">
-        <nautes-reactions bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
-        </nautes-reactions>
+      <section name="marketplace">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="marketplace">
        </nautes-dashboard-page>
       </section>
 
-      <section name="messages">
-       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="messages">
-        <nautes-asynch-messages-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}"></nautes-asynch-messages-list>
+      <section name="rooms">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="rooms">
        </nautes-dashboard-page>
       </section>
 
-      <section name="info">
-       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="info">
+      <section name="setupinfo">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="setupinfo">
         <nautes-fd-info bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
         </nautes-fd-info>
        </nautes-dashboard-page>
       </section>
 
-      <section name="settings">
-       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="settings">
+      <section name="setupsettings">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="setupsettings">
         <nautes-settings></nautes-settings>
        </nautes-dashboard-page>
       </section>
 
-      <section name="family">
-       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="family">
+      <section name="triggers">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="triggers">
+        <nautes-trigger-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+        </nautes-trigger-list>
        </nautes-dashboard-page>
       </section>
     </core-animated-pages>
 
   </template>
   <script>
-    Polymer({
+    Polymer("nautes-setup-animated-dashboard",{
       selected: "dashboard",
       selectedBox: null,
       selectedChanged: function(){

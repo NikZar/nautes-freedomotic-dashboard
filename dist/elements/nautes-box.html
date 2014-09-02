@@ -32,10 +32,6 @@
       user-select: none;
     }
 
-    core-icon{
-      color: #444;
-    }
-
     paper-ripple {
       z-index: 1;
       color: #aaaaff;
@@ -46,10 +42,9 @@
       z-index: 2;
     }
 
-    #my-button {
+    #mybutton {
         margin: 10px;
         background: {{box.color}};
-        color: #444;
         min-width: 150px;
     }
 
@@ -69,25 +64,25 @@
       line-height: 14px;
     }
 
-    .icon{
+    #icon{
       width: 140px;
       height: 140px;
     }
 
-    .info-icon{
+    #infoicon{
       width: 30px;
       height: 30px;
     }
 
     </style>
     <div layout vertical center center-justified fit>
-      <core-icon icon="{{box.img}}" class="icon"></core-icon>
-      <paper-button id="my-button" label="{{box.title | translate}}"></paper-button>
+      <core-icon icon="{{box.img}}" id="icon"></core-icon>
+      <paper-button id="mybutton" label="{{box.title | translate}}"></paper-button>
       <paper-ripple fit></paper-ripple>
     </div>
-    <div id="left-icon" layout vertical center center-justified on-tap="{{doFlip}}">
+    <div id="left-icon" layout vertical center center-justified on-tap="{{showTooltip}}">
         <core-tooltip position="left">
-              <core-icon icon="info-outline" class="info-icon"></core-icon>
+              <core-icon icon="info-outline" id="infoicon"></core-icon>
               <div id="tipContent" tip>
                 {{box.description}}
               </div>
@@ -110,13 +105,16 @@
       created: function() {
         this.showDescription = true;
       },
-      doFlip: function(){
+      showTooltip: function(){
         this.showDescription = !this.showDescription;
       },
       boxChanged: function(){
         var spanContent = this.box.description.chunk(40).join("<br />");
         this.$.tipContent.innerHTML = "<span style='color:"+this.box.color+"'>"+spanContent+"</span>";
         this.style.backgroundColor = this.box.color;
+        this.$.icon.style.color =
+          this.$.infoicon.style.color = 
+            this.$.mybutton.style.color =this.box.iconcolor;
       }
     });
   </script>
