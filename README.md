@@ -2,6 +2,10 @@ nautes-freedomotic-dashboard
 ============================
 This is a simple WIP frontend web application that interacts with a Freedomotic instance via its API.
 
+index.html -> End User functionalities
+
+setup.hmtl -> Administrator functionalities
+
 ---
 You can access a live preview hosted on heroku: 
 
