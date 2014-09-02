@@ -1,6 +1,6 @@
 nautes-freedomotic-dashboard
 ============================
-This is a simple WIP frontend web application that interacts with a Freedomotic instance via its API.
+This is a simple WIP frontend web application that interacts with a Freedomotic instance via its REST API V3.
 
 index.html -> End User functionalities
 
