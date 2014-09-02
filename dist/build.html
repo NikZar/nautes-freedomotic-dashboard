@@ -4487,10 +4487,6 @@ To style the background, text and hover color, apply the `background` and
       user-select: none;
     }
 
-    core-icon{
-      color: #444;
-    }
-
     paper-ripple {
       z-index: 1;
       color: #aaaaff;
@@ -4501,10 +4497,9 @@ To style the background, text and hover color, apply the `background` and
       z-index: 2;
     }
 
-    #my-button {
+    #mybutton {
         margin: 10px;
         background: {{box.color}};
-        color: #444;
         min-width: 150px;
     }
 
@@ -4524,25 +4519,25 @@ To style the background, text and hover color, apply the `background` and
       line-height: 14px;
     }
 
-    .icon{
+    #icon{
       width: 140px;
       height: 140px;
     }
 
-    .info-icon{
+    #infoicon{
       width: 30px;
       height: 30px;
     }
 
     </style>
     <div layout="" vertical="" center="" center-justified="" fit="">
-      <core-icon icon="{{box.img}}" class="icon"></core-icon>
-      <paper-button id="my-button" label="{{box.title | translate}}"></paper-button>
+      <core-icon icon="{{box.img}}" id="icon"></core-icon>
+      <paper-button id="mybutton" label="{{box.title | translate}}"></paper-button>
       <paper-ripple fit=""></paper-ripple>
     </div>
-    <div id="left-icon" layout="" vertical="" center="" center-justified="" on-tap="{{doFlip}}">
+    <div id="left-icon" layout="" vertical="" center="" center-justified="" on-tap="{{showTooltip}}">
         <core-tooltip position="left">
-              <core-icon icon="info-outline" class="info-icon"></core-icon>
+              <core-icon icon="info-outline" id="infoicon"></core-icon>
               <div id="tipContent" tip="">
                 {{box.description}}
               </div>
@@ -4565,13 +4560,16 @@ To style the background, text and hover color, apply the `background` and
       created: function() {
         this.showDescription = true;
       },
-      doFlip: function(){
+      showTooltip: function(){
         this.showDescription = !this.showDescription;
       },
       boxChanged: function(){
         var spanContent = this.box.description.chunk(40).join("<br />");
-        this.$.tipContent.innerHTML = "<span style='color:"+this.box.color+"'>"+spanContent+"</span>";
+        this.$.tipContent.innerHTML = "<span style='color:"+this.box.tooltipcolor+"'>"+spanContent+"</span>";
         this.style.backgroundColor = this.box.color;
+        this.$.icon.style.color =
+          this.$.infoicon.style.color = 
+            this.$.mybutton.style.color =this.box.iconcolor;
       }
     });
   </script>
@@ -4632,23 +4630,23 @@ To style the background, text and hover color, apply the `background` and
     <template if="{{smallScreen}}">
       <div id="smallcontainer" layout="" vertical="" align="" center="">
 
+        <nautes-box target="{{boxesObjects.environment.title}}" box="{{boxesObjects.environment}}" on-tap="{{boxTap}}" hero="" hero-id="environment" class="smallrow">
+        </nautes-box>
+
         <nautes-box target="{{boxesObjects.objects.title}}" box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" hero="" hero-id="objects" class="smallrow">
         </nautes-box>
 
-        <nautes-box target="{{boxesObjects.environment.title}}" box="{{boxesObjects.environment}}" on-tap="{{boxTap}}" hero="" hero-id="environment" class="smallrow">
-        </nautes-box>
+        <nautes-box target="{{boxesObjects.commands.title}}" box="{{boxesObjects.commands}}" on-tap="{{boxTap}}" hero="" hero-id="commands" class="smallrow">
+        </nautes-box> 
         
-        <nautes-box target="{{boxesObjects.triggers.title}}" box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" hero="" hero-id="triggers" class="smallrow">
+        <nautes-box target="{{boxesObjects.reactions.title}}" box="{{boxesObjects.reactions}}" on-tap="{{boxTap}}" hero="" hero-id="reactions" class="smallrow">
         </nautes-box>
 
         <nautes-box target="{{boxesObjects.messages.title}}" box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" hero="" hero-id="messages" class="smallrow">
         </nautes-box>
 
-        <nautes-box target="{{boxesObjects.commands.title}}" box="{{boxesObjects.commands}}" on-tap="{{boxTap}}" hero="" hero-id="commands" class="smallrow">
-        </nautes-box>
-        
-        <nautes-box target="{{boxesObjects.reactions.title}}" box="{{boxesObjects.reactions}}" on-tap="{{boxTap}}" hero="" hero-id="reactions" class="smallrow">
-        </nautes-box>
+        <nautes-box target="{{boxesObjects.family.title}}" box="{{boxesObjects.family}}" on-tap="{{boxTap}}" hero="" hero-id="family" class="smallrow">
+        </nautes-box> 
 
         <nautes-box target="{{boxesObjects.alerts.title}}" box="{{boxesObjects.alerts}}" on-tap="{{boxTap}}" hero="" hero-id="alerts" class="smallrow">
         </nautes-box>
@@ -4671,13 +4669,13 @@ To style the background, text and hover color, apply the `background` and
         </div>
         <div class="column" flex="" vertical="" layout="">
           <nautes-box target="{{boxesObjects.objects.title}}" box="{{boxesObjects.objects}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="objects"></nautes-box>
-          <nautes-box target="{{boxesObjects.reactions.title}}" box="{{boxesObjects.reactions}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="reactions"></nautes-box>
+          <nautes-box target="{{boxesObjects.commands.title}}" box="{{boxesObjects.commands}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="commands"></nautes-box>
           <nautes-box target="{{boxesObjects.settings.title}}" box="{{boxesObjects.settings}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="settings"></nautes-box>
         </div>
         <div class="column" flex="" vertical="" layout="">
-          <nautes-box target="{{boxesObjects.commands.title}}" box="{{boxesObjects.commands}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="commands"></nautes-box>
+          <nautes-box target="{{boxesObjects.family.title}}" box="{{boxesObjects.family}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="family"></nautes-box>
           <nautes-box target="{{boxesObjects.messages.title}}" box="{{boxesObjects.messages}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="messages"></nautes-box>
-          <nautes-box target="{{boxesObjects.triggers.title}}" box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="triggers"></nautes-box>
+          <nautes-box target="{{boxesObjects.reactions.title}}" box="{{boxesObjects.reactions}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="reactions"></nautes-box>
         </div>
       </div>
     </template>
@@ -4690,9 +4688,6 @@ To style the background, text and hover color, apply the `background` and
         this.selected = sender.getAttribute("target").toLowerCase();
         this.selectedBox = this.boxesObjects[this.selected];
 
-        setTimeout(function() {
-          this.page = 1;
-        }.bind(this), 200);
       }
     });
   </script>
@@ -11161,112 +11156,6 @@ core-icon {
 
 
 
-
-<polymer-element name="nautes-trigger-row" attributes="bgColor trigger" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        position: relative;
-        background-color: {{bgColor}};
-        width: 100%;
-        font-size: 1.2rem;
-        font-weight: 300;
-        font-family: Open Sans;
-      }
-      
-      .trigger-row {
-        margin-bottom: 10px;
-        padding: 40px;
-        color: #444;
-      }
-      
-      .trigger-row ::content h2 {
-        margin: 0;
-        font-size: 1.8rem;
-        font-weight: 300;
-      }
-      
-      .trigger-row ::content img {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        background: #444;
-        margin: 10px;
-      }
-      .title{
-        font-weight: bold;
-      }
-      span{
-        line-height: 24px;
-        margin-right: 5px;
-        font-size: 17px;
-      }
-      .icon{
-        margin-left: 30px;
-        color: #444;
-        width: 70px;
-        height: 70px;
-      }
-    </style>
-    <div layout="" horizontal="" center="">
-      <core-icon class="icon" icon="image:flash-on"></core-icon>
-      <div class="trigger-row" layout="" vertical="" center-justified="">
-        <div layout="" horizontal="">
-            <span class="title">{{trigger.name}}: </span> <span> {{trigger.description}}</span>
-        </div>
-        <span>Channel: {{trigger.channel}}</span>
-      </div>
-      <paper-shadow z="1"></paper-shadow>
-    </div>
-
-  </template>
-  <script>
-    Polymer("nautes-trigger-row",{
-
-    });
-  </script>
-</polymer-element>
-
-
-
-
-
-
-<polymer-element name="nautes-trigger-list" attributes="bgColor toast" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        background-color: {{bgColor}};
-      }
-    </style>
-
-    <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}" method="GET">
-    </fd-rest-element-service>
-
-    <div layout="" vertical="" center="">
-      <template repeat="{{trigger in triggers}}">
-        <nautes-trigger-row bgcolor="{{bgColor}}" trigger="{{trigger}}">
-        </nautes-trigger-row>
-      </template>
-    </div>    
-
-  </template>
-  <script>
-    Polymer("nautes-trigger-list",{
-
-    });
-  </script>
-</polymer-element>
-
-
-
-
-
-
-
 <polymer-element name="nautes-zone-object" attributes="envObject toast apiurl credentialrequired ssl" assetpath="../app/elements/">
   <template>
     <style>
@@ -12876,7 +12765,6 @@ information about `paper-radio-button`.
 
 
 
-
 <polymer-element name="nautes-animated-dashboard" attributes="selected" assetpath="../app/elements/">
   <template>
     <style>
@@ -12974,10 +12862,8 @@ information about `paper-radio-button`.
        </nautes-dashboard-page>
       </section>
 
-      <section name="triggers">
-       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="triggers">
-        <nautes-trigger-list bgcolor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
-        </nautes-trigger-list>
+      <section name="family">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="family">
        </nautes-dashboard-page>
       </section>
     </core-animated-pages>
@@ -12997,6 +12883,112 @@ information about `paper-radio-button`.
         this.selected = "dashboard";
         this.selectedBox = null;
       }
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-trigger-row" attributes="bgColor trigger" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        background-color: {{bgColor}};
+        width: 100%;
+        font-size: 1.2rem;
+        font-weight: 300;
+        font-family: Open Sans;
+      }
+      
+      .trigger-row {
+        margin-bottom: 10px;
+        padding: 40px;
+        color: #444;
+      }
+      
+      .trigger-row ::content h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 300;
+      }
+      
+      .trigger-row ::content img {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        background: #444;
+        margin: 10px;
+      }
+      .title{
+        font-weight: bold;
+      }
+      span{
+        line-height: 24px;
+        margin-right: 5px;
+        font-size: 17px;
+      }
+      .icon{
+        margin-left: 30px;
+        color: #444;
+        width: 70px;
+        height: 70px;
+      }
+    </style>
+    <div layout="" horizontal="" center="">
+      <core-icon class="icon" icon="image:flash-on"></core-icon>
+      <div class="trigger-row" layout="" vertical="" center-justified="">
+        <div layout="" horizontal="">
+            <span class="title">{{trigger.name}}: </span> <span> {{trigger.description}}</span>
+        </div>
+        <span>Channel: {{trigger.channel}}</span>
+      </div>
+      <paper-shadow z="1"></paper-shadow>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-trigger-row",{
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+<polymer-element name="nautes-trigger-list" attributes="bgColor toast" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+      }
+    </style>
+
+    <fd-rest-element-service fdtype="triggers" fditems="{{triggers}}" toast="{{toast}}" method="GET">
+    </fd-rest-element-service>
+
+    <div layout="" vertical="" center="">
+      <template repeat="{{trigger in triggers}}">
+        <nautes-trigger-row bgcolor="{{bgColor}}" trigger="{{trigger}}">
+        </nautes-trigger-row>
+      </template>
+    </div>    
+
+  </template>
+  <script>
+    Polymer("nautes-trigger-list",{
+
     });
   </script>
 </polymer-element>
@@ -14377,6 +14369,261 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
   </script>
 </polymer-element>
+
+
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-setup-dashboard" attributes="selected selectedBox smallQuery" assetpath="../app/elements/">
+  <template>
+    <style>
+
+      :host {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      #container{
+          background: #444;
+          height: 100%;
+      }
+
+      #smallcontainer{
+          background: #444;
+      }
+
+      .top,
+      .middle,
+      .bottom{
+          position: relative;
+          margin: 2px;
+      }
+
+      .column{
+        min-width: 210px;
+      }
+
+      .smallrow{
+        width: 95%;
+        min-width: 200px;
+      }
+
+    </style>
+
+    <nautes-dashboard-service boxesobjects="{{boxesObjects}}">
+    </nautes-dashboard-service>
+
+    <core-media-query query="{{smallQuery}}" querymatches="{{smallScreen}}">
+    </core-media-query>
+  
+    <template if="{{smallScreen}}">
+      <div id="smallcontainer" layout="" vertical="" align="" center="">
+
+        <nautes-box target="{{boxesObjects.setupobjects.title}}" box="{{boxesObjects.setupobjects}}" on-tap="{{boxTap}}" hero="" hero-id="setupobjects" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.rooms.title}}" box="{{boxesObjects.rooms}}" on-tap="{{boxTap}}" hero="" hero-id="rooms" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.plugins.title}}" box="{{boxesObjects.plugins}}" on-tap="{{boxTap}}" hero="" hero-id="plugins" class="smallrow">
+        </nautes-box> 
+
+        <nautes-box target="{{boxesObjects.triggers.title}}" box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" hero="" hero-id="triggers" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.users.title}}" box="{{boxesObjects.users}}" on-tap="{{boxTap}}" hero="" hero-id="users" class="smallrow">
+        </nautes-box> 
+
+        <nautes-box target="{{boxesObjects.marketplace.title}}" box="{{boxesObjects.marketplace}}" on-tap="{{boxTap}}" hero="" hero-id="marketplace" class="smallrow">
+        </nautes-box>
+        
+        <nautes-box target="{{boxesObjects.system.title}}" box="{{boxesObjects.system}}" on-tap="{{boxTap}}" hero="" hero-id="system" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.setupsettings.title}}" box="{{boxesObjects.setupsettings}}" on-tap="{{boxTap}}" hero="" hero-id="setupsettings" class="smallrow">
+        </nautes-box>
+
+        <nautes-box target="{{boxesObjects.setupinfo.title}}" box="{{boxesObjects.setupinfo}}" on-tap="{{boxTap}}" hero="" hero-id="setupinfo" class="smallrow">
+        </nautes-box>
+
+      </div>
+    </template>
+  
+    <template if="{{!smallScreen}}">
+      <div id="container" horizontal="" layout="">
+        <div class="column" flex="" vertical="" layout="">
+          <nautes-box target="{{boxesObjects.setupobjects.title}}" box="{{boxesObjects.setupobjects}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="setupobjects"></nautes-box>
+          <nautes-box target="{{boxesObjects.system.title}}" box="{{boxesObjects.system}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="system"></nautes-box>
+          <nautes-box target="{{boxesObjects.setupinfo.title}}" box="{{boxesObjects.setupinfo}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="setupinfo"></nautes-box>
+        </div>
+        <div class="column" flex="" vertical="" layout="">
+          <nautes-box target="{{boxesObjects.rooms.title}}" box="{{boxesObjects.rooms}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="rooms"></nautes-box>
+          <nautes-box target="{{boxesObjects.plugins.title}}" box="{{boxesObjects.plugins}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="plugins"></nautes-box>
+          <nautes-box target="{{boxesObjects.setupsettings.title}}" box="{{boxesObjects.setupsettings}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="setupsettings"></nautes-box>
+        </div>
+        <div class="column" flex="" vertical="" layout="">
+          <nautes-box target="{{boxesObjects.triggers.title}}" box="{{boxesObjects.triggers}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="triggers"></nautes-box>
+          <nautes-box target="{{boxesObjects.users.title}}" box="{{boxesObjects.users}}" on-tap="{{boxTap}}" flex="" hero="" hero-id="users"></nautes-box>
+          <nautes-box target="{{boxesObjects.marketplace.title}}" box="{{boxesObjects.marketplace}}" on-tap="{{boxTap}}" flex="" two="" hero="" hero-id="marketplace"></nautes-box>
+        </div>
+      </div>
+    </template>
+
+  </template>
+  <script>
+    Polymer("nautes-setup-dashboard",{
+      boxTap: function(event, detail, sender){
+        
+        this.selected = sender.getAttribute("target").toLowerCase();
+        this.selectedBox = this.boxesObjects[this.selected];
+        
+      }
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-setup-animated-dashboard" attributes="selected" assetpath="../app/elements/">
+  <template>
+    <style>
+    
+      :host {
+        display: block;
+        height: 100% !IMPORTANT;
+        width: 100%;
+      }
+
+      core-animated-pages {
+        height: 100%;
+      }
+
+      core-pages-animated transitions {
+          width: 100%; 
+          height: 100%;
+      }
+
+      core-pages-animated section {
+          width: 100%; 
+          height: 100% !IMPORTANT;
+      }
+
+      paper-toast {
+        bottom: 10px;
+        left: 10px;
+      }
+
+      paper-toast a {
+        color: #fff;
+        text-decoration: none;
+      }
+
+    </style>
+
+    <flatiron-director route="{{selected}}" autohash="" on-director-route="{{routeChanged}}">
+    </flatiron-director>
+
+    <paper-toast id="toast" text="There was a problem loading data.">
+    </paper-toast>
+
+    <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition cross-fade">
+      
+      <nautes-setup-dashboard name="dashboard" selected="{{selected}}" selectedbox="{{selectedBox}}" smallquery="max-width: 640px"></nautes-setup-dashboard>
+      
+      <section name="setupobjects" on-page-back="{{back}}">
+       <nautes-dashboard-page selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="setupobjects">
+       </nautes-dashboard-page>
+      </section>
+
+      <section name="plugins" on-page-back="{{back}}">
+       <nautes-dashboard-page selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="plugins">
+       </nautes-dashboard-page>
+      </section>
+
+      <section name="users" on-page-back="{{back}}" fit="">
+       <nautes-dashboard-page selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="users">
+       </nautes-dashboard-page>
+      </section>
+
+      <section name="system" on-page-back="{{back}}">
+       <nautes-dashboard-page selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="system">
+       </nautes-dashboard-page>
+      </section>
+
+      <section name="marketplace">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="marketplace">
+       </nautes-dashboard-page>
+      </section>
+
+      <section name="rooms">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="rooms">
+       </nautes-dashboard-page>
+      </section>
+
+      <section name="setupinfo">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="setupinfo">
+        <nautes-fd-info bgcolor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+        </nautes-fd-info>
+       </nautes-dashboard-page>
+      </section>
+
+      <section name="setupsettings">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="setupsettings">
+        <nautes-settings></nautes-settings>
+       </nautes-dashboard-page>
+      </section>
+
+      <section name="triggers">
+       <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="triggers">
+        <nautes-trigger-list bgcolor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+        </nautes-trigger-list>
+       </nautes-dashboard-page>
+      </section>
+    </core-animated-pages>
+
+  </template>
+  <script>
+    Polymer("nautes-setup-animated-dashboard",{
+      selected: "dashboard",
+      selectedBox: null,
+      selectedChanged: function(){
+        if(this.selected===""){
+          this.selected = "dashboard";
+        }
+        console.log("Transition to: " + this.selected.toUpperCase());
+      },
+      back: function(event, detail, sender){
+        this.selected = "dashboard";
+        this.selectedBox = null;
+      }
+    });
+  </script>
+</polymer-element>
+
 
 
 

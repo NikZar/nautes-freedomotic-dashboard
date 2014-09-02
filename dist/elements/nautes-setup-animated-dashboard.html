@@ -62,12 +62,13 @@
 
     <core-animated-pages selected="{{selected}}" transitions="slide-up slide-down list-cascade hero-transition cross-fade">
       
-      <nautes-setup-dashboard name="dashboard" selected="{{selected}}" selectedBox="{{selectedBox}}" smallQuery="max-width: 640px"></nautes-dashboard>
+      <nautes-setup-dashboard name="dashboard" selected="{{selected}}" selectedBox="{{selectedBox}}" smallQuery="max-width: 640px"></nautes-setup-dashboard>
       
       <section name="setupobjects" on-page-back="{{back}}">
-       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="setupobjects">
-        <nautes-environment bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
-        </nautes-environment>
+       <nautes-dashboard-page 
+        selected="{{selected}}" 
+        selectedBox="{{selectedBox}}" 
+        hero hero-id="setupobjects">
        </nautes-dashboard-page>
       </section>
 

@@ -110,7 +110,7 @@
       },
       boxChanged: function(){
         var spanContent = this.box.description.chunk(40).join("<br />");
-        this.$.tipContent.innerHTML = "<span style='color:"+this.box.color+"'>"+spanContent+"</span>";
+        this.$.tipContent.innerHTML = "<span style='color:"+this.box.tooltipcolor+"'>"+spanContent+"</span>";
         this.style.backgroundColor = this.box.color;
         this.$.icon.style.color =
           this.$.infoicon.style.color = 
