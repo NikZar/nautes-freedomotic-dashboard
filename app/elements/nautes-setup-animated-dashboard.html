@@ -15,6 +15,7 @@
 <link rel="import" href="../elements/nautes-trigger-list.html">
 <link rel="import" href="../elements/nautes-settings.html">
 <link rel="import" href="../elements/nautes-fd-info.html">
+<link rel="import" href="../elements/nautes-plugins.html">
 
 
 
@@ -77,6 +78,10 @@
         selected="{{selected}}" 
         selectedBox="{{selectedBox}}" 
         hero hero-id="plugins">
+        <nautes-plugins
+          bgColor="{{selectedBox.bgcolor}}" 
+          toast="{{$.toast}}">
+        </nautes-plugins>
        </nautes-dashboard-page>
       </section>
 
