@@ -1,0 +1,29 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/nautes-marketplace-categories.html">
+<link rel="import" href="../elements/nautes-open-sans.html">
+
+<polymer-element name="nautes-marketplace" attributes="toast bgColor">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: Open Sans;
+      }
+    </style>
+    <h1>Best New Plugins</h1>
+    <h1>Best Plugins</h1>
+    <h1>Browse By Category</h1>
+    <nautes-marketplace-categories 
+      smallQuery="max-width: 640px"
+      toast="{{toast}}" 
+      bgColor="{{bgColor}}">
+    </nautes-marketplace-categories>
+
+  </template>
+  <script>
+    Polymer({
+
+    });
+  </script>
+</polymer-element>
