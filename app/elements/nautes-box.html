@@ -109,7 +109,11 @@
         this.showDescription = !this.showDescription;
       },
       boxChanged: function(){
-        var spanContent = this.box.description.chunk(40).join("<br />");
+        var cutPosition = 40;
+        while(this.box.description[cutPosition] != " "){
+          cutPosition--;
+        }
+        var spanContent = this.box.description.chunk(cutPosition).join("<br />");
         this.$.tipContent.innerHTML = "<span style='color:"+this.box.tooltipcolor+"'>"+spanContent+"</span>";
         this.style.backgroundColor = this.box.color;
         this.$.icon.style.color =
