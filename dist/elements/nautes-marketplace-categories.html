@@ -1,0 +1,57 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/nautes-colorful-button.html">
+
+<polymer-element name="nautes-marketplace-categories" attributes="categories">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .categoriesRow{
+        overflow-x: auto; 
+        width: 100%;
+      }
+
+      .categoriesRow::-webkit-scrollbar { 
+        display: none; 
+      }
+
+      .categoriesContainer{
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+    </style>
+
+    <fd-rest-element-service id="getMarketplaceCategoriesService"
+      fdtype="marketplace/categories" 
+      fditems="{{categories}}" 
+      toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div class="categoriesRow">
+      <div id="categoriesContainer" class="categoriesContainer" layout horizontal center>
+        <template repeat="{{category in categories}}">
+          <nautes-colorful-button 
+            label="{{category.name}}" 
+            decimalColor="{{category.id}}">
+          </nautes-colorful-button>
+        </template>
+      </div>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-marketplace-categories",{
+
+      categoriesChanged: function(){
+        this.$.categoriesContainer.style.width = (this.categories.length * 200) + "px";
+      }
+
+    });
+  </script>
+</polymer-element>

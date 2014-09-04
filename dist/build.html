@@ -4564,7 +4564,11 @@ To style the background, text and hover color, apply the `background` and
         this.showDescription = !this.showDescription;
       },
       boxChanged: function(){
-        var spanContent = this.box.description.chunk(40).join("<br />");
+        var cutPosition = 40;
+        while(this.box.description[cutPosition] != " "){
+          cutPosition--;
+        }
+        var spanContent = this.box.description.chunk(cutPosition).join("<br />");
         this.$.tipContent.innerHTML = "<span style='color:"+this.box.tooltipcolor+"'>"+spanContent+"</span>";
         this.style.backgroundColor = this.box.color;
         this.$.icon.style.color =
@@ -12729,12 +12733,12 @@ information about `paper-radio-button`.
 
       showAddCommand: false,
 
-      addReaction: function(){
+      addCommand: function(){
         this.showList = false;
         this.showAddCommand = !this.showAddCommand;
       },
 
-      showReactionList: function(){
+      showCommandList: function(){
         this.showList = !this.showList;
         this.showAddCommand = false;
       }
@@ -14490,6 +14494,283 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
+<polymer-element name="nautes-plugin-list" attributes="toast bgColor" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+        width: 100%;
+      }
+    </style>
+
+    <fd-rest-element-service id="getPluginsService" fdtype="plugins" fditems="{{plugins}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div layout="" vertical="" center="">
+      <template repeat="{{plugin in plugins}}">
+        <nautes-plugin-row toast="{{toast}}" bgcolor="{{bgColor}}" plugin="{{plugin}}" on-remove="{{reloadList}}" on-start="{{reloadList}}" on-stop="{{reloadList}}">
+        </nautes-plugin-row>
+      </template>
+    </div>    
+  </template>
+  <script>
+
+    Polymer("nautes-plugin-list",{
+      
+      reloadList: function(){
+        this.$.getPluginsService.go();
+      }
+
+    });
+
+  </script>
+</polymer-element>
+
+
+
+<polymer-element name="nautes-plugin-add" attributes="" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  </template>
+  <script>
+    Polymer({
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-plugins" attributes="" assetpath="../app/elements/">
+<template>
+    <style>
+      
+      :host {
+        display: block;
+        width: 100%;
+        font-family: Open Sans;
+      }
+      
+      .header{
+        background-color: rgba(255,50,50,0.1);
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: #444;
+        width: 100%;
+      }
+
+      core-icon-button{
+        border: 1px solid rgba(64,64,64,0.3);
+        min-width: 110px;
+        text-align: center;
+      }
+
+      .pluginbtn {
+        margin: 5px;
+        background-color: #f88;
+      }
+
+    </style>
+
+    <div layout="" vertical="" center="">
+
+      <div class="header" layout="" vertical="" center="">
+        <div layout="" horizontal="" center="">
+
+          <template if="{{!showAddPlugin}}">
+            <core-icon-button class="pluginbtn" icon="add-box" on-tap="{{addPlugin}}">
+              PLUGIN
+            </core-icon-button>
+          </template>
+
+          <template if="{{!showList}}">
+            <core-icon-button class="pluginbtn" icon="extension" on-tap="{{showPluginList}}">
+              LIST
+            </core-icon-button>
+          </template>
+          
+        </div>
+      </div>
+    
+      <template if="{{showList}}">
+        <nautes-plugin-list bgcolor="{{bgColor}}" toast="{{toast}}">
+        </nautes-plugin-list>
+      </template>
+
+      <template if="{{showAddPlugin}}">
+        <nautes-plugin-add smallquery="max-width: 640px" bgcolor="{{bgColor}}" toast="{{toast}}">
+        </nautes-plugin-add>
+      </template>
+
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-plugins",{
+
+      showList: true,
+
+      showAddPlugin: false,
+
+      addPlugin: function(){
+        this.showList = false;
+        this.showAddPlugin = !this.showAddPlugin;
+      },
+
+      showPluginList: function(){
+        this.showList = !this.showList;
+        this.showAddPlugin = false;
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+<polymer-element name="nautes-colorful-button" attributes="label decimalColor" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #button{
+        font-family: Open Sans;
+        height: 100px;
+        width: 180px;
+        margin: 10px;
+      }
+
+    </style>
+
+    <paper-button id="button" label="{{label}}" raisedbutton="">
+    </paper-button>
+
+  </template>
+  <script>
+    Polymer({
+
+      decimalColorChanged: function(){
+        var catColor = (this.decimalColor % 4096).toString(16);
+        while(catColor.length < 3){
+          catColor = "8"+catColor;
+        }
+        this.$.button.style.backgroundColor = "#"+catColor;
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+<polymer-element name="nautes-marketplace-categories" attributes="categories" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .categoriesRow{
+        overflow-x: auto; 
+        width: 100%;
+      }
+
+      .categoriesRow::-webkit-scrollbar { 
+        display: none; 
+      }
+
+      .categoriesContainer{
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+    </style>
+
+    <fd-rest-element-service id="getMarketplaceCategoriesService" fdtype="marketplace/categories" fditems="{{categories}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div class="categoriesRow">
+      <div id="categoriesContainer" class="categoriesContainer" layout="" horizontal="" center="">
+        <template repeat="{{category in categories}}">
+          <nautes-colorful-button label="{{category.name}}" decimalcolor="{{category.id}}">
+          </nautes-colorful-button>
+        </template>
+      </div>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-marketplace-categories",{
+
+      categoriesChanged: function(){
+        this.$.categoriesContainer.style.width = (this.categories.length * 200) + "px";
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+<polymer-element name="nautes-marketplace" attributes="toast bgColor" assetpath="../app/elements/">
+  <template>
+    <style>
+
+      :host {
+        display: block;
+        font-family: Open Sans;
+      }
+
+      .title{
+        font-family: Open Sans;
+        color: #444;
+        font-size: 2em;
+        padding: 20px;
+      }
+
+    </style>
+    <div class="title">Latest Plugins</div>
+    <div class="title">Top Charts</div>
+    <div class="title">Browse By Category</div>
+    <nautes-marketplace-categories smallquery="max-width: 640px" toast="{{toast}}" bgcolor="{{bgColor}}">
+    </nautes-marketplace-categories>
+
+  </template>
+  <script>
+    Polymer("nautes-marketplace",{
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
 
 
 
@@ -14561,6 +14842,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <section name="plugins" on-page-back="{{back}}">
        <nautes-dashboard-page selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="plugins">
+        <nautes-plugins bgcolor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+        </nautes-plugins>
        </nautes-dashboard-page>
       </section>
 
@@ -14576,6 +14859,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <section name="marketplace">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="marketplace">
+        <nautes-marketplace bgcolor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+        </nautes-marketplace>
        </nautes-dashboard-page>
       </section>
 
@@ -14623,6 +14908,188 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
   </script>
 </polymer-element>
+
+
+
+
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-plugin-row" attributes="plugin bgColor" assetpath="../app/elements/">
+  <template>
+    <style>
+
+      :host {
+        display: block;
+        position: relative;
+        background-color: {{bgColor}};
+        width: 100%;
+        font-size: 1.2rem;
+        font-weight: 300;
+        font-family: Open Sans;
+      }
+
+      .plugin-row {
+        margin-bottom: 10px;
+        padding: 20px;
+        color: #444;
+        min-height: 70px;
+        font-size: 1.5em;
+      }
+
+      .icon{
+        margin-left: 30px;
+        color: #444;
+        width: 80px;
+        height: 80px;
+      }
+
+      .icon-remove{
+        color: #444;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        border-radius: 50%;
+        border: 2px solid #444;
+      }
+
+      .receiver{
+        font-size: 0.5em;
+      }
+
+      paper-ripple {
+        z-index: 1;
+        color: #aaaaff;
+      }
+
+    </style>
+
+    <fd-rest-element-service id="deletePluginService" auto="false" method="DELETE" fdtype="plugins/{{plugin.uuid}}" on-rest-response="{{removed}}" on-rest-error="{{notRemoved}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <fd-rest-element-service id="startPluginService" auto="false" method="POST" fdtype="plugins/{{plugin.uuid}}/start" on-rest-response="{{started}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <fd-rest-element-service id="stopPluginService" auto="false" method="POST" fdtype="plugins/{{plugin.uuid}}/stop" on-rest-response="{{stopped}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div layout="" horizontal="" center="" start="">
+
+      <core-icon class="icon-remove" icon="clear" on-tap="{{removePlugin}}">
+      </core-icon>
+
+      <template if="{{plugin.status === &apos;STOPPED&apos;}}">
+        <core-icon class="icon" icon="av:play-circle-fill" on-tap="{{startPlugin}}">
+          <paper-ripple class="circle" fit=""></paper-ripple>
+        </core-icon>
+      </template>
+      <template if="{{plugin.status === &apos;RUNNING&apos;}}">
+        <core-icon class="icon" icon="av:pause-circle-fill" on-tap="{{stopPlugin}}">
+          <paper-ripple class="circle" fit=""></paper-ripple>
+        </core-icon>
+      </template>
+
+      <div class="plugin-row" flex="">
+        <div>{{plugin.pluginName}}</div>
+      </div>
+
+      <paper-shadow z="1"></paper-shadow>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-plugin-row",{
+
+      removePlugin: function(){
+        this.$.deleteCommandService.go();
+        this.style.display = "none";
+      },
+
+      removed: function(){
+        this.fire("remove");
+      }, 
+
+      notRemoved: function(){
+        this.style.display = "block";
+      },
+
+      startPlugin: function(){
+        this.$.startPluginService.go();
+      },
+
+      stopPlugin: function(){
+        this.$.stopPluginService.go();
+      },
+
+      started: function(event){
+        if(this.toast){
+          this.toast.text= this.command.name + " started with success! ";
+          this.toast.show();
+        }
+        this.fire("start");
+      },
+
+      stopped: function(event){
+        if(this.toast){
+          this.toast.text= this.command.name + " stopped with success! ";
+          this.toast.show();
+        }
+        this.fire("stop");
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+<polymer-element name="nautes-marketplace-plugin" attributes="" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  </template>
+  <script>
+    Polymer({
+
+    });
+  </script>
+</polymer-element>
+
+
+
+<polymer-element name="nautes-marketplace-category" attributes="" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  </template>
+  <script>
+    Polymer({
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+
+
+
 
 
 

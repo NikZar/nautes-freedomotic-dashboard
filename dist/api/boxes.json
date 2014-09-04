@@ -84,8 +84,8 @@
 		"title": "Triggers",
 		"description": "This section lets you define Triggers to handle environment changes",
 		"img": "image:flash-on",
-		"iconcolor": "#b9f",
-		"tooltipcolor": "#b9f",
+		"iconcolor": "#a8e",
+		"tooltipcolor": "#a8e",
 		"color": "#222",
 		"bgcolor": "#b9e"
 	},
@@ -93,8 +93,8 @@
 		"title": "Users",
 		"description": "This section lets you manage Users",
 		"img": "social:people",
-		"iconcolor": "#fcf",
-		"tooltipcolor": "#fcf",
+		"iconcolor": "#fbf",
+		"tooltipcolor": "#fbf",
 		"color": "#222",
 		"bgcolor": "#fcf"
 	},
@@ -103,22 +103,22 @@
 		"description": "This section lets you manage your Plugins",
 		"img": "extension",
 		"iconcolor": "#f66",
-		"tooltipcolor": "#faa",
+		"tooltipcolor": "#f66",
 		"color": "#222",
-		"bgcolor": "#faa"
+		"bgcolor": "#f88"
 	},
 	{
 		"title": "Rooms",
-		"description": "This section lets you define Triggers to handle environment changes",
+		"description": "This section lets you configure environment Rooms",
 		"img": "view-quilt",
-		"iconcolor": "#afa",
-		"tooltipcolor": "#afa",
+		"iconcolor": "#9f8",
+		"tooltipcolor": "#9f8",
 		"color": "#222",
 		"bgcolor": "#cdc"
 	},
 	{
 		"title": "SetupObjects",
-		"description": "This section lets you define Triggers to handle environment changes",
+		"description": "This section lets you configure environment Objects",
 		"img": "image:camera",
 		"iconcolor": "#adf",
 		"tooltipcolor": "#adf",
@@ -127,10 +127,10 @@
 	},
 	{
 		"title": "Marketplace",
-		"description": "This section lets you define Triggers to handle environment changes",
+		"description": "This section lets you install and update Plugins in your System",
 		"img": "store",
-		"iconcolor": "#fb8",
-		"tooltipcolor": "#fb8",
+		"iconcolor": "#d95",
+		"tooltipcolor": "#d95",
 		"color": "#222",
 		"bgcolor": "#fb9"
 	},
@@ -138,8 +138,8 @@
 		"title": "System",
 		"description": "This section lets you manage your System",
 		"img": "settings-applications",
-		"iconcolor": "#ffa",
-		"tooltipcolor": "#ffa",
+		"iconcolor": "#ee7",
+		"tooltipcolor": "#ee7",
 		"color": "#222",
 		"bgcolor": "#ffa"
 	},
