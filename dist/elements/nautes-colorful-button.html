@@ -12,9 +12,20 @@
 
       #button{
         font-family: Open Sans;
+        font-size: 1.3em;
+        color: #fff;
         height: 100px;
-        width: 180px;
+        width: 190px;
         margin: 10px;
+        opacity: 0.8;
+      }
+
+      #button #content{
+        height: 100%
+      }
+
+      #button #content span{
+        vertical-align: middle;
       }
 
     </style>
@@ -29,7 +40,7 @@
       decimalColorChanged: function(){
         var catColor = (this.decimalColor % 4096).toString(16);
         while(catColor.length < 3){
-          catColor = "8"+catColor;
+          catColor = "a"+catColor;
         }
         this.$.button.style.backgroundColor = "#"+catColor;
       }

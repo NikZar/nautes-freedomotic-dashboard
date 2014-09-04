@@ -14652,9 +14652,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       #button{
         font-family: Open Sans;
+        font-size: 1.3em;
+        color: #fff;
         height: 100px;
-        width: 180px;
+        width: 190px;
         margin: 10px;
+        opacity: 0.8;
+      }
+
+      #button #content{
+        height: 100%
+      }
+
+      #button #content span{
+        vertical-align: middle;
       }
 
     </style>
@@ -14669,7 +14680,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       decimalColorChanged: function(){
         var catColor = (this.decimalColor % 4096).toString(16);
         while(catColor.length < 3){
-          catColor = "8"+catColor;
+          catColor = "a"+catColor;
         }
         this.$.button.style.backgroundColor = "#"+catColor;
       }
@@ -14701,8 +14712,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .categoriesContainer{
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 12px;
+        margin-right: 12px;
       }
 
     </style>
@@ -14724,7 +14735,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer("nautes-marketplace-categories",{
 
       categoriesChanged: function(){
-        this.$.categoriesContainer.style.width = (this.categories.length * 200) + "px";
+        this.$.categoriesContainer.style.width = (this.categories.length * 206) + "px";
       }
 
     });
