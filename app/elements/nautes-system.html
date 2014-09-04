@@ -7,7 +7,7 @@
 <link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/fd-rest-element-service.html">
 
-<polymer-element name="nautes-system" attributes="">
+<polymer-element name="nautes-system" attributes="toast">
   <template>
     <style>
       :host {
@@ -63,8 +63,18 @@
         if (r == true) {
           console.log("Shutting down system!");
           this.$.stopSystemService.go();
-        } 
+        } else if(this.toast){
+          this.toast.text= "System shutdown canceled! ";
+          this.toast.show();
+        }
 
+      },
+
+      stopped: function(event){
+        if(this.toast){
+          this.toast.text= "System is now offline! ";
+          this.toast.show();
+        }
       }
 
     });
