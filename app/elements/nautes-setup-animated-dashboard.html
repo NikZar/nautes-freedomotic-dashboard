@@ -93,6 +93,10 @@
 
       <section name="system" on-page-back="{{back}}">
        <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="system">
+        <nautes-system
+          bgColor="{{selectedBox.bgcolor}}" 
+          toast="{{$.toast}}">
+        </nautes-system>
        </nautes-dashboard-page>
       </section>
 
