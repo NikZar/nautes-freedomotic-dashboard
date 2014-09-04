@@ -16,6 +16,7 @@
 <link rel="import" href="../elements/nautes-settings.html">
 <link rel="import" href="../elements/nautes-fd-info.html">
 <link rel="import" href="../elements/nautes-plugins.html">
+<link rel="import" href="../elements/nautes-marketplace.html">
 
 
 
@@ -97,6 +98,10 @@
 
       <section name="marketplace">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="marketplace">
+        <nautes-marketplace
+          bgColor="{{selectedBox.bgcolor}}" 
+          toast="{{$.toast}}">
+        </nautes-marketplace>
        </nautes-dashboard-page>
       </section>
 
