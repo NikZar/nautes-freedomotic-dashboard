@@ -11,14 +11,13 @@
 
 <link rel="import" href="../elements/nautes-setup-dashboard.html">
 <link rel="import" href="../elements/nautes-dashboard-page.html">
-
+<link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/nautes-trigger-list.html">
 <link rel="import" href="../elements/nautes-settings.html">
 <link rel="import" href="../elements/nautes-fd-info.html">
 <link rel="import" href="../elements/nautes-plugins.html">
 <link rel="import" href="../elements/nautes-marketplace.html">
-
-
+<link rel="import" href="../elements/nautes-system.html">
 
 <polymer-element name="nautes-setup-animated-dashboard" attributes="selected">
   <template>
@@ -47,6 +46,9 @@
       paper-toast {
         bottom: 10px;
         left: 10px;
+        font-family: Open Sans;
+        padding-left: 20px;
+        padding-bottom: 18px;
       }
 
       paper-toast a {
@@ -93,6 +95,10 @@
 
       <section name="system" on-page-back="{{back}}">
        <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="system">
+        <nautes-system
+          bgColor="{{selectedBox.bgcolor}}" 
+          toast="{{$.toast}}">
+        </nautes-system>
        </nautes-dashboard-page>
       </section>
 

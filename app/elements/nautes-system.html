@@ -1,0 +1,82 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icons/av-icons.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/fd-rest-element-service.html">
+
+<polymer-element name="nautes-system" attributes="toast">
+  <template>
+    <style>
+      :host {
+        display: block;
+        color: #444;
+        font-style: Open Sans;
+        font-weight: bold;
+      }
+
+      .shutdown{
+        color: #444;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 10px solid #444;
+      }
+
+      .power{
+        margin-top: 10px;
+      }
+
+      paper-ripple {
+        z-index: 1;
+        color: #aaaaff;
+      }
+
+    </style>
+
+    <fd-rest-element-service id="stopSystemService" 
+      auto="false"
+      method="POST" 
+      fdtype="system/exit"  
+      on-rest-response="{{stopped}}"
+      toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div layout vertical center>
+      <div class="power" layout vertical center>
+        TURN OFF
+        <core-icon class="shutdown" icon="av:stop" on-tap="{{shutdown}}">
+          <paper-ripple fit></paper-ripple>
+        </core-icon>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer("nautes-system", {
+
+      shutdown: function(){
+
+        var r = confirm("Do you really want to shutdown your system? You will not be able to start it up again from here!");
+
+        if (r == true) {
+          console.log("Shutting down system!");
+          this.$.stopSystemService.go();
+        } else if(this.toast){
+          this.toast.text= "System shutdown canceled! ";
+          this.toast.show();
+        }
+
+      },
+
+      stopped: function(event){
+        if(this.toast){
+          this.toast.text= "System is now offline! ";
+          this.toast.show();
+        }
+      }
+
+    });
+  </script>
+</polymer-element>
