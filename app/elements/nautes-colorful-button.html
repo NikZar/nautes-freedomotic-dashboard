@@ -1,0 +1,39 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../elements/nautes-open-sans.html">
+
+<polymer-element name="nautes-colorful-button" attributes="label decimalColor">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #button{
+        font-family: Open Sans;
+        height: 100px;
+        width: 180px;
+        margin: 10px;
+      }
+
+    </style>
+
+    <paper-button id="button" label="{{label}}" raisedButton>
+    </paper-button>
+
+  </template>
+  <script>
+    Polymer({
+
+      decimalColorChanged: function(){
+        var catColor = (this.decimalColor % 4096).toString(16);
+        while(catColor.length < 3){
+          catColor = "8"+catColor;
+        }
+        this.$.button.style.backgroundColor = "#"+catColor;
+      }
+
+    });
+  </script>
+</polymer-element>
