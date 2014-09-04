@@ -4,7 +4,7 @@
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-colorful-button.html">
 
-<polymer-element name="nautes-marketplace-categories" attributes="categories">
+<polymer-element name="nautes-marketplace-categories" attributes="smallQuery categories">
   <template>
     <style>
       :host {
@@ -33,23 +33,47 @@
       toast="{{toast}}">
     </fd-rest-element-service>
 
-    <div class="categoriesRow">
-      <div id="categoriesContainer" class="categoriesContainer" layout horizontal center>
-        <template repeat="{{category in categories}}">
-          <nautes-colorful-button 
-            label="{{category.name}}" 
-            decimalColor="{{category.id}}">
-          </nautes-colorful-button>
-        </template>
+    <core-media-query
+      query="{{smallQuery}}"
+      queryMatches="{{smallScreen}}">
+    </core-media-query>
+
+    <template if="{{smallScreen}}">
+      <div class="categoriesRow">
+        <div id="categoriesContainer" class="categoriesContainer" layout horizontal center>
+          <template repeat="{{category in categories}}">
+            <nautes-colorful-button 
+              label="{{category.name}}" 
+              decimalColor="{{category.id}}">
+            </nautes-colorful-button>
+          </template>
+        </div>
       </div>
-    </div>
+    </template>
+
+    <template if="{{!smallScreen}}">
+      <div class="categoriesRow">
+        <div id="categoriesContainer" class="categoriesContainer" layout horizontal center>
+          <template repeat="{{category in categories}}">
+            <nautes-colorful-button 
+              label="{{category.name}}" 
+              decimalColor="{{category.id}}">
+            </nautes-colorful-button>
+          </template>
+        </div>
+      </div>
+    </template>
+
+    
 
   </template>
   <script>
     Polymer("nautes-marketplace-categories",{
 
-      categoriesChanged: function(){
-        this.$.categoriesContainer.style.width = (this.categories.length * 206) + "px";
+      smallScreenChanged: function(){
+        if(this.smallScreen){
+          this.$.categoriesContainer.style.width = (this.categories.length * 206) + "px";
+        }
       }
 
     });
