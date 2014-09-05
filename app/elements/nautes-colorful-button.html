@@ -1,5 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 
@@ -7,35 +7,42 @@
   <template>
     <style>
       :host {
-        display: block;
+        display: inline-block;
+        vertical-align: top;
+        font-family: Open Sans;
       }
 
       #button{
-        font-family: Open Sans;
-        font-size: 1.3em;
-        color: #fff;
-        height: 100px;
-        width: 190px;
+        padding: 5px;
         margin: 10px;
-        opacity: 0.8;
+        height: 90px;
+        width: 180px;
+        opacity: 0.9;
+        overflow: visible;
+        text-align: center;
+        text-transform: uppercase;
       }
 
-      #button #content{
-        height: 100%
-      }
 
-      #button #content span{
-        vertical-align: middle;
+      .card {
+        background: white;
+        width: 300px;
+        height: 300px;
+        position: relative;
+        margin: 16px;
+        border-radius: 2px;
       }
 
     </style>
-
-    <paper-button id="button" label="{{label}}" raisedButton>
-    </paper-button>
+    
+    <div class="card" id="button" layout vertical center center-justified>
+      {{label}}
+      <paper-shadow z="1"></paper-shadow>
+    </div>
 
   </template>
   <script>
-    Polymer({
+    Polymer("nautes-colorful-button",{
 
       decimalColorChanged: function(){
         var catColor = (this.decimalColor % 4096).toString(16);
