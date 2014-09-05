@@ -33,7 +33,7 @@
       toast="{{toast}}">
     </fd-rest-element-service>
 
-    <core-media-query
+    <!-- <core-media-query
       query="{{smallQuery}}"
       queryMatches="{{smallScreen}}">
     </core-media-query>
@@ -52,29 +52,44 @@
     </template>
 
     <template if="{{!smallScreen}}">
-      <div class="categoriesRow">
-        <div id="categoriesContainer" class="categoriesContainer" layout horizontal center>
-          <template repeat="{{category in categories}}">
-            <nautes-colorful-button 
-              label="{{category.name}}" 
-              decimalColor="{{category.id}}">
-            </nautes-colorful-button>
-          </template>
-        </div>
+      <div class="categoriesContainer">
+        <template repeat="{{category in categories}}">
+          <nautes-colorful-button 
+            label="{{category.name}}" 
+            decimalColor="{{category.id}}">
+          </nautes-colorful-button>
+        </template>
       </div>
-    </template>
+    </template>-->
 
-    
+    <div class="categoriesContainer">
+      <template repeat="{{category in categories}}">
+        <nautes-colorful-button 
+          label="{{category.name}}" 
+          decimalColor="{{category.id}}">
+        </nautes-colorful-button>
+      </template>
+    </div>
 
   </template>
   <script>
     Polymer("nautes-marketplace-categories",{
 
-      smallScreenChanged: function(){
+      /*smallScreenChanged: function(){
         if(this.smallScreen){
-          this.$.categoriesContainer.style.width = (this.categories.length * 206) + "px";
+
+          var self = this;
+
+          var setWidth = function(){
+            document.getElementById('categoriesContainer').style.width = (this.categories.length * 206) + "px";
+          }
+
+          window.setTimeout(function(){
+            setWidth();
+          }, 1000);
+
         }
-      }
+      }*/
 
     });
   </script>
