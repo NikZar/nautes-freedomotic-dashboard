@@ -1,0 +1,65 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../elements/nautes-half-circle.html">
+
+<polymer-element name="nautes-bottom-section" attributes="showContent">
+  <template>
+    <style>
+
+      :host {
+        width: 100%;
+        display: block;
+      }
+
+      .showObjects {
+        position: relative;
+        bottom: 0px;
+        left: 50%;
+        margin-left: -45px;
+      }
+
+      .content-container{
+        overflow-y: auto;
+        width: 100%;
+        height: 100%;
+      }
+
+    </style>
+
+    <nautes-half-circle class="showObjects" icon="{{icon}}" on-tap="{{showObjects}}" orientation="{{showObjectsOrientation}}">
+    </nautes-half-circle>
+
+    <template if="{{showContent}}">
+      <div class="content-container">
+        <content>
+        </content>
+      </div>
+    </template>
+
+  </template>
+  <script>
+    Polymer("nautes-bottom-section",{
+
+      created: function(){
+        this.showObjectsOrientation = "top";
+        this.icon = "expand-less";
+        this.showContent = false;
+      },
+
+      showObjects: function(){
+        if(this.showObjectsOrientation === "top"){
+          this.showObjectsOrientation = "bottom";
+          this.style.height = "60%";
+          this.icon = "expand-more";
+          this.style.backgroundColor = "rgba(50,50,50,0.4)";
+        } else {
+          this.showObjectsOrientation = "top";
+          this.style.height = "auto";
+          this.icon = "expand-less";
+          this.style.backgroundColor = "rgba(50,50,50,0.0)";
+        }
+        this.showContent = !this.showContent;
+      }
+
+    });
+  </script>
+</polymer-element>

@@ -1,0 +1,80 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
+
+<polymer-element name="nautes-object-cell" attributes="object selectedObject">
+  <template>
+    <style>
+
+      :host {
+        display: inline-block;
+      }
+
+
+      .chip {
+        display: inline-block;
+        position: relative;
+        border-radius: 3px;
+        margin: 4px;
+        overflow: hidden;
+        text-align: start;
+        background-color: #fff;
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16);
+      }
+
+      .chip-top {
+        width: 200px;
+        height: 200px;
+      }
+
+      .chip-bottom {
+        padding: 8px;
+        line-height: 1.5;
+      }
+
+      .chip-album-title {
+        font-weight: bold;
+      }
+
+    </style>
+
+    <core-localstorage
+      name="ssl" 
+      value="{{ ssl }}">
+    </core-localstorage>
+
+
+    <core-localstorage
+      name="apiurl" 
+      value="{{ apiurl }}">
+    </core-localstorage>
+
+    <core-localstorage
+      name="credentialrequired" 
+      value="{{ credentialrequired }}">
+    </core-localstorage>
+
+    <img id="image" width="200" height="200" />
+
+  </template>
+  <script>
+    Polymer("nautes-object-cell",{
+
+      observe: {
+        "ssl apiurl object":"reloadImage"
+      },
+
+      reloadImage: function(){
+        var icon = this.object.representation[this.object.currentRepresentation].icon;
+        if(icon != null && this.ssl != null && this.apiurl != null){
+          this.$.image.src = this.getImg(icon);
+        }
+      },
+
+      getImg: function(icon) {
+        var src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + icon ;
+        return src;
+      }
+
+    });
+  </script>
+</polymer-element>
