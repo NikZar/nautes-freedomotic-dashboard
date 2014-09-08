@@ -6,35 +6,14 @@
     <style>
 
       :host {
-        display: inline-block;
+        display: block;
       }
 
-
-      .chip {
-        display: inline-block;
-        position: relative;
-        border-radius: 3px;
-        margin: 4px;
-        overflow: hidden;
-        text-align: start;
-        background-color: #fff;
-        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16);
+      #image {
+        border-radius: 50%;
+        border: 2px solid #fff;
+        padding: 10px;
       }
-
-      .chip-top {
-        width: 200px;
-        height: 200px;
-      }
-
-      .chip-bottom {
-        padding: 8px;
-        line-height: 1.5;
-      }
-
-      .chip-album-title {
-        font-weight: bold;
-      }
-
     </style>
 
     <core-localstorage
@@ -53,7 +32,7 @@
       value="{{ credentialrequired }}">
     </core-localstorage>
 
-    <img id="image" width="200" height="200" />
+    <img id="image" width="90" height="90" />
 
   </template>
   <script>

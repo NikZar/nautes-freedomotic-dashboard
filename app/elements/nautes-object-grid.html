@@ -3,6 +3,7 @@
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-object-cell.html">
+<link rel="import" href="../elements/nautes-open-sans.html">
 
 <polymer-element name="nautes-object-grid" attributes="toast">
   <template>
@@ -11,23 +12,25 @@
 
       :host {
         display: block;
+        font-family: Open Sans;
+        color: #fff;
       }
 
       .chip {
         display: inline-block;
         position: relative;
         border-radius: 3px;
-        margin: 20px;
+        margin:15px;
         overflow: hidden;
         text-align: start;
         background-color: #444;
         box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16);
         width: 300px;
+        opacity: 0.9;
       }
 
       .chip-top {
-        width: 200px;
-        height: 200px;
+        padding: 20px;
       }
 
       .chip-bottom {
@@ -88,7 +91,7 @@
 
           <template repeat="{{obj in objects}}">
 
-            <div class="chip" hero-id="{{obj.uuid}}" hero?="{{selectedObject === obj }}">
+            <div class="chip" layout hero-id="{{obj.uuid}}" hero?="{{selectedObject === obj }}">
               <div class="chip-top" hero-id="{{obj.uuid}}-art" 
                 hero?="{{selectedObject === obj}}">
                 <nautes-object-cell object="{{obj}}" layout vertical center></nautes-object-cell>
