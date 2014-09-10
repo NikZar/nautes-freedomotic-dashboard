@@ -6,6 +6,7 @@
 <link rel="import" href="../elements/nautes-bottom-section.html">
 <link rel="import" href="../elements/nautes-object-grid.html">
 <link rel="import" href="../elements/nautes-environment.html">
+<link rel="import" href="../elements/nautes-settings.html">
 
 <polymer-element name="nautes-pass-dashboard" attributes="">
   <template>
@@ -45,34 +46,88 @@
         filter: blur(2px);
       }
 
+      .section{
+        position: fixed;
+        overflow-y: auto;
+        top: 1%;
+        bottom: 1%;
+        left: 1%;
+        right: 1%;
+        background: rgba(50,50,50,0.95);
+        border-radius: 4px;
+        z-index: 13;
+      }
+
+      .close{
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        color: #fff;
+      }
+
+      .top-right{
+        position: fixed;
+        top:0px;
+        right: 0px;
+      }
+
+      .top-left{
+        position: fixed;
+        top:0px;
+        left: 0px;
+      }
+
     </style>
 
     <paper-toast id="toast" text="There was a problem loading data.">
     </paper-toast>
 
 
-    <nautes-corner-button 
+    <nautes-corner-button class="top-right"
       icon="settings" 
       orientation="top-right" 
-      on-tap="{{showSettings}}">
+      on-tap="{{ showSettings }}">
     </nautes-corner-button>
 
-    <nautes-corner-button 
+    <nautes-corner-button class="top-left"
       icon="warning" 
       orientation="top-left" 
-      on-tap="{{showSettings}}">
+      on-tap="{{ showAlerts }}">
     </nautes-corner-button>
 
-    <nautes-environment class="{{ expanded ? 'blur' : ''}}" on-tap="{{hideBottomSection}}">
+    <nautes-environment class="{{ blur ? 'blur' : ''}}" on-tap="{{hideBottomSection}}">
     </nautes-environment>
 
-    <nautes-bottom-section showContent="{{expanded}}" class="bottom-section">
+    <nautes-bottom-section showContent="{{ expanded }}" class="bottom-section">
       <nautes-object-grid toast="$.toast"></nautes-object-grid>
     </nautes-bottom-section>
+
+    <template if="{{ displaySettings }}">
+      <div class="section">
+        <div class="close" on-tap="{{ closeSection }}">
+          <core-icon icon="close"></core-icon>
+        </div>
+        <nautes-settings color="#fff"></nautes-settings>
+      </div>
+    </template>
+
+    <template if="{{ displayAlerts }}">
+      <div class="section" on-tap="{{ closeSection }}">
+        <div class="close">
+          <core-icon icon="close"></core-icon>
+        </div>
+      </div>
+    </template>
 
   </template>
   <script>
     Polymer("nautes-pass-dashboard", {
+
+      displaySettings: false,
+
+      displayAlerts: false,
+
+      blur: false,
 
       hideBottomSection: function(){
         if(this.expanded){
@@ -80,8 +135,25 @@
         }
       },
 
-      showSettings: function(){
+      expandedChanged: function(){
+        this.blur = this.expanded;
+      },
 
+      showSettings: function(){
+        this.displaySettings = !this.displaySettings;
+        this.displayAlerts = false;
+        this.blur = !this.blur;
+      },
+
+      showAlerts: function(){
+        this.displayAlerts = !this.displayAlerts;
+        this.displaySettings = false;
+        this.blur = !this.blur;
+      },
+
+      closeSection: function(){
+        this.displaySettings = false;
+        this.displayAlerts = false;
       }
 
     });

@@ -8,15 +8,15 @@
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 
-<polymer-element name="nautes-settings" attributes="">
+<polymer-element name="nautes-settings" attributes="color">
   <template>
     <style>
       :host {
         display: block;
+        color: #444;
       }
       div{
         line-height: 40px;
-        color: #444;
         font-family: Open Sans;
       }
       .label{
@@ -33,7 +33,6 @@
         margin-top: 20px;
       }
       .fab{
-        color: #444;
         background-color: #9C9;
       }
       paper-input{
@@ -48,7 +47,12 @@
           name="apiurl" 
           value="{{apiurl}}">
         </core-localstorage>
-        <div class="label">API URL:&nbsp </div> <paper-input label="{{apiurl}}" floatingLabel="true" inputValue="{{newAPIUrl}}"></paper-input>
+        <div class="label">API URL:&nbsp </div> 
+        <paper-input id="apiInput"
+          label="{{apiurl}}" 
+          floatingLabel="true" 
+          inputValue="{{newAPIUrl}}">
+        </paper-input>
       </div>
 
       <div class="row" layout horizonal center start>
@@ -56,8 +60,9 @@
           name="credentialrequired" 
           value="{{credentialrequired}}">
         </core-localstorage>
-          {{"cr" | translate }}:  <paper-toggle-button checked="{{newCredentialRequired}}">
-                                  </paper-toggle-button>
+          {{"cr" | translate }}:  
+          <paper-toggle-button checked="{{newCredentialRequired}}">
+          </paper-toggle-button>
       </div>
 
       <div class="row" layout horizonal center start>
@@ -65,8 +70,9 @@
           name="ssl" 
           value="{{ssl}}">
         </core-localstorage>
-        SSL:  <paper-toggle-button checked="{{newSSL}}">
-              </paper-toggle-button>
+        SSL:  
+        <paper-toggle-button checked="{{newSSL}}">
+        </paper-toggle-button>
       </div>
 
       <div class="row" layout horizonal center start>
@@ -134,6 +140,11 @@
           location.reload();
         }, 500);
         
+      },
+
+      colorChanged: function(){
+        this.style.color = this.color;
+        this.$.apiInput.style.color = this.color;
       }
 
     });

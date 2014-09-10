@@ -1,19 +1,21 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
-<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
-<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 
 <polymer-element name="nautes-corner-button" attributes="icon orientation">
   <template>
     <style>
+    
       :host {
         display: block;
-        opacity: 0.8;
+        opacity: 0.9;
+        width: 90px;
+        height: 90px;
+        z-index: 12;
       }
 
       .top-right, .top-left{
-        position: fixed;
+        position: relative;
         top: 0px;
 
         width: 0;
@@ -44,10 +46,10 @@
 
       .top-left core-icon{
         position: relative;
-        top: -85px;
+        top: -83px;
         left: 5px;
-        width: 40px;
-        height: 40px;
+        width: 37px;
+        height: 37px;
         color: #fff;
       }
 
@@ -57,13 +59,11 @@
       }
 
     </style>
-
-    <div id="corner" on-tap="{{showSettings}}">
+    <div id="corner">
       <core-icon icon="{{icon}}">
-        <paper-ripple fit></paper-ripple>
       </core-icon>
+      <paper-ripple fit></paper-ripple>
     </div>
-
   </template>
   <script>
     
