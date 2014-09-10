@@ -1,18 +1,78 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+
+<link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/nautes-top-right.html">
+<link rel="import" href="../elements/nautes-bottom-section.html">
+<link rel="import" href="../elements/nautes-object-grid.html">
+<link rel="import" href="../elements/nautes-environment.html">
 
 <polymer-element name="nautes-pass-dashboard" attributes="">
   <template>
     <style>
+
       :host {
         display: block;
+        height: 100%;
+        width: 100%;
+        font-family: Open Sans;
+        background-color: #dfd;
       }
+
+      .bottom-section{
+        position: fixed;
+        bottom: 0px;
+      }
+
+      paper-toast {
+        bottom: 10px;
+        left: 10px;
+        font-family: Open Sans;
+        padding-left: 20px;
+        padding-bottom: 18px;
+      }
+      
+      paper-toast a {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .blur{
+        -webkit-filter: blur(2px);
+        -moz-filter: blur(2px);
+        -o-filter: blur(2px);
+        -ms-filter: blur(2px);
+        filter: blur(2px);
+      }
+
     </style>
 
-    TEST
+    <paper-toast id="toast" text="There was a problem loading data.">
+    </paper-toast>
+
+    <nautes-top-right icon="settings" on-tap="{{showSettings}}">
+    </nautes-top-right>
+
+    <nautes-environment class="{{ expanded ? 'blur' : ''}}" on-tap="{{hideBottomSection}}">
+    </nautes-environment>
+
+    <nautes-bottom-section showContent="{{expanded}}" class="bottom-section">
+      <nautes-object-grid toast="$.toast"></nautes-object-grid>
+    </nautes-bottom-section>
 
   </template>
   <script>
-    Polymer({
+    Polymer("nautes-pass-dashboard", {
+
+      hideBottomSection: function(){
+        if(this.expanded){
+          this.expanded = false;
+        }
+      },
+
+      showSettings: function(){
+
+      }
 
     });
   </script>

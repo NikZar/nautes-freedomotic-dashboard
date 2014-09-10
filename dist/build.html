@@ -4449,7 +4449,7 @@ To style the background, text and hover color, apply the `background` and
   </script>
 </polymer-element>
 
-<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css">
 
 <script src="../app/elements/nautes-i18n.js"></script>
 
@@ -6229,306 +6229,6 @@ license that can be found in the LICENSE file.
 
 <!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
-The complete set of authors may be found at http://polymer.github.io/AUTHORS
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
--->
-
-<!--
-@group Paper Elements
-`paper-icon-button` is a button with an image placed at the center.
-
-Example:
-
-    <paper-icon-button iconSrc="star.png"></paper-icon-button>
-
-`paper-icon-button` includes a default icon set.  Use `icon` to specify 
-which icon from the icon set to use.
-
-Example:
-
-    <paper-icon-button icon="menu"></paper-icon-button>
-
-The icons provided by `core-icons` are SVG, and you can style them with CSS.
-
-Example:
-
-    <paper-icon-button icon="favorite" style="fill:red;"></paper-icon-button>
-
-See `core-iconset` for more information about how to use a custom icon set.
-
-@element paper-icon-button
-@extends paper-button
-@homepage github.io
--->
-
-
-
-
-<polymer-element name="paper-icon-button" extends="paper-button" attributes="fill" assetpath="../app/bower_components/paper-icon-button/">
-
-  <template>
-
-    <style>/*
-Copyright 2013 The Polymer Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
-*/
-
-:host([disabled]) {
-  background: none !important;
-}
-
-:host([disabled]) /deep/ #icon {
-  fill: #c9c9c9;
-}
-
-:host(:not([fill])) /deep/ #focusBg {
-  border-radius: 50%;
-}</style>
-
-    <shadow></shadow>
-
-  </template>
-
-  <script>
-  
-    Polymer('paper-icon-button', {
-
-      publish: {
-
-        /**
-         * If true, the ripple expands to a square to fill the containing box.
-         *
-         * @attribute fill
-         * @type boolean
-         * @default false
-         */
-        fill: {value: false, reflect: true}
-
-      },
-
-      ready: function() {
-        this.$.ripple.classList.add('recenteringTouch');
-        this.fillChanged();
-      },
-
-      fillChanged: function() {
-        this.$.ripple.classList.toggle('circle', !this.fill);
-      },
-
-      iconChanged: function(oldIcon) {
-        if (!this.label) {
-          this.setAttribute('aria-label', this.icon);
-        }
-      }
-
-    });
-    
-  </script>
-  
-</polymer-element>
-
-
-
-
-
-
-
-
-
-<polymer-element name="nautes-dashboard-page" attributes="selected selectedBox" assetpath="../app/elements/">
-  <template>
-    <style>
-      :host {
-        display: block;
-        color: #fff;
-        z-index: 4;
-        font-family: Open Sans;
-      }
-
-      #header{
-        background: #444;
-        text-transform: uppercase;
-        padding-bottom: 10px;
-        z-index: 99 !IMPORTANT;
-      }
-    </style>
-
-    <nautes-dashboard-service boxesobjects="{{boxesObjects}}">
-    </nautes-dashboard-service>
-
-    <div id="header">
-      <paper-icon-button icon="arrow-back" on-tap="{{back}}"></paper-icon-button>
-      <div horizontal="" center-justified="" layout="">
-        {{selectedBox.title | translate}}
-      </div>
-    </div>
-    <content></content>
-  </template>
-  <script>
-    Polymer("nautes-dashboard-page",{
-
-      observe: {
-        'selected':'updatePage',
-        'boxesObjects':'updatePage'
-      },
-
-      updatePage: function(){
-        if(this.selected && this.boxesObjects){
-          this.selectedBox = this.boxesObjects[this.selected];
-        }
-      },
-
-      back: function() {
-        this.fire('page-back');
-      },
-
-      selectedBoxChanged: function(){
-        if(this.selectedBox){
-          this.style.backgroundColor = this.selectedBox.bgcolor;
-          this.style.minHeight = window.innerHeight + "px";
-        }
-      }
-
-
-    });
-  </script>
-</polymer-element>
-
-<!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<!--
-Element access to localStorage.  The "name" property
-is the key to the data ("value" property) stored in localStorage.
-
-`core-localstorage` automatically saves the value to localStorage when
-value is changed.  Note that if value is an object auto-save will be
-triggered only when value is a different instance.
-
-    <core-localstorage name="my-app-storage" value="{{value}}"></core-localstorage>
-
-@group Polymer Core Elements
-@element core-localstorage
-@blurb Element access to localStorage.
-@url github.io
-@categories Data
--->
-
-
-
-<polymer-element name="core-localstorage" attributes="name value useRaw autoSaveDisabled" hidden assetpath="../app/bower_components/core-localstorage/">
-<script>
-
-  Polymer('core-localstorage', {
-    
-    /**
-     * Fired when a value is loaded from localStorage.
-     * @event core-localstorage-load
-     */
-     
-    /**
-     * The key to the data stored in localStorage.
-     *
-     * @attribute name
-     * @type string
-     * @default null
-     */
-    name: '',
-    
-    /**
-     * The data associated with the specified name.
-     *
-     * @attribute value
-     * @type object
-     * @default null
-     */
-    value: null,
-    
-    /**
-     * If true, the value is stored and retrieved without JSON processing.
-     *
-     * @attribute useRaw
-     * @type boolean
-     * @default false
-     */
-    useRaw: false,
-    
-    /**
-     * If true, auto save is disabled.
-     *
-     * @attribute autoSaveDisabled
-     * @type boolean
-     * @default false
-     */
-    autoSaveDisabled: false,
-    
-    attached: function() {
-      // wait for bindings are all setup
-      this.async('load');
-    },
-    
-    valueChanged: function() {
-      if (this.loaded && !this.autoSaveDisabled) {
-        this.save();
-      }
-    },
-    
-    load: function() {
-      var v = localStorage.getItem(this.name);
-      if (this.useRaw) {
-        this.value = v;
-      } else {
-        // localStorage has a flaw that makes it difficult to determine
-        // if a key actually exists or not (getItem returns null if the
-        // key doesn't exist, which is not distinguishable from a stored
-        // null value)
-        // however, if not `useRaw`, an (unparsed) null value unambiguously
-        // signals that there is no value in storage (a stored null value would
-        // be escaped, i.e. "null")
-        // in this case we save any non-null current (default) value
-        if (v === null) {
-          if (this.value !== null) {
-            this.save();
-          }
-        } else {
-          try {
-            v = JSON.parse(v);
-          } catch(x) {
-          }
-          this.value = v;
-        }
-      }
-      this.loaded = true;
-      this.asyncFire('core-localstorage-load');
-    },
-    
-    /** 
-     * Saves the value to localStorage.
-     *
-     * @method save
-     */
-    save: function() {
-      var v = this.useRaw ? this.value : JSON.stringify(this.value);
-      localStorage.setItem(this.name, v);
-    }
-    
-  });
-
-</script>
-</polymer-element>
-
-<!--
-Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
@@ -7939,6 +7639,306 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
     
   })();
+
+</script>
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
+The complete set of authors may be found at http://polymer.github.io/AUTHORS
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+-->
+
+<!--
+@group Paper Elements
+`paper-icon-button` is a button with an image placed at the center.
+
+Example:
+
+    <paper-icon-button iconSrc="star.png"></paper-icon-button>
+
+`paper-icon-button` includes a default icon set.  Use `icon` to specify 
+which icon from the icon set to use.
+
+Example:
+
+    <paper-icon-button icon="menu"></paper-icon-button>
+
+The icons provided by `core-icons` are SVG, and you can style them with CSS.
+
+Example:
+
+    <paper-icon-button icon="favorite" style="fill:red;"></paper-icon-button>
+
+See `core-iconset` for more information about how to use a custom icon set.
+
+@element paper-icon-button
+@extends paper-button
+@homepage github.io
+-->
+
+
+
+
+<polymer-element name="paper-icon-button" extends="paper-button" attributes="fill" assetpath="../app/bower_components/paper-icon-button/">
+
+  <template>
+
+    <style>/*
+Copyright 2013 The Polymer Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+*/
+
+:host([disabled]) {
+  background: none !important;
+}
+
+:host([disabled]) /deep/ #icon {
+  fill: #c9c9c9;
+}
+
+:host(:not([fill])) /deep/ #focusBg {
+  border-radius: 50%;
+}</style>
+
+    <shadow></shadow>
+
+  </template>
+
+  <script>
+  
+    Polymer('paper-icon-button', {
+
+      publish: {
+
+        /**
+         * If true, the ripple expands to a square to fill the containing box.
+         *
+         * @attribute fill
+         * @type boolean
+         * @default false
+         */
+        fill: {value: false, reflect: true}
+
+      },
+
+      ready: function() {
+        this.$.ripple.classList.add('recenteringTouch');
+        this.fillChanged();
+      },
+
+      fillChanged: function() {
+        this.$.ripple.classList.toggle('circle', !this.fill);
+      },
+
+      iconChanged: function(oldIcon) {
+        if (!this.label) {
+          this.setAttribute('aria-label', this.icon);
+        }
+      }
+
+    });
+    
+  </script>
+  
+</polymer-element>
+
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-dashboard-page" attributes="selected selectedBox" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        color: #fff;
+        z-index: 4;
+        font-family: Open Sans;
+      }
+
+      #header{
+        background: #444;
+        text-transform: uppercase;
+        padding-bottom: 10px;
+        z-index: 99 !IMPORTANT;
+      }
+    </style>
+
+    <nautes-dashboard-service boxesobjects="{{boxesObjects}}">
+    </nautes-dashboard-service>
+
+    <div id="header">
+      <paper-icon-button icon="arrow-back" on-tap="{{back}}"></paper-icon-button>
+      <div horizontal="" center-justified="" layout="">
+        {{selectedBox.title | translate}}
+      </div>
+    </div>
+    <content></content>
+  </template>
+  <script>
+    Polymer("nautes-dashboard-page",{
+
+      observe: {
+        'selected':'updatePage',
+        'boxesObjects':'updatePage'
+      },
+
+      updatePage: function(){
+        if(this.selected && this.boxesObjects){
+          this.selectedBox = this.boxesObjects[this.selected];
+        }
+      },
+
+      back: function() {
+        this.fire('page-back');
+      },
+
+      selectedBoxChanged: function(){
+        if(this.selectedBox){
+          this.style.backgroundColor = this.selectedBox.bgcolor;
+          this.style.minHeight = window.innerHeight + "px";
+        }
+      }
+
+
+    });
+  </script>
+</polymer-element>
+
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+Element access to localStorage.  The "name" property
+is the key to the data ("value" property) stored in localStorage.
+
+`core-localstorage` automatically saves the value to localStorage when
+value is changed.  Note that if value is an object auto-save will be
+triggered only when value is a different instance.
+
+    <core-localstorage name="my-app-storage" value="{{value}}"></core-localstorage>
+
+@group Polymer Core Elements
+@element core-localstorage
+@blurb Element access to localStorage.
+@url github.io
+@categories Data
+-->
+
+
+
+<polymer-element name="core-localstorage" attributes="name value useRaw autoSaveDisabled" hidden assetpath="../app/bower_components/core-localstorage/">
+<script>
+
+  Polymer('core-localstorage', {
+    
+    /**
+     * Fired when a value is loaded from localStorage.
+     * @event core-localstorage-load
+     */
+     
+    /**
+     * The key to the data stored in localStorage.
+     *
+     * @attribute name
+     * @type string
+     * @default null
+     */
+    name: '',
+    
+    /**
+     * The data associated with the specified name.
+     *
+     * @attribute value
+     * @type object
+     * @default null
+     */
+    value: null,
+    
+    /**
+     * If true, the value is stored and retrieved without JSON processing.
+     *
+     * @attribute useRaw
+     * @type boolean
+     * @default false
+     */
+    useRaw: false,
+    
+    /**
+     * If true, auto save is disabled.
+     *
+     * @attribute autoSaveDisabled
+     * @type boolean
+     * @default false
+     */
+    autoSaveDisabled: false,
+    
+    attached: function() {
+      // wait for bindings are all setup
+      this.async('load');
+    },
+    
+    valueChanged: function() {
+      if (this.loaded && !this.autoSaveDisabled) {
+        this.save();
+      }
+    },
+    
+    load: function() {
+      var v = localStorage.getItem(this.name);
+      if (this.useRaw) {
+        this.value = v;
+      } else {
+        // localStorage has a flaw that makes it difficult to determine
+        // if a key actually exists or not (getItem returns null if the
+        // key doesn't exist, which is not distinguishable from a stored
+        // null value)
+        // however, if not `useRaw`, an (unparsed) null value unambiguously
+        // signals that there is no value in storage (a stored null value would
+        // be escaped, i.e. "null")
+        // in this case we save any non-null current (default) value
+        if (v === null) {
+          if (this.value !== null) {
+            this.save();
+          }
+        } else {
+          try {
+            v = JSON.parse(v);
+          } catch(x) {
+          }
+          this.value = v;
+        }
+      }
+      this.loaded = true;
+      this.asyncFire('core-localstorage-load');
+    },
+    
+    /** 
+     * Saves the value to localStorage.
+     *
+     * @method save
+     */
+    save: function() {
+      var v = this.useRaw ? this.value : JSON.stringify(this.value);
+      localStorage.setItem(this.name, v);
+    }
+    
+  });
 
 </script>
 </polymer-element>
@@ -11052,7 +11052,6 @@ core-icon {
 
 
 
-
 <polymer-element name="nautes-object-list" attributes="bgColor toast" assetpath="../app/elements/">
   <template>
     <style>
@@ -12769,6 +12768,7 @@ information about `paper-radio-button`.
 
 
 
+
 <polymer-element name="nautes-animated-dashboard" attributes="selected" assetpath="../app/elements/">
   <template>
     <style>
@@ -12795,8 +12795,11 @@ information about `paper-radio-button`.
       paper-toast {
         bottom: 10px;
         left: 10px;
+        font-family: Open Sans;
+        padding-left: 20px;
+        padding-bottom: 18px;
       }
-
+      
       paper-toast a {
         color: #fff;
         text-decoration: none;
@@ -13310,6 +13313,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <polymer-element name="core-drag-drop" assetpath="../app/bower_components/core-drag-drop/">
 <script>
+(function() {
+  var avatar;
 
   Polymer('core-drag-drop', {
 
@@ -13318,10 +13323,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     ready: function() {
-      if (!this.__proto__.avatar) {
-        this.__proto__.avatar = document.createElement('core-drag-avatar');
-        document.body.appendChild(this.avatar);
+      if (!avatar) {
+        avatar = document.createElement('core-drag-avatar');
+        document.body.appendChild(avatar);
       }
+      this.avatar = avatar;
       this.dragging = false;
     },
 
@@ -13389,9 +13395,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   });
 
+})();
 </script>
 </polymer-element>
-
 <!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -14647,35 +14653,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style>
       :host {
-        display: block;
+        display: inline-block;
+        vertical-align: top;
+        font-family: Open Sans;
       }
 
       #button{
-        font-family: Open Sans;
-        font-size: 1.3em;
-        color: #fff;
-        height: 100px;
-        width: 190px;
+        padding: 5px;
         margin: 10px;
-        opacity: 0.8;
+        height: 90px;
+        width: 180px;
+        opacity: 0.9;
+        overflow: visible;
+        text-align: center;
+        text-transform: uppercase;
       }
 
-      #button #content{
-        height: 100%
-      }
 
-      #button #content span{
-        vertical-align: middle;
+      .card {
+        background: white;
+        width: 300px;
+        height: 300px;
+        position: relative;
+        margin: 16px;
+        border-radius: 2px;
       }
 
     </style>
-
-    <paper-button id="button" label="{{label}}" raisedbutton="">
-    </paper-button>
+    
+    <div class="card" id="button" layout="" vertical="" center="" center-justified="">
+      {{label}}
+      <paper-shadow z="1"></paper-shadow>
+    </div>
 
   </template>
   <script>
-    Polymer({
+    Polymer("nautes-colorful-button",{
 
       decimalColorChanged: function(){
         var catColor = (this.decimalColor % 4096).toString(16);
@@ -14695,7 +14708,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<polymer-element name="nautes-marketplace-categories" attributes="categories" assetpath="../app/elements/">
+<polymer-element name="nautes-marketplace-categories" attributes="smallQuery categories" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -14721,22 +14734,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <fd-rest-element-service id="getMarketplaceCategoriesService" fdtype="marketplace/categories" fditems="{{categories}}" toast="{{toast}}">
     </fd-rest-element-service>
 
-    <div class="categoriesRow">
-      <div id="categoriesContainer" class="categoriesContainer" layout="" horizontal="" center="">
+    <!-- <core-media-query
+      query="{{smallQuery}}"
+      queryMatches="{{smallScreen}}">
+    </core-media-query>
+
+    <template if="{{smallScreen}}">
+      <div class="categoriesRow">
+        <div id="categoriesContainer" class="categoriesContainer" layout horizontal center>
+          <template repeat="{{category in categories}}">
+            <nautes-colorful-button 
+              label="{{category.name}}" 
+              decimalColor="{{category.id}}">
+            </nautes-colorful-button>
+          </template>
+        </div>
+      </div>
+    </template>
+
+    <template if="{{!smallScreen}}">
+      <div class="categoriesContainer">
         <template repeat="{{category in categories}}">
-          <nautes-colorful-button label="{{category.name}}" decimalcolor="{{category.id}}">
+          <nautes-colorful-button 
+            label="{{category.name}}" 
+            decimalColor="{{category.id}}">
           </nautes-colorful-button>
         </template>
       </div>
+    </template>-->
+
+    <div class="categoriesContainer">
+      <template repeat="{{category in categories}}">
+        <nautes-colorful-button label="{{category.name}}" decimalcolor="{{category.id}}">
+        </nautes-colorful-button>
+      </template>
     </div>
 
   </template>
   <script>
     Polymer("nautes-marketplace-categories",{
 
-      categoriesChanged: function(){
-        this.$.categoriesContainer.style.width = (this.categories.length * 206) + "px";
-      }
+      /*smallScreenChanged: function(){
+        if(this.smallScreen){
+
+          var self = this;
+
+          var setWidth = function(){
+            document.getElementById('categoriesContainer').style.width = (this.categories.length * 206) + "px";
+          }
+
+          window.setTimeout(function(){
+            setWidth();
+          }, 1000);
+
+        }
+      }*/
 
     });
   </script>
@@ -14787,6 +14839,83 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
+<polymer-element name="nautes-system" attributes="toast" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        color: #444;
+        font-style: Open Sans;
+        font-weight: bold;
+      }
+
+      .shutdown{
+        color: #444;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 10px solid #444;
+      }
+
+      .power{
+        margin-top: 10px;
+      }
+
+      paper-ripple {
+        z-index: 1;
+        color: #aaaaff;
+      }
+
+    </style>
+
+    <fd-rest-element-service id="stopSystemService" auto="false" method="POST" fdtype="system/exit" on-rest-response="{{stopped}}" toast="{{toast}}">
+    </fd-rest-element-service>
+
+    <div layout="" vertical="" center="">
+      <div class="power" layout="" vertical="" center="">
+        TURN OFF
+        <core-icon class="shutdown" icon="av:stop" on-tap="{{shutdown}}">
+          <paper-ripple fit=""></paper-ripple>
+        </core-icon>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer("nautes-system", {
+
+      shutdown: function(){
+
+        var r = confirm("Do you really want to shutdown your system? You will not be able to start it up again from here!");
+
+        if (r == true) {
+          console.log("Shutting down system!");
+          this.$.stopSystemService.go();
+        } else if(this.toast){
+          this.toast.text= "System shutdown canceled! ";
+          this.toast.show();
+        }
+
+      },
+
+      stopped: function(event){
+        if(this.toast){
+          this.toast.text= "System is now offline! ";
+          this.toast.show();
+        }
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -14827,6 +14956,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paper-toast {
         bottom: 10px;
         left: 10px;
+        font-family: Open Sans;
+        padding-left: 20px;
+        padding-bottom: 18px;
       }
 
       paper-toast a {
@@ -14865,6 +14997,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <section name="system" on-page-back="{{back}}">
        <nautes-dashboard-page selected="{{selected}}" selectedbox="{{selectedBox}}" hero="" hero-id="system">
+        <nautes-system bgcolor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+        </nautes-system>
        </nautes-dashboard-page>
       </section>
 
@@ -15091,6 +15225,488 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
   </script>
 </polymer-element>
+
+
+
+
+
+
+
+<polymer-element name="nautes-top-right" attributes="icon" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        opacity: 0.8;
+      }
+
+      .top-right{
+        position: fixed;
+        top: 0px;
+        right: 0px;
+
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 90px 90px 0;
+        border-color: transparent #444 transparent transparent;
+      }
+
+      .top-right core-icon{
+        position: relative;
+        top: 7px;
+        left: 45px;
+        width: 40px;
+        height: 40px;
+        color: #fff;
+      }
+
+      .top-right paper-ripple {
+        z-index: 1;
+        color: #aaaaff;
+      }
+
+    </style>
+
+    <div class="top-right" on-tap="{{showSettings}}">
+      <core-icon icon="{{icon}}">
+        <paper-ripple fit=""></paper-ripple>
+      </core-icon>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-top-right",{
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+<polymer-element name="nautes-half-circle" attributes="icon orientation" assetpath="../app/elements/">
+  <template>
+    <style>
+      :host {
+        display: block;
+        opacity: 0.8;
+        height:35px;
+        width:90px;
+        overflow: hidden;
+      }
+
+      .halfCircle{
+        position: relative;
+        top: 0px;
+        height:45px;
+        width:90px;
+        border-radius: 90px 90px 0 0;
+        background: #444;
+      }
+
+      .halfCircle core-icon{
+        position: relative;
+        top: 5px;
+        left: 50%;
+        margin-left: -20px;
+        width: 40px;
+        height: 40px;
+        color: #fff;
+      }
+
+
+      .halfCircle paper-ripple {
+        z-index: 1;
+        color: #aaaaff;
+      }
+
+    </style>
+
+    <div id="halfCircle" class="halfCircle">
+      <core-icon icon="{{icon}}">
+      </core-icon>
+      <paper-ripple circle="" fit=""></paper-ripple>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-half-circle",{
+
+      orientationChanged: function(){
+        if(this.orientation === "bottom"){
+          this.$.halfCircle.style.borderRadius = "0px 0px 90px 90px";
+          this.$.halfCircle.style.top = "-10px";
+        } else {
+          this.$.halfCircle.style.borderRadius = "90px 90px 0px 0px";
+          this.$.halfCircle.style.top = "0px";
+        }
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+<polymer-element name="nautes-bottom-section" attributes="showContent" assetpath="../app/elements/">
+  <template>
+    <style>
+
+      :host {
+        width: 100%;
+        display: block;
+        padding-top: 35px;
+      }
+
+      .showObjects {
+        position: absolute;
+        top: 0px;
+        left: 50%;
+        margin-left: -45px;
+      }
+
+      .content-container{
+        overflow-y: auto;
+        width: 100%;
+        height: 100%;
+        margin-bottom: 50px;
+      }
+
+      .content-container::-webkit-scrollbar { 
+        display: none; 
+      }
+
+    </style>
+
+    <nautes-half-circle class="showObjects" icon="{{icon}}" on-tap="{{showObjects}}" orientation="{{showObjectsOrientation}}">
+    </nautes-half-circle>
+
+    <template if="{{showContent}}">
+      <div class="content-container">
+        <content>
+        </content>
+      </div>
+    </template>
+
+  </template>
+  <script>
+    Polymer("nautes-bottom-section",{
+
+      created: function(){
+        this.showObjectsOrientation = "top";
+        this.icon = "expand-less";
+        this.showContent = false;
+      },
+
+      showContentChanged: function(){
+        if(this.showObjectsOrientation === "top"){
+          this.showObjectsOrientation = "bottom";
+          this.style.height = "60%";
+          this.icon = "expand-more";
+          this.style.backgroundColor = "rgba(50,50,50,0.4)";
+        } else {
+          this.showObjectsOrientation = "top";
+          this.style.height = "auto";
+          this.icon = "expand-less";
+          this.style.backgroundColor = "rgba(50,50,50,0.0)";
+        }
+      },
+
+      showObjects: function(){
+        this.showContent = !this.showContent;
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+<polymer-element name="nautes-object-cell" attributes="object selectedObject" assetpath="../app/elements/">
+  <template>
+    <style>
+
+      :host {
+        display: block;
+      }
+
+      #image {
+        border-radius: 50%;
+        border: 2px solid #fff;
+        padding: 10px;
+      }
+    </style>
+
+    <core-localstorage name="ssl" value="{{ ssl }}">
+    </core-localstorage>
+
+
+    <core-localstorage name="apiurl" value="{{ apiurl }}">
+    </core-localstorage>
+
+    <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
+    </core-localstorage>
+
+    <img id="image" width="90" height="90">
+
+  </template>
+  <script>
+    Polymer("nautes-object-cell",{
+
+      observe: {
+        "ssl apiurl object":"reloadImage"
+      },
+
+      reloadImage: function(){
+        var icon = this.object.representation[this.object.currentRepresentation].icon;
+        if(icon != null && this.ssl != null && this.apiurl != null){
+          this.$.image.src = this.getImg(icon);
+        }
+      },
+
+      getImg: function(icon) {
+        var src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + icon ;
+        return src;
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-object-grid" attributes="toast" assetpath="../app/elements/">
+  <template>
+
+    <style>
+
+      :host {
+        display: block;
+        font-family: Open Sans;
+        color: #fff;
+      }
+
+      .chip {
+        display: inline-block;
+        position: relative;
+        border-radius: 3px;
+        margin:15px;
+        overflow: hidden;
+        text-align: start;
+        background-color: rgba(50, 50, 50, 0.9);
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16);
+        width: 300px;
+        opacity: 0.9;
+      }
+
+      .chip-top {
+        padding: 20px;
+      }
+
+      .chip-bottom {
+        padding: 8px;
+        line-height: 1.5;
+      }
+
+      .chip-album-title {
+        font-weight: bold;
+      }
+
+      .card {
+        position: fixed;
+        top: 1%;
+        left: 1%;
+        width: 98%;
+        height: 98%;
+        border-radius: 3px;
+        padding: 20px;
+        overflow: hidden;
+        background: rgba(50, 50, 50, 0.95);
+        box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      }
+
+      .card-left {
+        padding: 20px;
+      }
+
+      .card-right {
+        width: 200px;
+        padding: 10px;
+      }
+
+      .card-icon {
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        margin-right: 16px;
+      }
+
+      .card-album-title {
+        font-size: 2em;
+      }
+    </style>
+
+    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast="{{" }}="">
+    </fd-rest-element-service>
+
+    <core-animated-pages selected="{{page}}" transitions="hero-transition cross-fade" on-core-animated-pages-transition-end="{{complete}}">
+
+      <section>
+
+        <div hero-p="" on-tap="{{transition}}">
+
+          <template repeat="{{obj in objects}}">
+
+            <div class="chip" layout="" hero-id="{{obj.uuid}}" hero?="{{selectedObject === obj }}" cross-fade="">
+              <div class="chip-top" hero-id="{{obj.uuid}}-art" hero?="{{selectedObject === obj}}">
+                <nautes-object-cell object="{{obj}}" layout="" vertical="" center=""></nautes-object-cell>
+              </div>
+              <div class="chip-bottom">
+                <div class="chip-album-title">{{obj.name}}</div>
+                <div class="chip-artist">{{obj.description}}</div>
+              </div>
+            </div>
+
+          </template>
+
+        </div>
+      </section>
+
+      <section id="details">
+
+        <div class="card" layout="" vertical="" center="" hero-id="{{selectedObject.uuid}}" hero="" on-tap="{{transition}}">
+          <div class="chip-album-title">{{selectedObject.name}}</div>
+          <div hero-id="{{selectedObject.uuid}}-art" hero="">
+            <nautes-object-cell object="{{selectedObject}}" layout="" vertical="" center="">
+            </nautes-object-cell>
+          </div>
+          <div class="chip-artist">{{selectedObject.description}}</div>
+        </div>
+
+      </section>
+
+    </core-animated-pages>
+
+  </template>
+  <script>
+    Polymer({
+
+      page: 0,
+
+      selectedObject: null,
+
+      transition: function(e) {
+        if (this.page === 0 && e.target.templateInstance.model.obj) {
+          this.selectedObject = e.target.templateInstance.model.obj;
+          this.page = 1;
+        } else {
+          this.page = 0;
+        }
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
+
+
+
+<polymer-element name="nautes-pass-dashboard" attributes="" assetpath="../app/elements/">
+  <template>
+    <style>
+
+      :host {
+        display: block;
+        height: 100%;
+        width: 100%;
+        font-family: Open Sans;
+        background-color: #dfd;
+      }
+
+      .bottom-section{
+        position: fixed;
+        bottom: 0px;
+      }
+
+      paper-toast {
+        bottom: 10px;
+        left: 10px;
+        font-family: Open Sans;
+        padding-left: 20px;
+        padding-bottom: 18px;
+      }
+      
+      paper-toast a {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .blur{
+        -webkit-filter: blur(2px);
+        -moz-filter: blur(2px);
+        -o-filter: blur(2px);
+        -ms-filter: blur(2px);
+        filter: blur(2px);
+      }
+
+    </style>
+
+    <paper-toast id="toast" text="There was a problem loading data.">
+    </paper-toast>
+
+    <nautes-top-right icon="settings" on-tap="{{showSettings}}">
+    </nautes-top-right>
+
+    <nautes-environment class="{{ expanded ? &apos;blur&apos; : &apos;&apos;}}" on-tap="{{hideBottomSection}}">
+    </nautes-environment>
+
+    <nautes-bottom-section showcontent="{{expanded}}" class="bottom-section">
+      <nautes-object-grid toast="$.toast"></nautes-object-grid>
+    </nautes-bottom-section>
+
+  </template>
+  <script>
+    Polymer("nautes-pass-dashboard", {
+
+      hideBottomSection: function(){
+        if(this.expanded){
+          this.expanded = false;
+        }
+      },
+
+      showSettings: function(){
+
+      }
+
+    });
+  </script>
+</polymer-element>
+
+
+
+
+
+
+
 
 
 

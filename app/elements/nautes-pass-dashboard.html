@@ -53,7 +53,7 @@
     <nautes-top-right icon="settings" on-tap="{{showSettings}}">
     </nautes-top-right>
 
-    <nautes-environment class="{{ expanded ? 'blur' : ''}}">
+    <nautes-environment class="{{ expanded ? 'blur' : ''}}" on-tap="{{hideBottomSection}}">
     </nautes-environment>
 
     <nautes-bottom-section showContent="{{expanded}}" class="bottom-section">
@@ -63,6 +63,12 @@
   </template>
   <script>
     Polymer("nautes-pass-dashboard", {
+
+      hideBottomSection: function(){
+        if(this.expanded){
+          this.expanded = false;
+        }
+      },
 
       showSettings: function(){
 
