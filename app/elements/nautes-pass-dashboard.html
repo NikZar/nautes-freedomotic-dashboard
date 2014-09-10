@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
-<link rel="import" href="../elements/nautes-top-right.html">
+<link rel="import" href="../elements/nautes-corner-button.html">
 <link rel="import" href="../elements/nautes-bottom-section.html">
 <link rel="import" href="../elements/nautes-object-grid.html">
 <link rel="import" href="../elements/nautes-environment.html">
@@ -50,8 +50,18 @@
     <paper-toast id="toast" text="There was a problem loading data.">
     </paper-toast>
 
-    <nautes-top-right icon="settings" on-tap="{{showSettings}}">
-    </nautes-top-right>
+
+    <nautes-corner-button 
+      icon="settings" 
+      orientation="top-right" 
+      on-tap="{{showSettings}}">
+    </nautes-corner-button>
+
+    <nautes-corner-button 
+      icon="warning" 
+      orientation="top-left" 
+      on-tap="{{showSettings}}">
+    </nautes-corner-button>
 
     <nautes-environment class="{{ expanded ? 'blur' : ''}}" on-tap="{{hideBottomSection}}">
     </nautes-environment>

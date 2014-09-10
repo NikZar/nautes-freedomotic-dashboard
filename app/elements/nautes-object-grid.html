@@ -3,6 +3,8 @@
 <link rel="import" href="../bower_components/core-animated-pages/transitions/cross-fade.html">
 <link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.html">
 <link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.css">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-object-cell.html">
@@ -49,10 +51,10 @@
         position: fixed;
         top: 1%;
         left: 1%;
-        width: 98%;
-        height: 98%;
+        bottom: 1%;
+        right: 1%;
         border-radius: 3px;
-        padding: 20px;
+        padding: 5%;
         overflow: hidden;
         background: rgba(50, 50, 50, 0.95);
         box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -76,6 +78,13 @@
 
       .card-album-title {
         font-size: 2em;
+      }
+
+      .close{
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        color: #fff;
       }
     </style>
 
@@ -109,6 +118,9 @@
       <section id="details">
 
         <div class="card" layout vertical center hero-id="{{selectedObject.uuid}}" hero on-tap="{{transition}}">
+          <div class="close">
+            <core-icon icon="close"></core-icon>
+          </div>
           <div class="chip-album-title">{{selectedObject.name}}</div>
           <div hero-id="{{selectedObject.uuid}}-art" hero>
             <nautes-object-cell object="{{selectedObject}}" layout vertical center>
