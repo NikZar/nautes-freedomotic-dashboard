@@ -7,6 +7,7 @@
 <link rel="import" href="../elements/nautes-object-grid.html">
 <link rel="import" href="../elements/nautes-environment.html">
 <link rel="import" href="../elements/nautes-settings.html">
+<link rel="import" href="../elements/nautes-alerts.html">
 
 <polymer-element name="nautes-pass-dashboard" attributes="">
   <template>
@@ -112,10 +113,11 @@
     </template>
 
     <template if="{{ displayAlerts }}">
-      <div class="section" on-tap="{{ closeSection }}">
-        <div class="close">
+      <div class="section">
+        <div class="close" on-tap="{{ closeSection }}">
           <core-icon icon="close"></core-icon>
         </div>
+        <nautes-alerts color="#fff"></nautes-settings>
       </div>
     </template>
 
@@ -154,6 +156,7 @@
       closeSection: function(){
         this.displaySettings = false;
         this.displayAlerts = false;
+        this.blur = false;
       }
 
     });
