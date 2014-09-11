@@ -1,4 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-environment-row.html">
@@ -8,18 +10,50 @@
 <polymer-element name="nautes-environment" attributes="bgColor toast">
   <template>
     <style>
+
       :host {
         display: block;
         background-color: {{bgColor}};
         width: 100%;
         overflow: hidden;
       }
+
+      .slide-left, .slide-right{
+        position: fixed;
+        top: 50%;
+        margin-top: -40px;
+        //background-color: rgba(50,50,50,0.5);
+        border-radius: 50%;
+      }
+
+      .slide-left core-icon, .slide-right core-icon{
+        height: 90px;
+        width: 90px;
+        color: rgba(50,50,50,0.6);
+      }
+
+      .slide-left{
+        left: 0px;
+      }
+
+      .slide-right{
+        right: 0px;
+      }
+
     </style>
 
     <fd-rest-element-service fdtype="environments" fditems="{{environments}}" toast="{{toast}}">
     </fd-rest-element-service>
 
     <div relative>
+      <div class="slide-left">
+        <core-icon icon="chevron-left"></core-icon>
+        <paper-ripple circle fit></paper-ripple>
+      </div>
+      <div class="slide-right">
+        <core-icon icon="chevron-right"></core-icon>
+        <paper-ripple circle fit></paper-ripple>
+      </div>
       <template repeat="{{environment in environments}}">
         <nautes-environment-row bgColor="{{bgColor}}" environment="{{environment}}" toast="{{toast}}">
         </nautes-environment-row>
