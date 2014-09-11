@@ -1,0 +1,55 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
+
+<polymer-element name="nautes-top-right" attributes="icon">
+  <template>
+    <style>
+      :host {
+        display: block;
+        opacity: 0.8;
+      }
+
+      .top-right{
+        position: fixed;
+        top: 0px;
+        right: 0px;
+
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 90px 90px 0;
+        border-color: transparent #444 transparent transparent;
+      }
+
+      .top-right core-icon{
+        position: relative;
+        top: 7px;
+        left: 45px;
+        width: 40px;
+        height: 40px;
+        color: #fff;
+      }
+
+      .top-right paper-ripple {
+        z-index: 1;
+        color: #aaaaff;
+      }
+
+    </style>
+
+    <div class="top-right" on-tap="{{showSettings}}">
+      <core-icon icon="{{icon}}">
+        <paper-ripple fit></paper-ripple>
+      </core-icon>
+    </div>
+
+  </template>
+  <script>
+    Polymer("nautes-top-right",{
+
+    });
+  </script>
+</polymer-element>

@@ -1,0 +1,143 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-animated-pages/core-animated-pages.html">
+<link rel="import" href="../bower_components/core-animated-pages/transitions/cross-fade.html">
+<link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.html">
+<link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.css">
+
+<link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/nautes-object-cell.html">
+<link rel="import" href="../elements/nautes-open-sans.html">
+
+<polymer-element name="nautes-object-grid" attributes="toast">
+  <template>
+
+    <style>
+
+      :host {
+        display: block;
+        font-family: Open Sans;
+        color: #fff;
+      }
+
+      .chip {
+        display: inline-block;
+        position: relative;
+        border-radius: 3px;
+        margin:15px;
+        overflow: hidden;
+        text-align: start;
+        background-color: rgba(50, 50, 50, 0.9);
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16);
+        width: 300px;
+        opacity: 0.9;
+      }
+
+      .chip-top {
+        padding: 20px;
+      }
+
+      .chip-bottom {
+        padding: 8px;
+        line-height: 1.5;
+      }
+
+      .chip-album-title {
+        font-weight: bold;
+      }
+
+      .card {
+        position: fixed;
+        top: 1%;
+        left: 1%;
+        width: 98%;
+        height: 98%;
+        border-radius: 3px;
+        padding: 20px;
+        overflow: hidden;
+        background: rgba(50, 50, 50, 0.95);
+        box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      }
+
+      .card-left {
+        padding: 20px;
+      }
+
+      .card-right {
+        width: 200px;
+        padding: 10px;
+      }
+
+      .card-icon {
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        margin-right: 16px;
+      }
+
+      .card-album-title {
+        font-size: 2em;
+      }
+    </style>
+
+    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast={{ toast }}>
+    </fd-rest-element-service>
+
+    <core-animated-pages selected="{{page}}" transitions="hero-transition cross-fade" on-core-animated-pages-transition-end="{{complete}}">
+
+      <section>
+
+        <div hero-p on-tap="{{transition}}">
+
+          <template repeat="{{obj in objects}}">
+
+            <div class="chip" layout hero-id="{{obj.uuid}}" hero?="{{selectedObject === obj }}" cross-fade>
+              <div class="chip-top" hero-id="{{obj.uuid}}-art" 
+                hero?="{{selectedObject === obj}}">
+                <nautes-object-cell object="{{obj}}" layout vertical center></nautes-object-cell>
+              </div>
+              <div class="chip-bottom">
+                <div class="chip-album-title">{{obj.name}}</div>
+                <div class="chip-artist">{{obj.description}}</div>
+              </div>
+            </div>
+
+          </template>
+
+        </div>
+      </section>
+
+      <section id="details">
+
+        <div class="card" layout vertical center hero-id="{{selectedObject.uuid}}" hero on-tap="{{transition}}">
+          <div class="chip-album-title">{{selectedObject.name}}</div>
+          <div hero-id="{{selectedObject.uuid}}-art" hero>
+            <nautes-object-cell object="{{selectedObject}}" layout vertical center>
+            </nautes-object-cell>
+          </div>
+          <div class="chip-artist">{{selectedObject.description}}</div>
+        </div>
+
+      </section>
+
+    </core-animated-pages>
+
+  </template>
+  <script>
+    Polymer({
+
+      page: 0,
+
+      selectedObject: null,
+
+      transition: function(e) {
+        if (this.page === 0 && e.target.templateInstance.model.obj) {
+          this.selectedObject = e.target.templateInstance.model.obj;
+          this.page = 1;
+        } else {
+          this.page = 0;
+        }
+      }
+
+    });
+  </script>
+</polymer-element>
