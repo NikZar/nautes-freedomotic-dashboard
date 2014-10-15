@@ -1,0 +1,57 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+
+<polymer-element name="fd-tag-manager" attributes="tags">
+<template>
+	<style>
+
+		:host {
+			display: block;
+			width: 100%;
+		}
+
+		.fd-tag{
+			background-color: CornflowerBlue;
+			color: white;
+			border-radius: 10%;
+			margin: 0px 5px;
+			padding: 1px 2px;
+		}
+
+		.fd-tm-icon{
+			border-radius: 50%;
+        border: 2px solid #444;
+        color: #444;
+		}
+	</style>
+	<div layout horizontal right>
+		<div>Tags: </div>
+		<template repeat="{{tag in tags}}">
+			<div class="fd-tag">{{tag}} 
+		<core-icon id="{{tag}}" icon="delete" on-tap="{{delTag}}" data="{{tag}}">             
+        </core-icon>
+        </div>
+		</template>
+		<core-icon class="fd-tm-icon" icon="add" on-tap="{{addTag}}">             
+        </core-icon>
+	</div>
+</template>
+<script>
+	Polymer("fd-tag-manager",{
+ 
+	delTag: function(e, d ,target){
+		toBeRemoved = target.attributes['data'].value;
+		var i = this.tags.indexOf(toBeRemoved);
+		if(i != -1) {
+			this.tags.splice(i, 1);
+		}
+	},
+	addTag: function(){
+        this.tags.push("   ");
+	}
+
+	});
+
+</script>
+</polymer-element>

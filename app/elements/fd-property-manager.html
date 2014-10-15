@@ -1,0 +1,64 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+
+<polymer-element name="fd-property-manager" attributes="properties">
+<template>
+	<style>
+
+		:host {
+			display: block;
+			width: 100%;
+		}
+
+		.fd-prop-name{
+			background-color: green;
+			color: white;
+			border-radius: 10%;
+			margin: 0px 5px;
+			padding: 1px 2px;
+		}
+
+		.fd-prop-value{
+			background-color: yellow;
+			color: #444;
+			border-radius: 10%;
+			margin: 1px 5px;
+		}
+
+		.fd-pm-icon{
+			border-radius: 50%;
+        border: 2px solid #444;
+        color: #444;
+		}
+	</style>
+	<div layout vertical right>
+		<div >Properties:</div>
+		<template repeat="{{item in properties | getKeys}}">
+		<div layout horizontal left>
+			<div class="fd-prop-name">{{item}}</div> = <div class="fd-prop-value">{{properties[item]}}</div>
+		<core-icon class="fd-pm-icon" icon="delete" on-tap="{{delProp}}" data="{{item}}">             
+        </core-icon>
+		</div>
+		</template>
+		<core-icon class="fd-pm-icon" icon="add" on-tap="{{addProp}}">             
+        </core-icon>
+	</div>
+</template>
+<script>
+	Polymer("fd-property-manager",{
+
+  // filter function to use in looping objects
+  getKeys : function(o){
+    return Object.keys(o);
+  },
+  delProp: function(e,d,t){
+     toBeRemoved=t.attributes['data'].value;
+     delete this.properties[toBeRemoved];
+  },
+  addProp: function(){
+
+  }
+	});
+</script>
+</polymer-element>

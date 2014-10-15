@@ -8,9 +8,10 @@
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/fd-tag-manager.html">
+<link rel="import" href="../elements/fd-property-manager.html">
 
-
-<polymer-element name="nautes-command-row" attributes="command bgColor">
+<polymer-element name="nautes-command-row" attributes="toast command bgColor">
   <template>
     <style>
 
@@ -31,6 +32,16 @@
         min-height: 70px;
       }
 
+      .command-input {
+        margin-bottom: 5px;
+        padding: 5px;
+        color: #444;
+        min-height: 60px;
+      }
+      .command-form {
+        background-color: #eee;
+      }
+
       .icon{
         margin-left: 30px;
         color: #444;
@@ -43,6 +54,15 @@
       .icon-remove{
         position: absolute;
         right: 10px;
+        top: 10px;
+        border-radius: 50%;
+        border: 2px solid #444;
+        color: #444;
+      }
+
+      .icon-modify{
+        position: absolute;
+        right: 40px;
         top: 10px;
         border-radius: 50%;
         border: 2px solid #444;
@@ -77,9 +97,19 @@
       toast="{{toast}}">
     </fd-rest-element-service>
 
+    <fd-rest-element-service id="copyCommandService" 
+      auto="false"
+      method="POST" 
+      fdtype="commands/user/{{command.uuid}}/copy"  
+      on-rest-response="{{copied}}"
+      toast="{{toast}}">
+    </fd-rest-element-service>
+
     <div layout horizontal center start>
+            <core-icon class="icon-modify" icon="create" on-tap="{{toggleForm}}">             
+        </core-icon>
       <template if="{{command.editable}}">
-        <core-icon class="icon-remove" icon="clear" on-tap="{{removeCommand}}">
+        <core-icon class="icon-remove" icon="delete" on-tap="{{removeCommand}}">
         </core-icon>
       </template>
       <core-icon class="icon" icon="hardware:gamepad" on-tap="{{run}}">
@@ -89,12 +119,79 @@
         <div>{{command.name}}</div>
         <div class="receiver">{{command.receiver}}</div>
       </div>
+      </div>
+      <template if="{{showForm}}">
+      <!-- inserire qua il form per modificare il comando -->
+      <fd-rest-element-service id="modifyCommandService" 
+      auto="false"
+      method="PUT" 
+      fdtype="commands/user/{{command.uuid}}"  
+      on-rest-response="{{modified}}"
+      on-rest-error="{{notModified}}"
+      toast="{{toast}}">
+
+    </fd-rest-element-service>
+    <div class="command-form" layout vertical center>
+      <div class="command-input" layout horizonal right start>
+        <div>Name:</div>
+        <paper-input id="nameInput"
+        label="{{command.name}}" 
+        inputValue="{{command.name}}">
+      </paper-input>
+    </div>
+    <div class="command-input" layout horizonal right>
+      <div>Description:</div>
+      <paper-input id="descriptionInput"
+      label="{{command.description}}" 
+      inputValue="{{command.description}}">
+    </paper-input>
+  </div>
+  <div class="command-input" layout horizonal right>
+    <div>Channel:</div>
+    <paper-input id="channelInput"
+    label="{{command.receiver}}" 
+    inputValue="{{command.receiver}}">
+  </paper-input>
+</div>
+<div class="command-input" layout horizonal right>
+  <div>Delay:</div>
+  <paper-input id="delayInput"
+  label="{{command.delay}}" 
+  inputValue="{{command.delay}}">
+</paper-input>
+</div>
+<div class="command-input" layout horizonal right>
+  <div>Reply timeout:</div>
+  <paper-input id="replyTimeoutInput"
+  label="{{command.replytimeout}}" 
+  inputValue="{{command.replytimeout}}">
+</paper-input>
+</div>
+<div class="command-input" layout horizonal right>
+<fd-tag-manager tags="{{command.tags}}">
+</fd-tag-manager>
+</div>
+<div class="command-input" layout horizonal right>
+<fd-property-manager properties="{{command.properties.properties}}">
+</fd-property-manager>
+</div>
+<div class="command-input" layout horizonal right>  <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
+  <paper-fab class="fab" icon="content-paste" on-tap="{{copyItem}}"></paper-fab>
+</div>
+  <!-- end --> 
+      </template>
       <paper-shadow z="1"></paper-shadow>
     </div>
 
   </template>
   <script>
     Polymer("nautes-command-row",{
+
+      showForm: false,
+      
+      toggleForm: function(){
+        this.showForm = !this.showForm;
+      },
 
       removeCommand: function(){
         this.$.deleteCommandService.go();
@@ -115,9 +212,21 @@
 
       successHandler: function(event){
         if(this.toast){
-          this.toast.text= this.command.name + " runned with success! ";
+          this.toast.text= this.command.name + " run with success! ";
           this.toast.show();
         }
+      },
+
+      applyChanges: function(){
+        this.$.modifyCommandService.body=this.command;
+        this.$.modifyCommandService.go();
+        this.showForm=false;
+      },
+
+      copyItem: function(){
+        this.$.copyCommandService.go();
+        this.showForm=false;
+        this.fire("create");
       }
 
     });
