@@ -13,6 +13,11 @@
   "devDependencies": {},
   "resolutions": {
     "platform": ">=0.3.0 <1.0.0",
-    "polymer": ">=0.3.0 <1.0.0"
+    "polymer": ">=0.3.0 <1.0.0",
+    "core-ajax": "~0.4.0",
+    "core-meta": "^0.4.0",
+    "core-shared-lib": "~0.4.2",
+    "core-transition": "^0.4.0",
+    "core-component-page": "^0.4.0"
   }
 }
