@@ -3,12 +3,10 @@
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icons/image-icons.html">
 <link rel="import" href="../bower_components/core-icons/hardware-icons.html">
-<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
-<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/fd-rest-element-service.html">
-
+<link rel="import" href="../elements/fd-manageable-element.html">
 
 <polymer-element name="nautes-plugin-row" attributes="plugin bgColor">
   <template>
@@ -24,50 +22,14 @@
         font-family: Open Sans;
       }
 
-      .plugin-row {
-        margin-bottom: 10px;
-        padding: 20px;
-        color: #444;
-        min-height: 70px;
-        font-size: 1.5em;
-      }
-
       .icon{
-        margin-left: 30px;
-        color: #444;
-        width: 80px;
-        height: 80px;
-      }
-
-      .icon-remove{
-        color: #444;
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        border-radius: 50%;
-        border: 2px solid #444;
-      }
-
-      .receiver{
-        font-size: 0.5em;
-      }
-
-      paper-ripple {
-        z-index: 1;
-        color: #aaaaff;
+        width: 70px;
+        height: 70px;
       }
 
     </style>
-
-    <fd-rest-element-service id="deletePluginService" 
-      auto="false"
-      method="DELETE" 
-      fdtype="plugins/{{plugin.uuid}}"  
-      on-rest-response="{{removed}}"
-      on-rest-error="{{notRemoved}}"
-      toast="{{toast}}">
-    </fd-rest-element-service>
-
+<fd-manageable-element element="{{plugin}}" apiBase="plugins" bgColor="{{bgColor}}">
+    
     <fd-rest-element-service id="startPluginService" 
       auto="false"
       method="POST" 
@@ -84,12 +46,8 @@
       toast="{{toast}}">
     </fd-rest-element-service>
 
-    <div layout horizontal center start>
-
-      <core-icon class="icon-remove" icon="clear" on-tap="{{removePlugin}}">
-      </core-icon>
-
-      <template if="{{plugin.status === 'STOPPED'}}">
+<element-icon>
+     <template if="{{plugin.status === 'STOPPED'}}">
         <core-icon class="icon" icon="av:play-circle-fill" on-tap="{{startPlugin}}">
           <paper-ripple class="circle" fit></paper-ripple>
         </core-icon>
@@ -99,30 +57,15 @@
           <paper-ripple class="circle" fit></paper-ripple>
         </core-icon>
       </template>
-
-      <div class="plugin-row" flex>
-        <div>{{plugin.pluginName}}</div>
-      </div>
-
-      <paper-shadow z="1"></paper-shadow>
-    </div>
-
+</element-icon>
+<h2>{{plugin.pluginName}}</h2>
+<description>{{plugin.description}}</description>
+<header></header>
+<form></form>
+</fd-manageable-element>      
   </template>
   <script>
     Polymer("nautes-plugin-row",{
-
-      removePlugin: function(){
-        this.$.deleteCommandService.go();
-        this.style.display = "none";
-      },
-
-      removed: function(){
-        this.fire("remove");
-      }, 
-
-      notRemoved: function(){
-        this.style.display = "block";
-      },
 
       startPlugin: function(){
         this.$.startPluginService.go();

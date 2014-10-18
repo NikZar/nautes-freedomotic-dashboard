@@ -53,9 +53,7 @@
     <div layout vertical center>
       <template repeat="{{obj in objects}}">
         <nautes-object-row bgColor="{{bgColor}}" object="{{obj}}" graph="{{graphs[obj.uuid]}}" toast="{{toast}}">
-          <img src="{{getImg(obj)}}" width="50" height="50">
-          <h2>{{obj.name}}</h2>
-          <p>{{obj.description}}</p>
+          <img src="{{getImg(obj)}}" width="70" height="70">
         </nautes-object-row>
       </template>
     </div>    
