@@ -26,7 +26,7 @@
 		}
 	</style>
 	<div layout horizontal right>
-		<div>Tags: </div>
+		<content select="header"></content>
 		<template repeat="{{tag in tags}}">
 			<div class="fd-tag">{{tag}} 
 		<core-icon id="{{tag}}" icon="delete" on-tap="{{delTag}}" data="{{tag}}">             

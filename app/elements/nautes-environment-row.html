@@ -28,7 +28,8 @@
       name="apiurl" 
       value="{{ apiurl }}">
     </core-localstorage>
-
+<fd-manageable-element element="{{environment}}" bgColor="{{bgColor}}" apiBase="environments">
+  <header>
     <div layout vertical center>
       <h2>{{environment.name}}</h2>
       <div id="container" relative>
@@ -37,8 +38,20 @@
         <template repeat="{{zone in environment.zones}}">
           <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
         </template>
+
+        <fd-rest-element-service 
+        fdtype="environments/{{environment.uuid}}/objects" 
+        fditems="{{objects}}" 
+        toast="{{toast}}">
+        </fd-rest-element-service>
+        
+        <template repeat="{{envObject in objects}}">
+          <nautes-zone-object envObject="{{envObject}}" toast="{{toast}}"></nautes-zone-object>
+        </template>
       </div>
     </div>
+  </header>
+</fd-manageable-element>
   </template>
   <script>
     Polymer("nautes-environment-row",{

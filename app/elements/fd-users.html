@@ -1,0 +1,35 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../elements/fd-user-row.html">
+
+<polymer-element name="fd-users" attributes="toast bgColor">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+        width: 100%;
+      }
+	</style>
+    <fd-rest-element-service id="userService"
+      fdtype="users" 
+      fditems="{{users}}" 
+      toast="{{toast}}">
+    </fd-rest-element-service>
+    
+    <div layout vertical center>
+      <template repeat="{{user in users}}">
+        <fd-user-row 
+          toast="{{toast}}"
+          bgColor="{{bgColor}}" 
+          user="{{user}}"
+          on-remove="{{reloadList}}"
+          on-create="{{reloadList}}" >
+        </fd-user-row>
+      </template>
+    </div>    
+  </template>
+<script>
+Polymer("fd-users",{
+});
+</script>
+</polymer-element>

@@ -1,0 +1,88 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icons/image-icons.html">
+<link rel="import" href="../bower_components/core-icons/hardware-icons.html">
+
+<link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/fd-tag-manager.html">
+<link rel="import" href="../elements/fd-property-manager.html">
+<link rel="import" href="../elements/fd-manageable-element.html">
+
+<polymer-element name="fd-user-row" attributes="toast user bgColor">
+<template>
+  <style>
+
+    :host {
+      display: block;
+      position: relative;
+      background-color: {{bgColor}};
+      width: 100%;
+      font-size: 1.2rem;
+      font-weight: 300;
+      font-family: Open Sans;
+    }
+
+    .element-input {
+      margin-bottom: 5px;
+      padding: 5px;
+      color: #444;
+      min-height: 60px;
+    }
+    .icon{
+      width: 70px;
+      height: 70px;
+    }
+  </style>
+
+  <fd-manageable-element element="{{user}}" apiBase="users" bgColor="{{bgColor}}">
+  <h2>{{user.properties.fullName}}</h2>
+  <description>{{user.name}}</description>
+  <element-icon>
+    <core-icon class="icon" icon="social:people"></core-icon>
+    </element-icon>
+  <header>
+</header>
+<!-- inserire qua il form per modificare il comando -->
+<form>
+  <div class="element-input" layout horizonal right start>
+    <div>Name:</div>
+    <paper-input id="nameInput"
+    label="{{user.properties.fullname}}" 
+    inputValue="{{user.properties.fullname}}">
+  </paper-input>
+</div>
+<div class="element-input" layout horizonal right start>
+    <div>Username:</div>
+    <paper-input id="usernameInput"
+    label="{{user.name}}" 
+    inputValue="{{user.name}}">
+  </paper-input>
+</div>
+<div class="element-input" layout horizonal right>
+  <fd-tag-manager tags="{{user.roles}}">
+  <header>Roles: </header>
+</fd-tag-manager>
+</div>
+<div class="element-input" layout horizonal right>
+  <div>Language:</div>
+  <paper-input id="languageInput"
+  label="{{user.properties.lang}}" 
+  inputValue="{{user.properties.language}}">
+</paper-input>
+</div>
+<div class="element-input" layout horizonal right>
+  <fd-property-manager properties="{{user.properties}}">
+  </fd-property-manager>
+</div>
+</form>
+<!-- end --> 
+</fd-manageable-element>
+</template>
+  <script>
+    Polymer("fd-user-row",{
+
+    });
+  </script>
+</polymer-element>

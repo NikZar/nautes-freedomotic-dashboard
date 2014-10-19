@@ -18,52 +18,25 @@
         font-family: Open Sans;
       }
       
-      .trigger-row {
-        margin-bottom: 10px;
-        padding: 40px;
-        color: #444;
-      }
-      
-      .trigger-row ::content h2 {
-        margin: 0;
-        font-size: 1.8rem;
-        font-weight: 300;
-      }
-      
-      .trigger-row ::content img {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        background: #444;
-        margin: 10px;
-      }
-      .title{
-        font-weight: bold;
-      }
       span{
         line-height: 24px;
         margin-right: 5px;
         font-size: 17px;
       }
       .icon{
-        margin-left: 30px;
         color: #444;
         width: 70px;
         height: 70px;
       }
     </style>
-    <div layout horizontal center>
-      <core-icon class="icon" icon="image:flash-on"></core-icon>
-      <div class="trigger-row" layout vertical center-justified>
-        <div layout horizontal>
-            <span class="title">{{trigger.name}}: </span> <span> {{trigger.description}}</span>
-        </div>
-        <span>Channel: {{trigger.channel}}</span>
-      </div>
-      <paper-shadow z="1"></paper-shadow>
-    </div>
-
+    <fd-manageable-element bgColor="{{bgColor}}" element="{{trigger}}" apiBase="triggers">
+      <element-icon>
+        <core-icon class="icon" icon="image:flash-on"></core-icon>
+      </element-icon>
+      <h2>{{trigger.name}}: <small>{{trigger.description}}</small></h2>
+      <description>Channel: {{trigger.channel}}</description>
+      <header></header>
+    </fd-manageable-element>
   </template>
   <script>
     Polymer("nautes-trigger-row",{
