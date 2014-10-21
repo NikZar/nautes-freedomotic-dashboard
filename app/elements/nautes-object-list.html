@@ -6,6 +6,7 @@
 <link rel="import" href="../elements/nautes-object-row.html">
 <link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
 <link rel="import" href="../elements/nautes-stats.html">
+<link rel="import" href="../elements/fd-image.html">
 
 <polymer-element name="nautes-object-list" attributes="bgColor toast">
   <template>
@@ -16,21 +17,6 @@
       }
     </style>
 
-    <core-localstorage
-      name="ssl" 
-      value="{{ ssl }}">
-    </core-localstorage>
-
-
-    <core-localstorage
-      name="apiurl" 
-      value="{{ apiurl }}">
-    </core-localstorage>
-
-    <core-localstorage
-      name="credentialrequired" 
-      value="{{ credentialrequired }}">
-    </core-localstorage>
 
     <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast={{ toast }}>
     </fd-rest-element-service>
@@ -53,7 +39,7 @@
     <div layout vertical center>
       <template repeat="{{obj in objects}}">
         <nautes-object-row bgColor="{{bgColor}}" object="{{obj}}" graph="{{graphs[obj.uuid]}}" toast="{{toast}}">
-          <img src="{{getImg(obj)}}" width="70" height="70">
+          <fd-image primary="{{obj.representation[obj.currentRepresentation].icon}}" width="70" height="70"></fd-image>
         </nautes-object-row>
       </template>
     </div>    
@@ -80,14 +66,6 @@
 
       apiurlChanged: function(){
         this.reloadUrl();
-      },
-
-      getImg: function(obj) {
-        var icon = obj.representation[obj.currentRepresentation].icon;
-        if(icon != null){
-          var src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + icon ;
-          return src;
-        }
       },
 
       updateObject: function(event){

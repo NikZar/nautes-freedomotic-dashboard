@@ -7,6 +7,7 @@
 <link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/fd-manageable-element.html">
+<link rel="import" href="../elements/fd-image.html">
 
 <polymer-element name="nautes-plugin-row" attributes="plugin bgColor">
   <template>
@@ -47,16 +48,11 @@
     </fd-rest-element-service>
 
 <element-icon>
-     <template if="{{plugin.status === 'STOPPED'}}">
-        <core-icon class="icon" icon="av:play-circle-fill" on-tap="{{startPlugin}}">
-          <paper-ripple class="circle" fit></paper-ripple>
-        </core-icon>
-      </template>
-      <template if="{{plugin.status === 'RUNNING'}}">
-        <core-icon class="icon" icon="av:pause-circle-fill" on-tap="{{stopPlugin}}">
-          <paper-ripple class="circle" fit></paper-ripple>
-        </core-icon>
-      </template>
+    <fd-image class="icon" 
+        primary="{{plugin.uuid}}-{{plugin.status}}.png" alternative="plugin-{{plugin-status}}.png" 
+        on-tap="{{startPlugin}">
+        <paper-ripple class="circle" fit></paper-ripple>
+    </fd-image>
 </element-icon>
 <h2>{{plugin.pluginName}}</h2>
 <description>{{plugin.description}}</description>
