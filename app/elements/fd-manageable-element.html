@@ -4,7 +4,7 @@
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
-<polymer-element name="fd-manageable-element" attributes="element apiBase bgColor">
+<polymer-element name="fd-manageable-element" attributes="element apiBase bgColor uuidField">
 <template>
 	<style>
 	:host {
@@ -73,7 +73,7 @@
 	<fd-rest-element-service id="deleteService" 
       auto="false"
       method="DELETE" 
-      fdtype="{{apiBase}}/{{element.uuid}}"  
+      fdtype="{{apiBase}}/{{element[uuidField]}}"  
       on-rest-response="{{removed}}"
       on-rest-error="{{notRemoved}}"
       toast="{{toast}}">
@@ -82,7 +82,7 @@
     <fd-rest-element-service id="copyService" 
       auto="false"
       method="POST" 
-      fdtype="{{apiBase}}/{{element.uuid}}/copy"  
+      fdtype="{{apiBase}}/{{element[uuidField]}}/copy"  
       on-rest-response="{{copied}}"
       toast="{{toast}}">
     </fd-rest-element-service>
@@ -90,7 +90,7 @@
     <fd-rest-element-service id="updateService" 
       auto="false"
       method="PUT" 
-      fdtype="{{apiBase}}/{{element.uuid}}"  
+      fdtype="{{apiBase}}/{{element[uuidField]}}"  
       toast="{{toast}}"
       body="{{body}}">
     </fd-rest-element-service>
@@ -119,7 +119,8 @@
 <script>
 	Polymer("fd-manageable-element",{
        showForm: false,
-      
+       uuidField: "uuid",
+
       toggleEditForm: function(){
         this.showForm = !this.showForm;
       },
@@ -145,7 +146,8 @@
       },
 
       applyChanges: function(){
-        this.$.updateService.body=this.element;
+        console.log(this.element);
+        this.$.updateService.body=JSON.stringify(this.element);
         this.$.updateService.go();
         this.showForm=false;
       }

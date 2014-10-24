@@ -15,20 +15,23 @@
 			background-color: CornflowerBlue;
 			color: white;
 			border-radius: 10%;
+			border:none;
 			margin: 0px 5px;
 			padding: 1px 2px;
 		}
 
 		.fd-tm-icon{
-			border-radius: 50%;
+		border-radius: 50%;
         border: 2px solid #444;
         color: #444;
 		}
 	</style>
 	<div layout horizontal right>
 		<content select="header"></content>
-		<template repeat="{{tag in tags}}">
-			<div class="fd-tag">{{tag}} 
+		<template repeat="{{tag,index in tags}}">
+			<div class="fd-tag">
+<input class="fd-tag" id="{{index}}" type="text" value="{{tag}}" 
+		on-focus="" on-blur="{{updateTag}}" size="{{tag.length}}"/>
 		<core-icon id="{{tag}}" icon="delete" on-tap="{{delTag}}" data="{{tag}}">             
         </core-icon>
         </div>
@@ -48,8 +51,13 @@
 		}
 	},
 	addTag: function(){
-        this.tags.push("   ");
+        this.tags.push(" ");
+	},
+	updateTag: function(e,d,target){
+		var id = target.attributes['id'].value;
+		this.tags[id]=target.value;
 	}
+
 
 	});
 

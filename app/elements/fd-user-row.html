@@ -33,14 +33,24 @@
     .icon{
       width: 70px;
       height: 70px;
+      border-radius: 10%;
+
     }
   </style>
 
-  <fd-manageable-element element="{{user}}" apiBase="users" bgColor="{{bgColor}}">
+  <fd-manageable-element element="{{user}}" apiBase="users" bgColor="{{bgColor}}" uuidField="name">
   <h2>{{user.properties.fullName}}</h2>
   <description>{{user.name}}</description>
   <element-icon>
+    <template if="{{user.properties.iconfile != undefined}}">
+    <fd-image primary="{{user.properties.iconfile}}" class="icon"></fd-image>
+    </template>
+    <template if="{{user.properties.iconurl != undefined}}">
+    <img _src="{{user.properties.iconurl}}" class="icon"></img>
+    </template>
+  <template if="{{user.properties.iconfile === undefined && user.properties.iconurl === undefined}}" >
     <core-icon class="icon" icon="social:people"></core-icon>
+    </template>
     </element-icon>
   <header>
 </header>
