@@ -2,12 +2,13 @@
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icons/image-icons.html">
-<link rel="import" href="../bower_components/core-icons/hardware-icons.html">
+<link rel="import" href="../bower_components/core-icons/social-icons.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 
+
+<link rel="import" href="../elements/fd-manageable-element.html"> 
 <link rel="import" href="../elements/fd-tag-manager.html">
 <link rel="import" href="../elements/fd-property-manager.html">
-<link rel="import" href="../elements/fd-manageable-element.html">
 <link rel="import" href="../elements/fd-image.html">
 
 <polymer-element name="fd-user-row" attributes="toast user bgColor">
@@ -38,7 +39,7 @@
     }
   </style>
 
-  <fd-manageable-element element="{{user}}" apiBase="users" bgColor="{{bgColor}}" uuidField="name">
+  <fd-manageable-element elmnt="{{user}}" apiBase="users" bgColor="{{bgColor}}" uuidField="name">
   <h2>{{user.properties.fullName}}</h2>
   <description>{{user.name}}</description>
   <element-icon>

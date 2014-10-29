@@ -13,14 +13,15 @@
 <link rel="import" href="../elements/nautes-dashboard.html">
 <link rel="import" href="../elements/nautes-dashboard-page.html">
 
-<link rel="import" href="../elements/nautes-object-list.html">
 <link rel="import" href="../elements/nautes-environment.html">
-<link rel="import" href="../elements/nautes-settings.html">
-<link rel="import" href="../elements/nautes-fd-info.html">
+<link rel="import" href="../elements/nautes-commands.html">
+<link rel="import" href="../elements/nautes-object-list.html">
 <link rel="import" href="../elements/nautes-asynch-messages-list.html">
 <link rel="import" href="../elements/nautes-reactions.html">
-<link rel="import" href="../elements/nautes-commands.html">
-<link rel="import" href="../elements/fd-users.html">
+<link rel="import" href="../elements/nautes-settings.html">
+<link rel="import" href="../elements/nautes-system.html">
+<link rel="import" href="../elements/nautes-fd-info.html">
+<link rel="import" href="../elements/fd-users.html"> 
 
 
 <polymer-element name="nautes-animated-dashboard" attributes="selected">
@@ -79,13 +80,8 @@
       </section>
 
       <section name="commands" on-page-back="{{back}}">
-       <nautes-dashboard-page 
-        selected="{{selected}}" 
-        selectedBox="{{selectedBox}}" 
-        hero hero-id="commands">
-        <nautes-commands 
-          bgColor="{{selectedBox.bgcolor}}" 
-          toast="{{$.toast}}">
+       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="commands">
+        <nautes-commands bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
         </nautes-commands>
        </nautes-dashboard-page>
       </section>
@@ -133,6 +129,7 @@
        <fd-users bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}"></fd-users>
        </nautes-dashboard-page>
       </section>
+
     </core-animated-pages>
 
   </template>

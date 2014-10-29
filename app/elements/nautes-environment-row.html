@@ -1,10 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
 
-<link rel="import" href="../elements/fd-manageable-element.html">
+<link rel="import" href="../elements/fd-manageable-element.html"> 
 <link rel="import" href="../elements/nautes-zone.html">
 <link rel="import" href="../elements/nautes-zone-object.html">
+<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html"> 
 
 <polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiurl ssl">
   <template>
@@ -31,7 +31,7 @@
       name="apiurl" 
       value="{{ apiurl }}">
     </core-localstorage>
-<fd-manageable-element element="{{environment}}" bgColor="{{bgColor}}" apiBase="environments">
+<fd-manageable-element elmnt="{{environment}}" bgColor="{{bgColor}}" apiBase="environments">
   <header>
     <div layout vertical center>
       <h2>{{environment.name}}</h2>
