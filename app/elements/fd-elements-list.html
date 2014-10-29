@@ -1,0 +1,89 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+
+<polymer-element name="fd-elements-list" attributes="bgColor btnColor toast elementType">
+  <template>
+    <style>
+      
+      :host {
+        display: block;
+        width: 100%;
+        font-family: Open Sans;
+      }
+      
+      .header{
+        background-color: rgba(255,100,100,0.05);
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: #444;
+        width: 100%;
+      }
+
+      core-icon-button{
+        border: 1px solid rgba(64,64,64,0.3);
+        min-width: 110px;
+        text-align: center;
+      }
+      .btn {
+        margin: 5px;
+        background-color: {{btnColor}};
+      }
+      polyfill-next-selector { content: '.body list'; }
+      .body ::content list {
+        width:100%;
+      }
+
+    </style>
+
+    <div class="body" layout vertical center>
+
+      <div class="header" layout vertical center>
+        <div layout horizontal center>
+
+          <template if="{{!showAddButton}}">
+            <core-icon-button class="btn" icon="add-box" on-tap="{{addElement}}">
+              {{elementType}}
+            </core-icon-button>
+          </template>
+
+          <template if="{{!showingList}}">
+            <core-icon-button class="btn" icon="send" on-tap="{{showList}}">
+              LIST
+            </core-icon-button>
+          </template>
+          
+        </div>
+      </div>
+    
+      <template if="{{showingList}}">
+        <content select="list"></content>
+      </template>
+
+      <template if="{{showAddButton}}">
+        <content select="new-element"></content>
+      </template>
+
+    </div>
+
+  </template>
+  <script>
+    Polymer("fd-elements-list",{
+      
+      showingList: true,
+
+      showAddButton: false,
+
+      addElement: function(){
+        this.showingList = false;
+        this.showAddButton = true;
+      },
+
+      showList: function(){
+        this.showingList = true;
+        this.showAddButton = false;
+      }
+
+    });
+  </script>
+</polymer-element>

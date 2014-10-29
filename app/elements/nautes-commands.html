@@ -3,8 +3,9 @@
 <link rel="import" href="../bower_components/core-icons/hardware-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
+<link rel="import" href="../elements/fd-elements-list.html">
 <link rel="import" href="../elements/nautes-command-list.html">
-<link rel="import" href="../elements/nautes-open-sans.html">
+<!-- <link rel="import" href="../elements/nautes-command-add.html"> -->
 
 <polymer-element name="nautes-commands" attributes="">
 <template>
@@ -15,89 +16,20 @@
         width: 100%;
         font-family: Open Sans;
       }
-      
-      .header{
-        background-color: rgba(255,100,100,0.05);
-        padding-top: 10px;
-        padding-bottom: 10px;
-        color: #444;
-        width: 100%;
-      }
-
-      core-icon-button{
-        border: 1px solid rgba(64,64,64,0.3);
-        min-width: 110px;
-        text-align: center;
-      }
-
-      .commandbtn {
-        margin: 5px;
-        background-color: #f88;
-      }
 
     </style>
-
-    <div layout vertical center>
-
-      <div class="header" layout vertical center>
-        <div layout horizontal center>
-
-          <template if="{{!showAddCommand}}">
-            <core-icon-button 
-              class="commandbtn" 
-              icon="add-box" 
-              on-tap="{{addCommand}}">
-              COMMAND
-            </core-icon-button>
-          </template>
-
-          <template if="{{!showList}}">
-            <core-icon-button 
-              class="commandbtn" 
-              icon="hardware:gamepad" 
-              on-tap="{{showCommandList}}">
-              LIST
-            </core-icon-button>
-          </template>
-          
-        </div>
-      </div>
-    
-      <template if="{{showList}}">
-        <nautes-command-list 
-          bgColor="{{bgColor}}" 
-          toast="{{toast}}">
-        </nautes-command-list>
-      </template>
-
-      <template if="{{showAddCommand}}">
-        <nautes-command-add 
-          smallQuery="max-width: 640px" 
-          bgColor="{{bgColor}}" 
-          toast="{{toast}}">
+<fd-elements-list elementType="COMMAND" bgColor="{{bgColor}}" btnColor="#f88" toast="{{toast}}">
+<list>
+        <nautes-command-list bgColor="{{bgColor}}" toast="{{toast}}"></nautes-command-list>
+</list>
+<new-element>
+        <nautes-command-add smallQuery="max-width: 640px" bgColor="{{bgColor}}" toast="{{toast}}">
         </nautes-command-add>
-      </template>
-
-    </div>
-
-  </template>
+</new-element>
+</fd-elements-list>
+ </template>
   <script>
     Polymer("nautes-commands",{
-
-      showList: true,
-
-      showAddCommand: false,
-
-      addCommand: function(){
-        this.showList = false;
-        this.showAddCommand = !this.showAddCommand;
-      },
-
-      showCommandList: function(){
-        this.showList = !this.showList;
-        this.showAddCommand = false;
-      }
-
     });
   </script>
 </polymer-element>

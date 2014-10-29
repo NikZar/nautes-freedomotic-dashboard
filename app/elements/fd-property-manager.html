@@ -23,6 +23,7 @@
 			background-color: yellow;
 			color: #444;
 			border-radius: 10%;
+			border:none;
 			margin: 1px 5px;
 		}
 
@@ -36,7 +37,9 @@
 		<div >Properties:</div>
 		<template repeat="{{item in properties | getKeys}}">
 		<div layout horizontal left>
-			<div class="fd-prop-name">{{item}}</div> = <div class="fd-prop-value">{{properties[item]}}</div>
+			<div class="fd-prop-name">{{item}}</div> =
+			<div class="fd-prop-value"><input id="{{item}}" type="text" class="fd-prop-value" value="{{properties[item]}}" 
+			size="{{properties[item].length}}" on-blur="{{updatePropValue}}"/></div>
 		<core-icon class="fd-pm-icon" icon="delete" on-tap="{{delProp}}" data="{{item}}">             
         </core-icon>
 		</div>
@@ -58,7 +61,17 @@
   },
   addProp: function(){
 
-  }
+  },
+  updatePropValue: function(e,d,target){
+		var id = target.attributes['id'].value;
+		console.log(this.properties[id]);
+		this.properties[id].value=target.value;
+	},
+  updatePropName: function(e,d,target){
+  		// find old name
+  		// save old-name's value
+  		// create new name and add previous value
+	}
 	});
 </script>
 </polymer-element>

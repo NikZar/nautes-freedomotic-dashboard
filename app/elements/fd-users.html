@@ -1,4 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
+
 <link rel="import" href="../elements/fd-user-row.html">
 
 <polymer-element name="fd-users" attributes="toast bgColor">
@@ -9,6 +11,7 @@
         background-color: {{bgColor}};
         width: 100%;
       }
+      dummy{}
 	</style>
     <fd-rest-element-service id="userService"
       fdtype="users" 

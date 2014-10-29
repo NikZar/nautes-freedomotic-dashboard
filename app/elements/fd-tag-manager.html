@@ -30,7 +30,7 @@
 		<content select="header"></content>
 		<template repeat="{{tag,index in tags}}">
 			<div class="fd-tag">
-<input class="fd-tag" id="{{index}}" type="text" value="{{tag}}" 
+		<input class="fd-tag" id="{{index}}" type="text" value="{{tag}}" 
 		on-focus="" on-blur="{{updateTag}}" size="{{tag.length}}"/>
 		<core-icon id="{{tag}}" icon="delete" on-tap="{{delTag}}" data="{{tag}}">             
         </core-icon>

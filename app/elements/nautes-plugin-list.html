@@ -1,4 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
+
+<link rel="import" href="../elements/nautes-plugin-row.html">
 
 <polymer-element name="nautes-plugin-list" attributes="toast bgColor">
   <template>
@@ -8,6 +11,7 @@
         background-color: {{bgColor}};
         width: 100%;
       }
+      dummy{}
     </style>
 
     <fd-rest-element-service id="getPluginsService"

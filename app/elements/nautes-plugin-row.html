@@ -3,9 +3,8 @@
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icons/image-icons.html">
 <link rel="import" href="../bower_components/core-icons/hardware-icons.html">
+<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
 
-<link rel="import" href="../elements/nautes-open-sans.html">
-<link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/fd-manageable-element.html">
 <link rel="import" href="../elements/fd-image.html">
 
@@ -50,9 +49,8 @@
 <element-icon>
     <fd-image class="icon" 
         primary="{{plugin.uuid}}-{{plugin.status}}.png" alternative="plugin-{{plugin-status}}.png" 
-        on-tap="{{startPlugin}">
+        on-tap="{{startPlugin}"/>
         <paper-ripple class="circle" fit></paper-ripple>
-    </fd-image>
 </element-icon>
 <h2>{{plugin.pluginName}}</h2>
 <description>{{plugin.description}}</description>
