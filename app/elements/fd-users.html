@@ -1,5 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <link rel="import" href="../elements/fd-user-row.html">
 
@@ -13,11 +13,11 @@
       }
       dummy{}
 	</style>
-    <fd-rest-element-service id="userService"
+    <fd-rest-service id="userService"
       fdtype="users" 
       fditems="{{users}}" 
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
     
     <div layout vertical center>
       <template repeat="{{user in users}}">

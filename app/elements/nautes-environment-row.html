@@ -1,10 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <link rel="import" href="../elements/fd-manageable-element.html"> 
 <link rel="import" href="../elements/nautes-zone.html">
 <link rel="import" href="../elements/nautes-zone-object.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html"> 
 
 <polymer-element name="nautes-environment-row" attributes="environment bgColor toast apiurl ssl">
   <template>
@@ -42,11 +42,11 @@
           <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
         </template>
 
-        <fd-rest-element-service 
+        <fd-rest-service 
         fdtype="environments/{{environment.uuid}}/objects" 
         fditems="{{objects}}" 
         toast="{{toast}}">
-        </fd-rest-element-service>
+        </fd-rest-service>
         
         <template repeat="{{envObject in objects}}">
           <nautes-zone-object envObject="{{envObject}}" toast="{{toast}}"></nautes-zone-object>

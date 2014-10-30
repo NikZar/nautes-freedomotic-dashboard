@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icons/image-icons.html">
 <link rel="import" href="../bower_components/core-icons/hardware-icons.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <link rel="import" href="../elements/fd-manageable-element.html">
 <link rel="import" href="../elements/fd-image.html">
@@ -30,21 +30,21 @@
     </style>
 <fd-manageable-element element="{{plugin}}" apiBase="plugins" bgColor="{{bgColor}}">
     
-    <fd-rest-element-service id="startPluginService" 
+    <fd-rest-service id="startPluginService" 
       auto="false"
       method="POST" 
       fdtype="plugins/{{plugin.uuid}}/start"  
       on-rest-response="{{started}}"
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
-    <fd-rest-element-service id="stopPluginService" 
+    <fd-rest-service id="stopPluginService" 
       auto="false"
       method="POST" 
       fdtype="plugins/{{plugin.uuid}}/stop"  
       on-rest-response="{{stopped}}"
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
 <element-icon>
     <fd-image class="icon" 

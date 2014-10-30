@@ -4,7 +4,7 @@
 <link rel="import" href="../bower_components/core-icons/image-icons.html">
 <link rel="import" href="../bower_components/core-icons/hardware-icons.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <link rel="import" href="../elements/fd-tag-manager.html">
 <link rel="import" href="../elements/fd-property-manager.html">
@@ -60,13 +60,13 @@
     <core-icon class="icon" icon="hardware:gamepad" on-tap="{{run}}"></core-icon>
     </element-icon>
   <header>
-    <fd-rest-element-service id="runService" 
+    <fd-rest-service id="runService" 
       auto="false"
       method="POST" 
       fdtype="commands/user/{{command.uuid}}/run"  
       on-rest-response="{{successHandler}}"
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 </header>
 <!-- inserire qua il form per modificare il comando -->
 <form>

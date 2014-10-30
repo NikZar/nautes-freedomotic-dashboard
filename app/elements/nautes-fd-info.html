@@ -1,6 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../elements/nautes-open-sans.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <polymer-element name="nautes-fd-info" attributes="toast">
   <template>
@@ -17,8 +17,8 @@
       }
     </style>
 
-    <fd-rest-element-service fdtype="system/info/framework" fditems="{{info}}" toast="{{toast}}">
-    </fd-rest-element-service>
+    <fd-rest-service fdtype="system/info/framework" fditems="{{info}}" toast="{{toast}}">
+    </fd-rest-service>
       <div layout vertical center>
         Nautes Freedomotic Dashboard 0.0.3 (Beta)
       </div>

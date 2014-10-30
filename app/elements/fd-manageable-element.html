@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <polymer-element name="fd-manageable-element" attributes="elmnt apiBase bgColor uuidField">
 <template>
@@ -72,30 +72,30 @@
 
 	</style>
 
-    	<fd-rest-element-service id="deleteService" 
+    	<fd-rest-service id="deleteService" 
       auto="false"
       method="DELETE" 
       fdtype="{{apiBase}}/{{elmnt[uuidField]}}"  
       on-rest-response="{{removed}}"
       on-rest-error="{{notRemoved}}"
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
-    <fd-rest-element-service id="copyService" 
+    <fd-rest-service id="copyService" 
       auto="false"
       method="POST" 
       fdtype="{{apiBase}}/{{elmnt[uuidField]}}/copy"  
       on-rest-response="{{copied}}"
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
-    <fd-rest-element-service id="updateService" 
+    <fd-rest-service id="updateService" 
       auto="false"
       method="PUT" 
       fdtype="{{apiBase}}/{{elmnt[uuidField]}}"  
       toast="{{toast}}"
       body="{{body}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
  
 
       <core-icon class="mini-icon icon-modify" icon="create" on-tap="{{toggleEditForm}}"></core-icon>

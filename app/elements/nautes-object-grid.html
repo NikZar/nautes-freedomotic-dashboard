@@ -5,7 +5,7 @@
 <link rel="import" href="../bower_components/core-animated-pages/transitions/hero-transition.css">
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <link rel="import" href="../elements/nautes-object-cell.html">
 <link rel="import" href="../elements/nautes-behavior-edit.html">
@@ -86,8 +86,8 @@
 
     </style>
 
-    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast={{ toast }}>
-    </fd-rest-element-service>
+    <fd-rest-service fdtype="objects" fditems="{{ objects }}" toast={{ toast }}>
+    </fd-rest-service>
 
     <core-animated-pages selected="{{page}}" transitions="hero-transition cross-fade" on-core-animated-pages-transition-end="{{complete}}">
 

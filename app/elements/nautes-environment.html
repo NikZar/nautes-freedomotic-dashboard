@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/core-icon/core-icon.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <link rel="import" href="../elements/nautes-environment-row.html">
 
@@ -41,8 +41,8 @@
 
     </style>
 
-    <fd-rest-element-service fdtype="environments" fditems="{{environments}}" toast="{{toast}}">
-    </fd-rest-element-service>
+    <fd-rest-service fdtype="environments" fditems="{{environments}}" toast="{{toast}}">
+    </fd-rest-service>
 
     <div relative>
       <div class="slide-left">

@@ -1,5 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-element-service.html"> 
+<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-service.html"> 
 
 <link rel="import" href="../elements/nautes-colorful-button.html">
 
@@ -26,11 +26,11 @@
 
     </style>
 
-    <fd-rest-element-service id="getMarketplaceCategoriesService"
+    <fd-rest-service id="getMarketplaceCategoriesService"
       fdtype="marketplace/categories" 
       fditems="{{categories}}" 
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
     <!-- <core-media-query
       query="{{smallQuery}}"
