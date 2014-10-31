@@ -78,7 +78,7 @@ var locale = {
 PolymerExpressions.prototype.translate = function(key){
 
 	if(key){
-
+		i18n.init({ lng: "en" });
 		if(!localStorage["locale"]){
 
 			var defaultLanguage = navigator.language;
@@ -109,15 +109,9 @@ PolymerExpressions.prototype.translate = function(key){
 		var currentLocale = JSON.parse(localStorage["locale"]);
 
 		var lower_key = key.toLowerCase();
+console.log(i18n.t("app.name") + ": " + key);
+		return i18n.t(key);
 
-		var translation = "";
-		if( (lower_key in locale) && (currentLocale in locale[lower_key]) ){
-			return locale[lower_key][currentLocale];
-		} else if( (lower_key in locale) && ("en-US" in locale[lower_key]) ) {
-			return locale[lower_key]["en-US"];
-		} else {
-			return key;
-		}	
 	} else {
 		return "";
 	}
