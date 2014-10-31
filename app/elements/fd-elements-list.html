@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
-
+<link rel="import" href="../elements/nautes-i18n.html">
 <polymer-element name="fd-elements-list" attributes="bgColor btnColor toast elementType">
   <template>
     <style>
@@ -43,13 +43,13 @@
 
           <template if="{{!showAddButton}}">
             <core-icon-button class="btn" icon="add-box" on-tap="{{addElement}}">
-              {{elementType}}
+              {{ "add_X" | translate(translate(elementType)) | upperCase}}
             </core-icon-button>
           </template>
 
           <template if="{{!showingList}}">
             <core-icon-button class="btn" icon="send" on-tap="{{showList}}">
-              LIST
+              {{ "list" | upperCase }}
             </core-icon-button>
           </template>
           
