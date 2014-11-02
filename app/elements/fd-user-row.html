@@ -35,7 +35,6 @@
       width: 70px;
       height: 70px;
       border-radius: 10%;
-
     }
   </style>
 
@@ -58,7 +57,7 @@
 <!-- inserire qua il form per modificare il comando -->
 <form>
   <div class="element-input" layout horizonal right start>
-    <div>Name:</div>
+    <div>{{'name'|translate}}:</div>
     <paper-input id="nameInput"
     label="{{user.properties.fullname}}" 
     inputValue="{{user.properties.fullname}}">
@@ -73,17 +72,17 @@
 </div>
 <div class="element-input" layout horizonal right>
   <fd-tag-manager tags="{{user.roles}}">
-  <header>Roles: </header>
+  <header>{{'roles'|translate}}: </header>
 </fd-tag-manager>
 </div>
 <div class="element-input" layout horizonal right>
-  <div>Email:</div>
+  <div>{{'email'|translate}}:</div>
   <paper-input id="emailInput"
   label="{{user.properties.email}}" 
   inputValue="{{user.properties.email}}">
 </paper-input>
 </div><div class="element-input" layout horizonal right>
-  <div>Language:</div>
+  <div>{{'language'|translate}}:</div>
   <paper-input id="languageInput"
   label="{{user.properties.lang}}" 
   inputValue="{{user.properties.language}}">

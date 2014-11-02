@@ -1,9 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/bestmazzo-fd-test/fd-rest-service.html"> 
 
 <link rel="import" href="../elements/nautes-colorful-button.html">
 
-<polymer-element name="nautes-marketplace-categories" attributes="smallQuery categories">
+<polymer-element name="nautes-marketplace-categories" attributes="smallQuery categories selected">
   <template>
     <style>
       :host {
@@ -26,11 +25,7 @@
 
     </style>
 
-    <fd-rest-service id="getMarketplaceCategoriesService"
-      fdtype="marketplace/categories" 
-      fditems="{{categories}}" 
-      toast="{{toast}}">
-    </fd-rest-service>
+
 
     <!-- <core-media-query
       query="{{smallQuery}}"
@@ -62,10 +57,11 @@
     </template>-->
 
     <div class="categoriesContainer">
-      <template repeat="{{category in categories}}">
+      <template repeat="{{category,index in categories}}">
         <nautes-colorful-button 
           label="{{category.name}}" 
-          decimalColor="{{category.id}}">
+          decimalColor="{{category.id}}"
+          on-tap="{{selectCategory(index)}}">
         </nautes-colorful-button>
       </template>
     </div>
@@ -73,7 +69,10 @@
   </template>
   <script>
     Polymer("nautes-marketplace-categories",{
-
+selectCategory: function(idx){
+  console.log("Marketplace category: " + this.categories[idx]);
+  this.selected = idx;
+}
       /*smallScreenChanged: function(){
         if(this.smallScreen){
 

@@ -1,13 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
-<link rel="import" href="../elements/nautes-i18n.html">
-
-<polymer-element name="fd-manageable-element" attributes="elmnt apiBase bgColor uuidField">
+<polymer-element name="fd-manageable-element" attributes="hideMainButtons elmnt apiBase bgColor uuidField">
 <template>
 	<style>
 	:host {
@@ -26,26 +24,15 @@
     }
 
       .mini-icon{
-        position: absolute;
+        fload:right;
         border-radius: 10%;
         border: 1px solid #444;
         color: #444;
-        top: 10px;
-      }
-
-      .icon-modify{
-        right: 40px;
-      }
-      .icon-remove{
-        right: 10px;
-      }
-
-      .icon-copy{
-        right: 70px;
+        margin: 0px 3px;
       }
 
     .element-row {
-      padding: 10px;
+      padding: 5px;
       color: #444;
     }
 
@@ -66,10 +53,14 @@
       height: 70px;
       border-radius: 10%;
       border: 2px solid #444;
+      padding: 3px;
+      vertical-align: middle;
+      text-align: center;
     }
 
      .element-form {
       background-color: #ddd;
+      border-radius: 20px;
     }
 
 	</style>
@@ -100,24 +91,35 @@
     </fd-rest-service>
  
 
-      <core-icon class="mini-icon icon-modify" icon="create" on-tap="{{toggleEditForm}}"></core-icon>
-      <core-icon class="mini-icon icon-remove" icon="delete" on-tap="{{removeElement}"></core-icon>
-      <core-icon class="mini-icon icon-copy" icon="content-paste" on-tap="{{copyElement}}"></core-icon>   
-      <div class="element-row" layout horizontal center start>
+      <div class="element-row" layout vertical >
+      <div class="element-row" layout horizontal>
+
       <content select="element-icon"></content>
       <div flex>
       	<content select="h2"></content>
       	<p><content select="description"></content></p>
       	<content select="header"></content>
       </div>
+      <div layout horizontal start>
+        <template if="{{!hideMainButtons}}">
+          <core-icon class="mini-icon" icon="create" on-tap="{{toggleEditForm}}"></core-icon>
+          <core-icon class="mini-icon" icon="delete" on-tap="{{doRemoveElement}}"></core-icon>
+          <core-icon class="mini-icon" icon="content-paste" on-tap="{{doCopyElement}}"></core-icon>  
+        </template>
+        <content select="extra-icons"></content>
+      </div>
+    </div>
+
       <template if="{{showForm}}">
-      <div class="element-form" layout vertical center>
-        <content select="form"></content>
+        <div class="element-form" layout vertical center>
+          <content select="form"></content>
+          <div layout vertical end>  
+            <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
+          </div>
         </div>
-        <div layout horizonal right>  
-		  <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
-        </div>
+
       </template>
+      </div>
       <paper-shadow z="1"></paper-shadow> 
 </template>
 <script>
@@ -129,7 +131,7 @@
         this.showForm = !this.showForm;
       },
 
-      removeElement: function(){
+      doRemoveElement: function(){
         this.$.deleteService.go();
         this.style.display = "none";
       },
@@ -140,18 +142,16 @@
         this.style.display = "block";
       },
 
-      copyElement: function(){
+      doCopyElement: function(){
         this.$.copyService.go();
         this.showForm=false;
-        this.fire("create");
       },
       copied: function(){
-
+        this.fire("create");
       },
-
       applyChanges: function(){
-        console.log(this.element);
-        this.$.updateService.body=JSON.stringify(this.element);
+        console.log(this.elmnt);
+        this.$.updateService.body=JSON.stringify(this.elmnt);
         this.$.updateService.go();
         this.showForm=false;
       }

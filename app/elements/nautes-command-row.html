@@ -71,28 +71,28 @@
 <!-- inserire qua il form per modificare il comando -->
 <form>
   <div class="command-input" layout horizonal right start>
-    <div>Name:</div>
+    <div>{{'name' | translate}}:</div>
     <paper-input id="nameInput"
     label="{{command.name}}" 
     inputValue="{{command.name}}">
   </paper-input>
 </div>
 <div class="command-input" layout horizonal right>
-  <div>Description:</div>
+  <div>{{'description' | translate}}:</div>
   <paper-input id="descriptionInput"
   label="{{command.description}}" 
   inputValue="{{command.description}}">
 </paper-input>
 </div>
 <div class="command-input" layout horizonal right>
-  <div>Channel:</div>
+  <div>{{'channel' | translate}}:</div>
   <paper-input id="channelInput"
   label="{{command.receiver}}" 
   inputValue="{{command.receiver}}">
 </paper-input>
 </div>
 <div class="command-input" layout horizonal right>
-  <div>Delay:</div>
+  <div>{{'delay' | translate}}:</div>
   <paper-input id="delayInput"
   label="{{command.delay}}" 
   inputValue="{{command.delay}}">
@@ -107,7 +107,7 @@
 </div>
 <div class="command-input" layout horizonal right>
   <fd-tag-manager tags="{{command.tags}}">
-  <header>Tags: </header>
+  <header>{{'tags' | translate}}: </header>
 </fd-tag-manager>
 </div>
 <div class="command-input" layout horizonal right>

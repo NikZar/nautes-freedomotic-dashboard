@@ -1,0 +1,42 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../elements/nautes-marketplace-plugin.html">
+
+<polymer-element name="fd-marketplace-plugin-list" attributes="toast bgColor selected categories">
+  <template>
+    <style>
+
+      :host {
+        display: block;
+        font-family: Open Sans;
+      }
+
+      .title{
+        font-family: Open Sans;
+        color: #444;
+        font-size: 2em;
+        padding: 20px;
+      }
+
+    </style>
+    <div layout vertical>
+    <template repeat="{{category in categories}}">
+    <div>{{category.name}}</div>
+    <fd-rest-service
+      method="GET" 
+      fdtype="marketplace/categories/{{category.name}}/plugins"  
+      fditems="{{plugins}}"
+      toast="{{toast}}">
+    </fd-rest-service>
+    <template repeat="{{plugin in plugins}}">
+        <nautes-marketplace-plugin plugin="{{plugin}}"></nautes-marketplace-plugin>
+    </template>
+    </template>
+    </div>
+  </template>
+  <script>
+    Polymer("fd-marketplace-plugin-list",{
+
+    });
+  </script>
+</polymer-element>

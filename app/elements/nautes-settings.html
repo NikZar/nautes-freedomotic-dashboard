@@ -1,6 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icons/image-icons.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
@@ -19,12 +22,7 @@
         line-height: 40px;
         font-family: Open Sans;
       }
-      .label{
-        display: inline-block;
-        height: 100px;
-        vertical-align: top;
-        padding-top: 48px;
-      }
+
       .row{
         margin-top: 20px;
       }
@@ -41,13 +39,15 @@
     </style>
 
     <div layout vertical center>
-
-      <div class="row" layout horizonal center start>
+    <div layout horizontal >
+     <a href="/setup.html"><core-icon icon="settings-applications"></core-icon></a>
+    </div>
+      <div class="row" layout horizontal end>
         <core-localstorage id="LSapiurl" 
           name="apiurl" 
           value="{{apiurl}}">
         </core-localstorage>
-        <div class="label">API URL:&nbsp </div> 
+        <div>API URL: </div>
         <paper-input id="apiInput"
           label="{{apiurl}}" 
           floatingLabel="true" 
@@ -55,33 +55,34 @@
         </paper-input>
       </div>
 
-      <div class="row" layout horizonal center start>
+      <div class="row" layout horizontal center
         <core-localstorage id="LScr" 
           name="credentialrequired" 
           value="{{credentialrequired}}">
         </core-localstorage>
-          {{"cr" | translate }}:  
+          <div>{{"login_msg" | translate }}:  </div>
           <paper-toggle-button checked="{{newCredentialRequired}}">
           </paper-toggle-button>
       </div>
 
-      <div class="row" layout horizonal center start>
+      <div class="row" layout horizontal center>
         <core-localstorage id="LSssl" 
           name="ssl" 
           value="{{ssl}}">
         </core-localstorage>
-        SSL:  
+        <div>SSL: </div>
         <paper-toggle-button checked="{{newSSL}}">
         </paper-toggle-button>
       </div>
 
-      <div class="row" layout horizonal center start>
+      <div class="row" layout horizontal center>
         <core-localstorage id="LSlocale" 
           name="locale" 
           value="{{locale}}">
         </core-localstorage>
-        {{ "language" | translate }}: <paper-radio-group selected="{{newLocale}}">
-                                      <paper-radio-button name="en-US" label="English">
+        <div>{{ "language" | translate }}: </div>
+        <paper-radio-group selected="{{newLocale}}">
+                                     <paper-radio-button name="en-US" label="English">
                                       </paper-radio-button>
                                       <paper-radio-button name="it-IT" label="Italiano">
                                       </paper-radio-button>

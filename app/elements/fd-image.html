@@ -10,38 +10,38 @@
   </style>
   <core-localstorage
   name="ssl" 
-  value="{{ ssl }}">
+  value="{{ssl}}">
 </core-localstorage>
 
 <core-localstorage
 name="apiurl" 
-value="{{ apiurl }}">
+value="{{apiurl}}">
 </core-localstorage>
 
-<img _src="{{getImg()}}" id="fdImageImg"
+<img id="fdImageImg"
 width="{{width}}"
 height="{{height}}"></img>
 </template>
 <script>
   Polymer('fd-image', {
-
-    getImg: function() {
-      var src;
-      if (this.ssl != undefined && this.apiurl){
-        if (this.alternate != undefined && this.primary != undefined){
-          src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + this.primary + "?fbId=" + this.alternate;
+    imgSrc: undefined,
+    observe: {
+      "primary alternate ssl apiurl": "reloadSrc"
+    },
+    reloadSrc: function() {
+      if (this.ssl != undefined && !!this.apiurl){
+        if (!!this.alternate && !!this.primary){
+            this.$.fdImageImg.src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + this.primary + "?fbId=" + this.alternate;
         } else {
-          if (this.primary != undefined){
-            src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + this.primary;
+          if (!!this.primary){
+            this.$.fdImageImg.src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + this.primary;
           }
-          if (this.alternate != undefined){
-            src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + this.alternate;
+          if (!!this.alternate){
+            this.$.fdImageImg.src =  (this.ssl ? "https" : "http") + '://' + this.apiurl + 'resources/' + this.alternate;
           }
         }
-        return src;
       }
     }
-
   });
 </script>
 </polymer-element>

@@ -80,28 +80,28 @@
 </header>
 <form>
   <div class="command-input" layout horizonal right start>
-    <div>Name:</div>
+    <div>{{'name' | translate}}:</div>
     <paper-input id="nameInput"
     label="{{object.name}}" 
     inputValue="{{ebject.name}}">
   </paper-input>
 </div>
 <div class="command-input" layout horizonal right>
-  <div>Description:</div>
+  <div>{{'description' | translate}}:</div>
   <paper-input id="descriptionInput"
   label="{{object.description}}" 
   inputValue="{{object.description}}">
 </paper-input>
 </div>
 <div class="command-input" layout horizonal right>
-  <div>Protocol:</div>
+  <div>{{'protocol' | translate}}:</div>
   <paper-input id="protocolInput"
   label="{{object.protocol}}" 
   inputValue="{{object.protocol}}">
 </paper-input>
 </div>
 <div class="command-input" layout horizonal right>
-  <div>Phisical Address:</div>
+  <div>{{'address' | translate}}:</div>
   <paper-input id="phisicalAddressInput"
   label="{{object.phisicalAddress}}" 
   inputValue="{{object.phisicalAddress}}">
@@ -120,6 +120,11 @@
   label="{{object.actAs}}" 
   inputValue="{{object.actAs}}">
 </paper-input>
+</div>
+<div class="command-input" layout horizonal right>
+  <fd-tag-manager tags="{{object.tags}}">
+    <header>{{'tags'|translate}}: </header>
+  </fd-tag-manager>
 </div>
 </form>
 </fd-manageable-element>

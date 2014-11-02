@@ -1,16 +1,60 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icons/hardware-icons.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
-<polymer-element name="nautes-marketplace-plugin" attributes="">
+<polymer-element name="nautes-marketplace-plugin" attributes="plugin">
   <template>
     <style>
       :host {
         display: block;
       }
+
+      .icon{
+        width: 70px;
+        height: 70px;
+      }
     </style>
+
+<fd-manageable-element elmnt="{{plugin}}" apiBase="users" bgColor="{{bgColor}}" uuidField="name" hideMainButtons="true">
+  <h2>{{plugin.title}}</h2>
+  <description>{{plugin.description}}</description>
+  <element-icon>
+    <img src="{{plugin.icons[0].filepath}}" class="icon"></img>
+  </element-icon>
+
+  <fd-rest-service id="installPluginService" 
+    auto="false"
+    method="POST" 
+    fdtype="marketplace/install/"  
+    on-rest-response="{{started}}"
+    toast="{{toast}}">
+  </fd-rest-service>
+
+  <extra-icons>
+      <a href="{{plugin.uri}}"><core-icon class="mini-icon" icon="launch"></core-icon></a>
+      <core-icon class="mini-icon" icon="hardware:desktop-windows"></core-icon>
+      <core-icon class="mini-icon" icon="extension" ></core-icon>
+      <core-icon class="mini-icon" icon="shopping-cart" on-tap="{{doInstallPlugin}}"></core-icon>
+  </extra-icons>
+  <header></header>
+  <form></form>
+</fd-manageable-element>
   </template>
   <script>
-    Polymer({
-
+    Polymer("nautes-marketplace-plugin",{
+doInstallPlugin: function(){
+  for (var i = this.plugin.files.length - 1; i >= 0; i--) {
+    if (this.plugin.files[i].filename.indexOf("5.6") > -1){
+      var uri = this.plugin.files[i].filepath;
+      console.log(uri)
+      this.$.installPluginService.fdtype="marketplace/install/" + encodeURIComponent(uri);
+      this.$.installPluginService.go();
+      break;
+    }
+  }
+}
     });
   </script>
 </polymer-element>

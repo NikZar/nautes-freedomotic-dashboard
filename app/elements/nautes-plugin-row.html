@@ -25,6 +25,7 @@
       .icon{
         width: 70px;
         height: 70px;
+        border-radius: 10%;
       }
 
     </style>
@@ -48,7 +49,7 @@
 
 <element-icon>
     <fd-image class="icon" 
-        primary="{{plugin.uuid}}-{{plugin.status}}.png" alternative="plugin-{{plugin-status}}.png" 
+        primary="{{plugin.uuid}}-{{plugin.currentPluginStatus}}.png" alternate="plugin-{{plugin.currentPluginStatus}}.png" 
         on-tap="{{startPlugin}"/>
         <paper-ripple class="circle" fit></paper-ripple>
 </element-icon>
