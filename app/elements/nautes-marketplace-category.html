@@ -1,12 +1,25 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
-<polymer-element name="nautes-marketplace-category" attributes="">
+<link rel="import" href="../elements/nautes-marketplace-plugin.html">
+
+<polymer-element name="nautes-marketplace-category" attributes="category">
   <template>
     <style>
       :host {
         display: block;
       }
     </style>
+        <div>{{category.name}}</div>
+    <fd-rest-service id="catPlug"
+      method="GET" 
+      fdtype="marketplace/categories/{{category.name}}/plugins"  
+      fditems="{{plugins}}"
+      toast="{{toast}}">
+    </fd-rest-service>
+    <template repeat="{{plugin in plugins}}">
+        <nautes-marketplace-plugin plugin="{{plugin}}"></nautes-marketplace-plugin>
+    </template>
   </template>
   <script>
     Polymer({

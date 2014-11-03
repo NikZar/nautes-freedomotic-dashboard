@@ -42,13 +42,13 @@
   <h2>{{user.properties.fullName}}</h2>
   <description>{{user.name}}</description>
   <element-icon>
-    <template if="{{user.properties.iconfile != undefined}}">
+    <template if="{{!!user.properties.iconfile}}">
     <fd-image primary="{{user.properties.iconfile}}" class="icon"></fd-image>
     </template>
-    <template if="{{user.properties.iconurl != undefined}}">
+    <template if="{{!!user.properties.iconurl}}">
     <img _src="{{user.properties.iconurl}}" class="icon"></img>
     </template>
-  <template if="{{user.properties.iconfile === undefined && user.properties.iconurl === undefined}}" >
+  <template if="{{!user.properties.iconfile && !user.properties.iconurl}}" >
     <core-icon class="icon" icon="social:people"></core-icon>
     </template>
     </element-icon>

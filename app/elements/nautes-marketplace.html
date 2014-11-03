@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <link rel="import" href="../elements/nautes-marketplace-categories.html">
-<link rel="import" href="../elements/fd-marketplace-plugin-list.html">
+<link rel="import" href="../elements/nautes-marketplace-category.html">
 
 <polymer-element name="nautes-marketplace" attributes="toast bgColor">
   <template>
@@ -37,7 +37,11 @@
       categories="{{categories}}">
     </nautes-marketplace-categories>
     <div class="title">Plugin List</div>
-    <fd-marketplace-plugin-list categories="{{categories}}"></fd-marketplace-plugin-list>
+      <div layout vertical>
+        <template repeat="{{category, index in categories}}">
+          <nautes-marketplace-category category="{{category}}"></nautes-marketplace-category>
+        </template>
+      </div>
   </template>
   <script>
     Polymer("nautes-marketplace",{

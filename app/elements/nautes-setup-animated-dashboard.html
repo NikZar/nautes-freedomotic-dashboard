@@ -18,6 +18,7 @@
 <link rel="import" href="../elements/nautes-plugins.html">
 <link rel="import" href="../elements/nautes-marketplace.html">
 <link rel="import" href="../elements/nautes-system.html">
+<link rel="import" href="../elements/fd-roles.html">
 
 <polymer-element name="nautes-setup-animated-dashboard" attributes="selected">
   <template>
@@ -88,8 +89,11 @@
        </nautes-dashboard-page>
       </section>
 
-      <section name="users" on-page-back="{{back}}" fit>
-       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="users">
+      <section name="roles" on-page-back="{{back}}" fit>
+       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="roles">
+       <fd-roles 
+          bgColor="{{selectedBox.bgcolor}}" 
+          toast="{{$.toast}}"></fd-roles>
        </nautes-dashboard-page>
       </section>
 

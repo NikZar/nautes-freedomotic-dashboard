@@ -56,7 +56,7 @@
 	{
 		"title": "Family",
 		"description": "This section contains the list of users",
-		"img": "social:people",
+		"img": "social:person",
 		"iconcolor": "#444",
 		"tooltipcolor": "#ccf",
 		"color": "#ccf",
@@ -92,6 +92,15 @@
 	{
 		"title": "Users",
 		"description": "This section lets you manage Users",
+		"img": "social:person",
+		"iconcolor": "#fbf",
+		"tooltipcolor": "#fbf",
+		"color": "#222",
+		"bgcolor": "#fcf"
+	},
+	{
+		"title": "Roles",
+		"description": "This section lets you manage Roles",
 		"img": "social:people",
 		"iconcolor": "#fbf",
 		"tooltipcolor": "#fbf",

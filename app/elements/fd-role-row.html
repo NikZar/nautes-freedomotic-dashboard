@@ -1,0 +1,70 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/core-icons/image-icons.html">
+<link rel="import" href="../bower_components/core-icons/social-icons.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+
+<link rel="import" href="../elements/fd-manageable-element.html"> 
+<link rel="import" href="../elements/fd-tag-manager.html">
+
+<polymer-element name="fd-role-row" attributes="toast role bgColor">
+<template>
+  <style>
+
+    :host {
+      display: block;
+      position: relative;
+      background-color: {{bgColor}};
+      width: 100%;
+      font-size: 1.2rem;
+      font-weight: 300;
+      font-family: Open Sans;
+    }
+
+    .element-input {
+      margin-bottom: 5px;
+      padding: 5px;
+      color: #444;
+      min-height: 60px;
+    }
+    .icon{
+      width: 70px;
+      height: 70px;
+      border-radius: 10%;
+    }
+  </style>
+
+  <fd-manageable-element elmnt="{{role}}" apiBase="system/roles" bgColor="{{bgColor}}" uuidField="name">
+  <h2>{{role.name}}</h2>
+  <description></description>
+  <element-icon>
+    <core-icon class="icon" icon="social:group"></core-icon>
+    </element-icon>
+  <header>
+</header>
+<!-- inserire qua il form per modificare il comando -->
+<form>
+  <div class="element-input" layout horizonal right start>
+    <div>{{'name'|translate}}:</div>
+    <paper-input id="nameInput"
+    label="{{role.name}}" 
+    inputValue="{{role.name}}" disabled>
+  </paper-input>
+</div>
+<div class="element-input" layout horizonal right>
+  <fd-tag-manager tags="{{role.permissions}}">
+    <header>{{'permissions'|translate}}: </header>
+  </fd-tag-manager>
+</div>
+</form>
+<!-- end --> 
+</fd-manageable-element>
+</template>
+  <script>
+    Polymer("fd-role-row",{
+
+    });
+  </script>
+</polymer-element>

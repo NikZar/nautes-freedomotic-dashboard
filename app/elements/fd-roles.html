@@ -1,0 +1,44 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
+
+<link rel="import" href="../elements/fd-elements-list.html">
+<link rel="import" href="../elements/fd-role-row.html">
+
+<polymer-element name="fd-roles" attributes="toast bgColor">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: {{bgColor}};
+        width: 100%;
+      }
+      dummy{}
+	</style>
+<fd-elements-list elementType="role" bgColor="{{bgColor}}" btnColor="#f88" toast="{{toast}}">
+<list>
+    <fd-rest-service id="roleService"
+      fdtype="system/roles" 
+      fditems="{{roles}}" 
+      toast="{{toast}}">
+    </fd-rest-service>
+    
+    <div layout vertical center>
+      <template repeat="{{role in roles}}">
+        <fd-role-row 
+          toast="{{toast}}"
+          bgColor="{{bgColor}}" 
+          role="{{role}}" >
+        </fd-role-row>
+      </template>
+    </div>    
+    </list>
+    <new-element>
+    
+    </new-element>
+</fd-elements-list>
+  </template>
+<script>
+Polymer("fd-roles",{
+});
+</script>
+</polymer-element>

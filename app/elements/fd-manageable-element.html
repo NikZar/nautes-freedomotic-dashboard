@@ -113,8 +113,9 @@
       <template if="{{showForm}}">
         <div class="element-form" layout vertical center>
           <content select="form"></content>
-          <div layout vertical end>  
-            <paper-fab class="fab" icon="arrow-forward" on-tap="{{applyChanges}}"></paper-fab>
+          <div layout horizontal end>  
+              <paper-fab class="fab" icon="undo" on-tap=""></paper-fab>
+              <paper-fab class="fab" icon="save" on-tap="{{applyChanges}}"></paper-fab>
           </div>
         </div>
 
