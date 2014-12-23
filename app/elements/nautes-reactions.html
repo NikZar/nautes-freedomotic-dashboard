@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-reactions.html">
 
 <link rel="import" href="../elements/fd-elements-list.html">
 <link rel="import" href="../elements/nautes-reaction-list.html">
@@ -52,8 +53,9 @@
 
 <fd-elements-list elementType="REACTION" bgColor="{{bgColor}}" btnColor="#fcc" toast="{{toast}}">
 <list>
-         <nautes-reaction-list bgColor="{{bgColor}}" toast="{{toast}}">
-        </nautes-reaction-list>
+        <!-- <nautes-reaction-list bgColor="{{bgColor}}" toast="{{toast}}">
+        </nautes-reaction-list> -->
+        <fd-reactions></fd-reactions>
 </list>
 <new-element>
         <nautes-reaction-add smallQuery="max-width: 640px" bgColor="{{bgColor}}" toast="{{toast}}">

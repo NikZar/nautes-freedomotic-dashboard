@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-things.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/nautes-corner-button.html">
@@ -100,7 +101,8 @@
     </nautes-environment>
 
     <nautes-bottom-section showContent="{{ expanded }}" class="bottom-section">
-      <nautes-object-grid toast="$.toast"></nautes-object-grid>
+      <fd-things mode="chip"></fd-things>
+      <!-- <nautes-object-grid toast="$.toast"></nautes-object-grid> -->
     </nautes-bottom-section>
 
     <template if="{{ displaySettings }}">

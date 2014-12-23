@@ -100,11 +100,11 @@
       	<p><content select="description"></content></p>
       	<content select="header"></content>
       </div>
-      <div layout horizontal start>
+      <div layout horizontal end>
         <template if="{{!hideMainButtons}}">
-          <core-icon class="mini-icon" icon="create" on-tap="{{toggleEditForm}}"></core-icon>
-          <core-icon class="mini-icon" icon="delete" on-tap="{{doRemoveElement}}"></core-icon>
-          <core-icon class="mini-icon" icon="content-paste" on-tap="{{doCopyElement}}"></core-icon>  
+          <paper-fab mini style="background-color:yellow;color: black;" icon="create" on-tap="{{toggleEditForm}}"></paper-fab>
+          <paper-fab mini style="background-color:red;color: black;" icon="delete" on-tap="{{doRemoveElement}}"></paper-fab>
+          <paper-fab mini style="background-color:green;color: black;" icon="content-paste" on-tap="{{doCopyElement}}"></paper-fab>
         </template>
         <content select="extra-icons"></content>
       </div>

@@ -21,8 +21,9 @@
 <link rel="import" href="../elements/nautes-settings.html">
 <link rel="import" href="../elements/nautes-system.html">
 <link rel="import" href="../elements/nautes-fd-info.html">
-<link rel="import" href="../elements/fd-users.html"> 
 
+<link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-users.html">
+<link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-things.html">
 
 <polymer-element name="nautes-animated-dashboard" attributes="selected">
   <template>
@@ -88,8 +89,9 @@
 
       <section name="objects" on-page-back="{{back}}" fit>
        <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="objects">
-          <nautes-object-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
-          </nautes-object-list>
+          <!-- <nautes-object-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+          </nautes-object-list> -->
+          <fd-things></fd-things>
        </nautes-dashboard-page>
       </section>
 
