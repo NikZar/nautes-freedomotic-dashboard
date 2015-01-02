@@ -15,36 +15,43 @@
         <!-- Place your HTML imports here -->
         <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
         <link href="bower_components/polymer/polymer.html" rel="import">
+
+        <link rel="import" href="bower_components/fd-polymer-i18next-translate/fd-polymer-i18next-translate.html">
         <link rel="import" href="bower_components/core-image/core-image.html">
         <link rel="import" href="bower_components/paper-input/paper-input.html">
         <link rel="import" href="bower_components/paper-button/paper-button.html">
         <link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
         <link rel="import" href="bower_components/paper-shadow/paper-shadow.html">
         <link rel="import" href="bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
-        
+        <link rel="import" href="elements/nautes-pass-dashboard.html">
     </head>
     <body unresolved>
     <template is="auto-binding">
-    <fd-api-settings
-    address="{{address}}" apiVersion="{{path}}"
-    ssl="{{ssl}}" port="{{port}}" ></fd-api-settings>
+        <fd-api-settings
+            address="{{address}}" apiVersion="{{path}}"
+            ssl="{{ssl}}" port="{{port}}" noSave="false" ></fd-api-settings>
+        <fd-rest-service
+            id="reLogin" fdType="users/_" 
+            on-rest-error="{{backToLogin}}"
+            on-rest-response="{{gotoApp}}"></fd-rest-service>
+    <template if="{{!successLogin}}">
     <fd-rest-service
-    id="userAPI"
-    auto="false"
-    fdType="users/{{name}}"
+    id="doLogin"
+    auto="false" method="POST"
+    contentType="application/x-www-form-urlencoded"
+    fdType="users/_/login"
     on-rest-error="{{backToLogin}}"
     on-rest-response="{{gotoApp}}"></fd-rest-service>
-
-    <core-image class="background" src="images/background.jpg" sizing="cover" preload fade></core-image>
+    <core-image class="background" src="images/backgrounds/{{background}}" sizing="cover" preload fade></core-image>
     <div layout horizontal layout center class="container">
     <paper-shadow z="2" class="login" layout vertical center >
         <div class="logocontainer" self-stretch>
             <core-image class="logo" src="images/freedomotic-logo-light-transparent.png" sizing="contain" preload fade></core-image>
         </div>
         <div layout vertical self-stretch end-justified style="padding:1em 2em;">
-            <paper-input label="Address" id="address" value="{{address}}" floatingLabel></paper-input>
-            <paper-input id="name" label="Name" value="{{name}}" floatingLabel></paper-input>
-            <paper-input-decorator label="Password" floatingLabel>
+            <paper-input label="{{'address' | translate}}" id="address" value="{{address}}" floatingLabel></paper-input>
+            <paper-input id="name" label="{{'name' | translate}}" value="{{name}}" floatingLabel></paper-input>
+            <paper-input-decorator label="{{'password' | translate}}" floatingLabel>
                 <input id="password" is="core-input" value="{{password}}"  name="password" type="password"/>
             </paper-input-decorator>
             <core-label center horizontal layout style="margin:1em;">
@@ -55,46 +62,77 @@
                 <div flex>Remember me</div>&nbsp;
                 <paper-checkbox for></paper-checkbox>
             </core-label>
-            <small style="margin:1em;" on-tap="{{toggleShowAdvanced}}">Show advanced options</small>
-            <paper-input hidden?="{{showAdvanced}}" label="Port" id="port" value="{{port}}" floatingLabel></paper-input>
-            <paper-input hidden?="{{showAdvanced}}" label="Path" id="path" value="{{path}}" floatingLabel></paper-input>
-            <paper-button raised style="margin:1em;" on-tap="{{tryLogin}}">Login</paper-button>
+            <small style="margin:1em;" on-tap="{{toggleHideAdvanced}}">Show advanced options</small>
+            <paper-input hidden?="{{hideAdvanced}}" label="Port" id="port" value="{{port}}" floatingLabel></paper-input>
+            <paper-input hidden?="{{hideAdvanced}}" label="Path" id="path" value="{{path}}" floatingLabel></paper-input>
+            <paper-button raised style="margin:1em;" on-tap="{{tryLogin}}" id="loginButton">{{'login' | translate}}</paper-button>
         </div>
     </paper-shadow>
      </div>
      </template>
+     <template if="{{successLogin}}">
+        <fd-rest-service
+        id="prelogout"
+        auto="false" method="POST"
+        fdType="users/_/logout"
+        on-rest-response="{{backToLogin}}"></fd-rest-service>
+    
+        <nautes-pass-dashboard></nautes-pass-dashboard>
+     </template>
      <script type="text/javascript">
          var scope = document.querySelector('template[is=auto-binding]');
-         scope.backToLogin= function(){
-            console.log("LOGIN ERROR");
+         scope.successLogin=false;
+         scope.backgrounds=[    "104792456_71001aaea2_o.jpg",   "15171955576_e0b30e8946_k.jpg", "472387994_4da97c2407_o.jpg",
+                                "5031124094_01d0a88fde_o.jpg",  "8505463101_01086d86d7_k.jpg",  "13983804179_a5b92250d3_o.jpg",
+                                "4517193518_c8cebf5f2e_o.jpg",  "4911433144_e6b761b3f9_b.jpg",  "5577311905_0261db95bd_o.jpg",
+                                "9712013330_547dd0fd9e_k.jpg"
+         ];
+         scope.background=scope.backgrounds[Math.floor((Math.random() * 10))]; 
+         scope.backToLogin= function(e){
+            console.log(e);
+            console.log("BACK TO LOGIN");
             // cleanup password field
+            var password= document.querySelector('#password');
+            password.value="";
             // block login button fo 3 seconds
+            var loginButton = document.querySelector('#loginButton');
+            loginButton.disabled=true;
+            setTimeout(function () {
+                var loginButton = document.querySelector('#loginButton');
+                loginButton.disabled=false;
+            }, 5000);
+            scope.successLogin=false;
          };
-         scope.gotoApp = function(){
-            console.log("LOGIN SUCCESS");
-            // change url 
-            location.assign("pass.html");
+         scope.gotoApp = function(e){
+            //console.log("APPARENTLY IT'S A SUCCESSFUL RESPONSE")
+            if (false && e.detail.detail.xhr.status==0){
+                scope.backToLogin(e);
+            } else{
+                console.log(e);
+                console.log("LOGIN SUCCESS");
+                // change url 
+                scope.successLogin=true;
+                //location.assign("pass.html");
+            }
          };
-         scope.showAdvanced= false;
-         scope.toggleShowAdvanced = function(){
-            scope.showAdvanced = !scope.showAdvanced;
+         scope.hideAdvanced= true;
+         scope.toggleHideAdvanced = function(){
+            scope.hideAdvanced = !scope.hideAdvanced;
          };
          scope.tryLogin = function(){
             // find userAPI
-            var api = document.querySelector('#userAPI');
-            // Create Base64 Object
-            var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
-
-            // set params
-            /// console.log(scope.name + ":" + scope.password);
-            if (api.$.ajax.headers == undefined) {
-                 api.$.ajax.headers = {};
-            }
-            api.$.ajax.headers.Authorization= "Basic " + Base64.encode(scope.name + ':' + scope.password );
-            /// console.log(api.$.ajax.headers.Authorization);
-            // call userAPI.go();
+            var api = document.querySelector('#doLogin');
+            api.body="name="+ scope.name + "&password=" + scope.password + "&";
             api.go();
          };
+         scope.tryLogout= function(){
+            var api = document.querySelector('#prelogout');
+            api.go();
+         };
+         document.addEventListener('rest-error', function(e) {
+            console.log("ERROR ON A REST CALL");
+            console.log(e);
+         });
      </script>
     </body>
 </html>

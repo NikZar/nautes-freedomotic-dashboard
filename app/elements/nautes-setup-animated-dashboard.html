@@ -18,7 +18,6 @@
 <link rel="import" href="../elements/nautes-plugins.html">
 <link rel="import" href="../elements/nautes-marketplace.html">
 <link rel="import" href="../elements/nautes-system.html">
-<!-- <link rel="import" href="../elements/fd-roles.html"> -->
 <link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-elements.html">
 
 <polymer-element name="nautes-setup-animated-dashboard" attributes="selected">
@@ -83,10 +82,6 @@
         selected="{{selected}}" 
         selectedBox="{{selectedBox}}" 
         hero hero-id="plugins">
-<!--        <nautes-plugins
-          bgColor="{{selectedBox.bgcolor}}" 
-          toast="{{$.toast}}">
-        </nautes-plugins> -->
           <fd-plugins></fd-plugins>
        </nautes-dashboard-page>
       </section>

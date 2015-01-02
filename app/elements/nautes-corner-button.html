@@ -23,11 +23,30 @@
         height: 0;
         border-style: solid;
       }
+      .bottom-right, .bottom-left{
+        position: relative;
+        bottom: 0px;
+
+        width: 0;
+        height: 0;
+        border-style: solid;
+      }
 
       .top-right{
         right: 0px;
         border-width: 0 90px 90px 0;
         border-color: transparent #444 transparent transparent;
+      }
+
+      .bottom-right{
+        right: 0px;
+        border-width: 90px 90px  0 0;
+        border-color:  transparent #444 transparent transparent;
+      }
+      .bottom-left{
+        right: 0px;
+        border-width: 90px 0 0 90px;
+        border-color:  transparent transparent transparent #777;
       }
 
       .top-left{
@@ -45,6 +64,15 @@
         color: #fff;
       }
 
+      .bottom-right core-icon{
+        position: relative;
+        top: -45px;
+        left: 45px;
+        width: 40px;
+        height: 40px;
+        color: #fff;
+      }
+
       .top-left core-icon{
         position: relative;
         top: -83px;
@@ -53,8 +81,16 @@
         height: 37px;
         color: #fff;
       }
+      .bottom-left core-icon{
+        position: relative;
+        top: -45px;
+        left: -83px;
+        width: 37px;
+        height: 37px;
+        color: #fff;
+      }
 
-      .top-right paper-ripple, .top-left paper-ripple {
+      .top-right paper-ripple, .top-left paper-ripple, .bottom-left paper-ripple, .bottom-right paper-ripple {
         z-index: 10;
         color: #aaaaff;
       }
