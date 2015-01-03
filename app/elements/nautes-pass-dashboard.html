@@ -1,15 +1,16 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-things.html">
+<link rel="import" href="../bower_components/fd-polymer-environments/fd-polymer-environments.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
 <link rel="import" href="../elements/nautes-corner-button.html">
 <link rel="import" href="../elements/nautes-bottom-section.html">
-<link rel="import" href="../elements/nautes-object-grid.html">
-<link rel="import" href="../elements/nautes-environment.html">
-<link rel="import" href="../elements/nautes-settings.html">
 <link rel="import" href="../elements/nautes-alerts.html">
+<!-- <link rel="import" href="../elements/nautes-setup-animated-dashboard.html">  -->
+<link rel="import" href="../elements/nautes-fd-info.html">
 
-<polymer-element name="nautes-pass-dashboard" attributes="">
+<polymer-element name="nautes-pass-dashboard" attributes="background">
   <template>
     <style>
 
@@ -57,6 +58,7 @@
         background: rgba(50,50,50,0.95);
         border-radius: 4px;
         z-index: 13;
+        color:black;
       }
 
       .close{
@@ -76,31 +78,74 @@
         position: fixed;
         top:0px;
         left: 0px;
+      }      
+      .bottom-right{
+        position: fixed;
+        bottom:0px;
+        right: 0px;
       }
+
+      .bottom-left{
+        position: fixed;
+        bottom:0px;
+        left: 0px;
+      }
+      .background{
+      width:100%;
+      height:100%;
+      background-color:lightgray; 
+      }
+      .container{
+  position:fixed;
+  top:0px;
+  left:0px;
+  height: 100%;
+  width: 100%;
+}
 
     </style>
 
+    <template if="{{background}}">
+      <core-image class="background" src="images/backgrounds/{{background}}" sizing="cover" preload fade></core-image>
+    </template>
+    <div class="container">(
     <paper-toast id="toast" text="There was a problem loading data.">
     </paper-toast>
 
-
     <nautes-corner-button class="top-right"
-      icon="settings" 
+      icon="exit-to-app" 
       orientation="top-right" 
-      on-tap="{{ showSettings }}">
+      on-tap="{{doLogout}}">
+    </nautes-corner-button>
+    <fd-rest-service
+           id="logoutService" fdType="users/_/logout" 
+           method="POST" auto ="false"
+          on-rest-response="{{gotoApp}}"></fd-rest-service>
+
+    <nautes-corner-button class="bottom-right"
+      icon="settings" 
+      orientation="bottom-right" 
+      on-tap="{{ showSetup }}">
     </nautes-corner-button>
 
     <nautes-corner-button class="top-left"
       icon="warning" 
       orientation="top-left" 
       on-tap="{{ showAlerts }}">
+      </nautes-corner-button>
+
+    <nautes-corner-button class="bottom-left"
+      icon="info" 
+      orientation="bottom-left" 
+      on-tap="{{ showInfo }}">
     </nautes-corner-button>
 
-    <nautes-environment class="{{ blur ? 'blur' : ''}}" on-tap="{{hideBottomSection}}">
-    </nautes-environment>
-
+<div layout vertical center self-stretch style="padding-top:10px;">
+    <fd-environments class="{{ blur ? 'blur' : ''}}" on-tap="{{hideBottomSection}}" simple showNavigation>
+    </fd-environments>
+</div>
     <nautes-bottom-section showContent="{{ expanded }}" class="bottom-section">
-      <nautes-object-grid toast="$.toast"></nautes-object-grid>
+      <fd-things mode="chip"></fd-things>
     </nautes-bottom-section>
 
     <template if="{{ displaySettings }}">
@@ -108,7 +153,7 @@
         <div class="close" on-tap="{{ closeSection }}">
           <core-icon icon="close"></core-icon>
         </div>
-        <nautes-settings color="#fff"></nautes-settings>
+         <nautes-setup-animated-dashboard></nautes-setup-animated-dashboard> 
       </div>
     </template>
 
@@ -117,18 +162,26 @@
         <div class="close" on-tap="{{ closeSection }}">
           <core-icon icon="close"></core-icon>
         </div>
-        <nautes-alerts color="#fff"></nautes-settings>
+        <nautes-alerts color="#fff"></nautes-alerts>
       </div>
     </template>
 
+  <template if="{{ displayInfo }}">
+      <div class="section">
+        <div class="close" on-tap="{{ closeSection }}">
+          <core-icon icon="close"></core-icon>
+        </div>
+        <nautes-fd-info color="#fff"></nautes-fd-info>
+      </div>
+    </template>
+ </div>
   </template>
   <script>
     Polymer("nautes-pass-dashboard", {
 
       displaySettings: false,
-
+      displayInfo: false,
       displayAlerts: false,
-
       blur: false,
 
       hideBottomSection: function(){
@@ -136,27 +189,41 @@
           this.expanded = false;
         }
       },
-
       expandedChanged: function(){
         this.blur = this.expanded;
       },
-
-      showSettings: function(){
-        this.displaySettings = !this.displaySettings;
+      hideAll: function(){
+        this.hideBottomSection();
+        this.displaySettings = false;
         this.displayAlerts = false;
+        this.displayInfo = false;
+      },
+      showSetup: function(){
+        this.hideAll();
+        this.displaySettings = true;
         this.blur = !this.blur;
       },
-
       showAlerts: function(){
-        this.displayAlerts = !this.displayAlerts;
-        this.displaySettings = false;
+        this.hideAll();
+        this.displayAlerts = true;
+        this.blur = !this.blur;
+      },
+      showInfo: function(){
+        this.hideAll();
+        this.displayInfo = true;
         this.blur = !this.blur;
       },
 
       closeSection: function(){
-        this.displaySettings = false;
-        this.displayAlerts = false;
+        this.hideAll();
         this.blur = false;
+      },
+      ready: function(){
+
+      },
+      doLogout: function(){
+        this.$.logoutService.go();
+        this.fire("logout",null);
       }
 
     });

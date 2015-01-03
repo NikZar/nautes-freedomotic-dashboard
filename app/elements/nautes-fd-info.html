@@ -1,7 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-
-<link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <polymer-element name="nautes-fd-info" attributes="toast">
   <template>
@@ -11,20 +10,21 @@
         font-family: Open Sans;
       }
       div{
-        color: #444;
+        color: #fff;
         font-size: 1.0em;
         padding-top: 20px;
         text-align: center;
       }
     </style>
 
-    <fd-rest-element-service fdtype="system/info/framework" fditems="{{info}}" toast="{{toast}}">
-    </fd-rest-element-service>
+    <fd-rest-service fdtype="system/info/framework" fditems="{{info}}" toast="{{toast}}">
+    </fd-rest-service>
       <div layout vertical center>
         Nautes Freedomotic Dashboard 0.0.3 (Beta)
       </div>
       <div layout vertical center>
-        Niko Zarzani : niko.zarzani@nautes.com
+        Niko Zarzani: niko.zarzani@nautes.com<br/>
+        Matteo Mazzoni: matteo@freedomotic.com
       </div>
       <div layout vertical center>
         <hr/>
@@ -39,7 +39,7 @@
         {{info.FRAMEWORK_AUTHOR}} : {{info.PROJECT_MAIL}}
       </div>
       <div layout vertical center>
-        License: {{info.FRAMEWORK_LICENSE}}
+        {{'licence' | translate}}: {{info.FRAMEWORK_LICENSE}}
       </div>
   </template>
   <script>

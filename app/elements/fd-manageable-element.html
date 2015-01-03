@@ -1,0 +1,162 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
+
+<polymer-element name="fd-manageable-element" attributes="hideMainButtons elmnt apiBase bgColor uuidField">
+<template>
+	<style>
+	:host {
+       display: block; 
+       position: relative; 
+      background-color: {{bgColor}};
+      width: 100%;
+      font-size: 1.2rem;
+      font-weight: 300;
+      font-family: Open Sans; 
+    }
+
+    paper-ripple {
+        z-index: 1;
+        color: #aaaaff;
+    }
+
+      .mini-icon{
+        fload:right;
+        border-radius: 10%;
+        border: 1px solid #444;
+        color: #444;
+        margin: 0px 3px;
+      }
+
+    .element-row {
+      padding: 5px;
+      color: #444;
+    }
+
+    polyfill-next-selector { content: '.element-row h2'; }
+
+    .element-row ::content h2 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 300;
+    }
+
+    polyfill-next-selector { content: '.element-row element-icon'; }
+
+    .element-row ::content element-icon {
+      margin-right: 30px; 
+      color: #444;
+      width: 70px;
+      height: 70px;
+      border-radius: 10%;
+      border: 2px solid #444;
+      padding: 3px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+     .element-form {
+      background-color: #ddd;
+      border-radius: 20px;
+    }
+
+	</style>
+
+    	<fd-rest-service id="deleteService" 
+      auto="false"
+      method="DELETE" 
+      fdtype="{{apiBase}}/{{elmnt[uuidField]}}"  
+      on-rest-response="{{removed}}"
+      on-rest-error="{{notRemoved}}"
+      toast="{{toast}}">
+    </fd-rest-service>
+
+    <fd-rest-service id="copyService" 
+      auto="false"
+      method="POST" 
+      fdtype="{{apiBase}}/{{elmnt[uuidField]}}/copy"  
+      on-rest-response="{{copied}}"
+      toast="{{toast}}">
+    </fd-rest-service>
+
+    <fd-rest-service id="updateService" 
+      auto="false"
+      method="PUT" 
+      fdtype="{{apiBase}}/{{elmnt[uuidField]}}"  
+      toast="{{toast}}"
+      body="{{body}}">
+    </fd-rest-service>
+ 
+
+      <div class="element-row" layout vertical >
+      <div class="element-row" layout horizontal>
+
+      <content select="element-icon"></content>
+      <div flex>
+      	<content select="h2"></content>
+      	<p><content select="description"></content></p>
+      	<content select="header"></content>
+      </div>
+      <div layout horizontal end>
+        <template if="{{!hideMainButtons}}">
+          <paper-fab mini style="background-color:yellow;color: black;" icon="create" on-tap="{{toggleEditForm}}"></paper-fab>
+          <paper-fab mini style="background-color:red;color: black;" icon="delete" on-tap="{{doRemoveElement}}"></paper-fab>
+          <paper-fab mini style="background-color:green;color: black;" icon="content-paste" on-tap="{{doCopyElement}}"></paper-fab>
+        </template>
+        <content select="extra-icons"></content>
+      </div>
+    </div>
+
+      <template if="{{showForm}}">
+        <div class="element-form" layout vertical center>
+          <content select="form"></content>
+          <div layout horizontal end>  
+              <paper-fab class="fab" icon="undo" on-tap=""></paper-fab>
+              <paper-fab class="fab" icon="save" on-tap="{{applyChanges}}"></paper-fab>
+          </div>
+        </div>
+
+      </template>
+      </div>
+      <paper-shadow z="1"></paper-shadow> 
+</template>
+<script>
+	Polymer("fd-manageable-element",{
+       showForm: false,
+       uuidField: "uuid",
+
+      toggleEditForm: function(){
+        this.showForm = !this.showForm;
+      },
+
+      doRemoveElement: function(){
+        this.$.deleteService.go();
+        this.style.display = "none";
+      },
+      removed: function(){
+        this.fire("remove");
+      },
+      notRemoved: function(){
+        this.style.display = "block";
+      },
+
+      doCopyElement: function(){
+        this.$.copyService.go();
+        this.showForm=false;
+      },
+      copied: function(){
+        this.fire("create");
+      },
+      applyChanges: function(){
+        console.log(this.elmnt);
+        this.$.updateService.body=JSON.stringify(this.elmnt);
+        this.$.updateService.go();
+        this.showForm=false;
+      }
+	});
+
+</script>
+</polymer-element>

@@ -18,6 +18,7 @@
 <link rel="import" href="../elements/nautes-plugins.html">
 <link rel="import" href="../elements/nautes-marketplace.html">
 <link rel="import" href="../elements/nautes-system.html">
+<link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-elements.html">
 
 <polymer-element name="nautes-setup-animated-dashboard" attributes="selected">
   <template>
@@ -81,15 +82,15 @@
         selected="{{selected}}" 
         selectedBox="{{selectedBox}}" 
         hero hero-id="plugins">
-        <nautes-plugins
-          bgColor="{{selectedBox.bgcolor}}" 
-          toast="{{$.toast}}">
-        </nautes-plugins>
+          <fd-plugins mode="chip"></fd-plugins>
        </nautes-dashboard-page>
       </section>
 
-      <section name="users" on-page-back="{{back}}" fit>
-       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="users">
+      <section name="roles" on-page-back="{{back}}" fit>
+       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="roles">
+       <fd-roles 
+          bgColor="{{selectedBox.bgcolor}}" 
+          toast="{{$.toast}}" mode="chip"></fd-roles>
        </nautes-dashboard-page>
       </section>
 
@@ -131,8 +132,9 @@
 
       <section name="triggers">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="triggers">
-        <nautes-trigger-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
-        </nautes-trigger-list>
+        <!--<nautes-trigger-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+        </nautes-trigger-list> -->
+        <fd-triggers mode="chip"></fd-triggers>
        </nautes-dashboard-page>
       </section>
     </core-animated-pages>

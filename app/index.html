@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Nautes Dashboard</title>
+        <title>Freedomotic - Open IoT Framework</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -13,18 +13,129 @@
         <!-- endbuild-->
 
         <!-- Place your HTML imports here -->
-        <script src="bower_components/platform/platform.js"></script>
-        <link rel="import" href="elements/elements.html">
+        <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+        <link href="bower_components/polymer/polymer.html" rel="import">
 
-    </head>
-    <body>
+        <link rel="import" href="bower_components/fd-polymer-i18next-translate/fd-polymer-i18next-translate.html">
+        <link rel="import" href="bower_components/core-image/core-image.html">
+        <link rel="import" href="bower_components/paper-input/paper-input.html">
+        <link rel="import" href="bower_components/paper-button/paper-button.html">
+        <link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
+        <link rel="import" href="bower_components/paper-shadow/paper-shadow.html">
+        <link rel="import" href="bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
+        <link rel="import" href="elements/nautes-pass-dashboard.html">
+            </head>
+    <body unresolved>
+    <template is="auto-binding">
+        <fd-api-settings
+            address="{{address}}" apiVersion="{{path}}"
+            ssl="{{ssl}}" port="{{port}}" noSave="false" ></fd-api-settings>
+        <fd-rest-service
+            id="reLogin" fdType="users/_" 
+            on-rest-error="{{backToLogin}}"
+            on-rest-response="{{gotoApp}}"></fd-rest-service>
+    <template if="{{!successLogin}}">
+    <fd-rest-service
+    id="doLogin"
+    auto="false" method="POST"
+    contentType="application/x-www-form-urlencoded"
+    fdType="users/_/login"
+    on-rest-error="{{backToLogin}}"
+    on-rest-response="{{gotoApp}}"></fd-rest-service>
+    <core-image class="background" src="images/backgrounds/{{background}}" sizing="cover" preload fade></core-image>
+    <div layout horizontal layout center class="container">
+    <paper-shadow z="2" class="login" layout vertical center >
+        <div class="logocontainer" self-stretch>
+            <core-image class="logo" src="images/freedomotic-logo-light-transparent.png" sizing="contain" preload fade></core-image>
+        </div>
+        <div layout vertical self-stretch end-justified style="padding:1em 2em;">
+            <paper-input label="{{'address' | translate}}" id="address" value="{{address}}" floatingLabel></paper-input>
+            <paper-input id="name" label="{{'name' | translate}}" value="{{name}}" floatingLabel></paper-input>
+            <paper-input-decorator label="{{'password' | translate}}" floatingLabel>
+                <input id="password" is="core-input" value="{{password}}"  name="password" type="password"/>
+            </paper-input-decorator>
+            <core-label center horizontal layout style="margin:1em;">
+                <div flex>SSL</div>&nbsp;
+                <paper-checkbox value="{{ssl}}" for></paper-checkbox>
+            </core-label>
+            <core-label center horizontal layout style="margin:1em;">
+                <div flex>Remember me</div>&nbsp;
+                <paper-checkbox for></paper-checkbox>
+            </core-label>
+            <small style="margin:1em;" on-tap="{{toggleHideAdvanced}}">Show advanced options</small>
+            <paper-input hidden?="{{hideAdvanced}}" label="Port" id="port" value="{{port}}" floatingLabel></paper-input>
+            <paper-input hidden?="{{hideAdvanced}}" label="Path" id="path" value="{{path}}" floatingLabel></paper-input>
+            <paper-button raised style="margin:1em;" on-tap="{{tryLogin}}" id="loginButton">{{'login' | translate}}</paper-button>
+        </div>
+    </paper-shadow>
+     </div>
+     </template>
+     <template if="{{successLogin}}">
+        <fd-rest-service
+        id="prelogout"
+        auto="false" method="POST"
+        fdType="users/_/logout"
+        on-rest-response="{{backToLogin}}"></fd-rest-service>
+    
+        <nautes-pass-dashboard background="{{background}}" on-logout="{{backToLogin}}"></nautes-pass-dashboard>
+     </template>
+     <script type="text/javascript">
+         var scope = document.querySelector('template[is=auto-binding]');
+         scope.successLogin=false;
+         scope.backgrounds=[    "104792456_71001aaea2_o.jpg",   "15171955576_e0b30e8946_k.jpg", "472387994_4da97c2407_o.jpg",
+                                "5031124094_01d0a88fde_o.jpg",  "8505463101_01086d86d7_k.jpg",  "13983804179_a5b92250d3_o.jpg",
+                                "4517193518_c8cebf5f2e_o.jpg",  "4911433144_e6b761b3f9_b.jpg",  "5577311905_0261db95bd_o.jpg",
+                                "9712013330_547dd0fd9e_k.jpg"
+         ];
+         scope.background=scope.backgrounds[Math.floor((Math.random() * 10))]; 
+         scope.backToLogin= function(e){
+            console.log(e);
+            console.log("BACK TO LOGIN");
+            scope.successLogin=false;
+            
+            // cleanup password field
+            var password= document.querySelector('#password');
+            password.value="";
 
-      <nautes-animated-dashboard></nautes-animated-dashboard>
-       
-      <script>
-        document.addEventListener('polymer-ready', function() {
-            // Perform some behaviour
-        });
-      </script>
+           // block login button fo 3 seconds
+            var loginButton = document.querySelector('#loginButton');
+            loginButton.disabled=true;
+            setTimeout(function () {
+                var loginButton = document.querySelector('#loginButton');
+                loginButton.disabled=false;
+            }, 5000);
+         };
+         scope.gotoApp = function(e){
+            //console.log("APPARENTLY IT'S A SUCCESSFUL RESPONSE")
+            if (false && e.detail.detail.xhr.status==0){
+                scope.backToLogin(e);
+            } else{
+                console.log(e);
+                console.log("LOGIN SUCCESS");
+                // change url 
+                scope.successLogin=true;
+                //location.assign("pass.html");
+            }
+         };
+         scope.hideAdvanced= true;
+         scope.toggleHideAdvanced = function(){
+            scope.hideAdvanced = !scope.hideAdvanced;
+         };
+         scope.tryLogin = function(){
+            // find userAPI
+            var api = document.querySelector('#doLogin');
+            api.body="name="+ scope.name + "&password=" + scope.password + "&";
+            api.go();
+         };
+         scope.tryLogout= function(){
+            var api = document.querySelector('#prelogout');
+            api.go();
+         };
+         document.addEventListener('rest-error', function(e) {
+            console.log("ERROR ON A REST CALL");
+            console.log(e);
+            backToLogin();
+         });
+     </script>
     </body>
 </html>

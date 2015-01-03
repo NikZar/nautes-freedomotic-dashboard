@@ -1,7 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <link rel="import" href="../elements/nautes-marketplace-categories.html">
-<link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/nautes-marketplace-category.html">
 
 <polymer-element name="nautes-marketplace" attributes="toast bgColor">
   <template>
@@ -20,15 +21,27 @@
       }
 
     </style>
+        <fd-rest-service id="getMarketplaceCategoriesService"
+      fdtype="marketplace/categories" 
+      fditems="{{categories}}" 
+      toast="{{toast}}">
+    </fd-rest-service>
     <div class="title">Latest Plugins</div>
     <div class="title">Top Charts</div>
     <div class="title">Browse By Category</div>
     <nautes-marketplace-categories 
       smallQuery="max-width: 640px"
       toast="{{toast}}" 
-      bgColor="{{bgColor}}">
+      bgColor="{{bgColor}}"
+      selCategory="{{selCategory}}"
+      categories="{{categories}}">
     </nautes-marketplace-categories>
-
+    <div class="title">Plugin List</div>
+      <div layout vertical>
+        <template repeat="{{category, index in categories}}">
+          <nautes-marketplace-category category="{{category}}"></nautes-marketplace-category>
+        </template>
+      </div>
   </template>
   <script>
     Polymer("nautes-marketplace",{

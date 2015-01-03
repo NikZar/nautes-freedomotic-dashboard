@@ -6,7 +6,7 @@
 		"iconcolor": "#444",
 		"tooltipcolor": "#BDFFCD",
 		"color": "#BDFFCD",
-		"bgcolor": "#dfd"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Reactions",
@@ -15,7 +15,7 @@
 		"iconcolor": "#444",
 		"tooltipcolor": "#fcc",
 		"color": "#fcc",
-		"bgcolor": "#fdd"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Settings",
@@ -24,7 +24,7 @@
 		"iconcolor": "#444",
 		"tooltipcolor": "#eee",
 		"color": "#eee",
-		"bgcolor": "#eee"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Info",
@@ -33,7 +33,7 @@
 		"iconcolor": "#444",
 		"tooltipcolor": "#aaa",
 		"color": "#aaa",
-		"bgcolor": "#aaa"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Messages",
@@ -42,7 +42,7 @@
 		"iconcolor": "#444",
 		"tooltipcolor": "#ffa",
 		"color": "#ffa",
-		"bgcolor": "#ffb"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Objects",
@@ -51,16 +51,16 @@
 		"iconcolor": "#444",
 		"tooltipcolor": "#bef",
 		"color": "#bef",
-		"bgcolor": "#bef"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Family",
 		"description": "This section contains the list of users",
-		"img": "social:people",
+		"img": "social:person",
 		"iconcolor": "#444",
 		"tooltipcolor": "#ccf",
 		"color": "#ccf",
-		"bgcolor": "#ccf"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Alerts",
@@ -69,7 +69,7 @@
 		"iconcolor": "#444",
 		"tooltipcolor": "#fb8",
 		"color": "#fb8",
-		"bgcolor": "#fb9"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Commands",
@@ -78,7 +78,7 @@
 		"iconcolor": "#444",
 		"tooltipcolor": "#f88",
 		"color": "#f88",
-		"bgcolor": "#faa"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Triggers",
@@ -87,16 +87,25 @@
 		"iconcolor": "#a8e",
 		"tooltipcolor": "#a8e",
 		"color": "#222",
-		"bgcolor": "#b9e"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Users",
 		"description": "This section lets you manage Users",
+		"img": "social:person",
+		"iconcolor": "#fbf",
+		"tooltipcolor": "#fbf",
+		"color": "#222",
+		"bgcolor": "#fff"
+	},
+	{
+		"title": "Roles",
+		"description": "This section lets you manage Roles",
 		"img": "social:people",
 		"iconcolor": "#fbf",
 		"tooltipcolor": "#fbf",
 		"color": "#222",
-		"bgcolor": "#fcf"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Plugins",
@@ -105,7 +114,7 @@
 		"iconcolor": "#f66",
 		"tooltipcolor": "#f66",
 		"color": "#222",
-		"bgcolor": "#f88"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Rooms",
@@ -114,7 +123,7 @@
 		"iconcolor": "#9f8",
 		"tooltipcolor": "#9f8",
 		"color": "#222",
-		"bgcolor": "#cdc"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "SetupObjects",
@@ -123,7 +132,7 @@
 		"iconcolor": "#adf",
 		"tooltipcolor": "#adf",
 		"color": "#222",
-		"bgcolor": "#adf"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "Marketplace",
@@ -132,7 +141,7 @@
 		"iconcolor": "#d95",
 		"tooltipcolor": "#d95",
 		"color": "#222",
-		"bgcolor": "#fb9"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "System",
@@ -141,7 +150,7 @@
 		"iconcolor": "#ee7",
 		"tooltipcolor": "#ee7",
 		"color": "#222",
-		"bgcolor": "#ffa"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "SetupSettings",
@@ -150,7 +159,7 @@
 		"iconcolor": "#eee",
 		"tooltipcolor": "#eee",
 		"color": "#222",
-		"bgcolor": "#eee"
+		"bgcolor": "#fff"
 	},
 	{
 		"title": "SetupInfo",
@@ -159,6 +168,6 @@
 		"iconcolor": "#aaa",
 		"tooltipcolor": "#aaa",
 		"color": "#222",
-		"bgcolor": "#aaa"
+		"bgcolor": "#fff"
 	}
 ]

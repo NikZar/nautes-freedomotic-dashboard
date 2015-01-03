@@ -1,8 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-ajax/core-ajax.html">
-
-
-<link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <polymer-element name="nautes-stats" attributes="stats graphs graphsArray">
   <template>
@@ -13,8 +11,12 @@
       }
     </style>
 
-    <fd-rest-element-service fdtype="commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run" fditems="{{ stats }}" toast={{ toast }} method="POST">
-    </fd-rest-element-service>
+    <fd-rest-service 
+    fdtype="commands/user/93dfb9ab-2b38-4c07-a7f3-d4b5caf2d05b/run" 
+    fditems="{{ stats }}" 
+    toast="{{ toast }}"
+    method="POST">
+    </fd-rest-service>
 
   </template>
 

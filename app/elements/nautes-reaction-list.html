@@ -1,4 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <link rel="import" href="../elements/nautes-reaction-row.html">
 
@@ -10,13 +11,14 @@
         background-color: {{bgColor}};
         width: 100%;
       }
+dummy{}
     </style>
 
-    <fd-rest-element-service id="getReactionsService"
+    <fd-rest-service id="getReactionsService"
       fdtype="OLDreactions" 
       fditems="{{reactions}}" 
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
     <div layout vertical center>
       <template repeat="{{reaction in reactions}}">

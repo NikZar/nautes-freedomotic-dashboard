@@ -5,9 +5,8 @@
 <link rel="import" href="../bower_components/core-icons/hardware-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="../bower_components/core-media-query/core-media-query.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
-<link rel="import" href="../elements/nautes-open-sans.html">
-<link rel="import" href="../elements/fd-rest-element-service.html">
 <link rel="import" href="../elements/nautes-channel.html">
 <link rel="import" href="../elements/nautes-condition.html">
 <link rel="import" href="../elements/nautes-command.html">
@@ -114,11 +113,11 @@
       queryMatches="{{smallScreen}}">
     </core-media-query>
 
-    <fd-rest-element-service 
+    <fd-rest-service 
       fdtype="triggers" 
       fditems="{{triggers}}" 
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
     <nautes-sorter 
       id="triggerSorter"
@@ -128,11 +127,11 @@
       filter="{{allowedTrigger}}">
     </nautes-sorter>
 
-    <fd-rest-element-service 
+    <fd-rest-service 
       fdtype="commands/user" 
       fditems="{{commands}}" 
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
     <nautes-sorter 
       property="receiver" 
@@ -140,14 +139,14 @@
       sortedElements="{{sortedCommands}}">
     </nautes-sorter>
 
-    <fd-rest-element-service id="sendReactionService" 
+    <fd-rest-service id="sendReactionService" 
       auto="false"
       method="POST" 
       fdtype="reactions"  
       toast="{{toast}}"
       body="{{body}}"
       contentType="application/json">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
     <div hidden>
         <core-icon id="triggerIcon" class="icon" icon="image:flash-on"></core-icon>

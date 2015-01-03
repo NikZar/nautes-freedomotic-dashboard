@@ -3,9 +3,7 @@
 <link rel="import" href="../bower_components/core-icons/hardware-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
 
-<link rel="import" href="../elements/nautes-plugin-list.html">
 <link rel="import" href="../elements/nautes-plugin-add.html">
-<link rel="import" href="../elements/nautes-open-sans.html">
 
 <polymer-element name="nautes-plugins" attributes="">
 <template>
@@ -65,9 +63,10 @@
       </div>
     
       <template if="{{showList}}">
-        <nautes-plugin-list 
+       <fd-plugins></fd-plugins>
+        <!--<nautes-plugin-list 
           bgColor="{{bgColor}}" 
-          toast="{{toast}}">
+          toast="{{toast}}"> -->
         </nautes-plugin-list>
       </template>
 

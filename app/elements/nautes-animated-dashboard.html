@@ -12,14 +12,18 @@
 
 <link rel="import" href="../elements/nautes-dashboard.html">
 <link rel="import" href="../elements/nautes-dashboard-page.html">
-<link rel="import" href="../elements/nautes-object-list.html">
+
 <link rel="import" href="../elements/nautes-environment.html">
-<link rel="import" href="../elements/nautes-settings.html">
-<link rel="import" href="../elements/nautes-fd-info.html">
+<link rel="import" href="../elements/nautes-commands.html">
+<link rel="import" href="../elements/nautes-object-list.html">
 <link rel="import" href="../elements/nautes-asynch-messages-list.html">
 <link rel="import" href="../elements/nautes-reactions.html">
-<link rel="import" href="../elements/nautes-commands.html">
+<link rel="import" href="../elements/nautes-settings.html">
+<link rel="import" href="../elements/nautes-system.html">
+<link rel="import" href="../elements/nautes-fd-info.html">
 
+<link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-users.html">
+<link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-things.html">
 
 <polymer-element name="nautes-animated-dashboard" attributes="selected">
   <template>
@@ -77,21 +81,17 @@
       </section>
 
       <section name="commands" on-page-back="{{back}}">
-       <nautes-dashboard-page 
-        selected="{{selected}}" 
-        selectedBox="{{selectedBox}}" 
-        hero hero-id="commands">
-        <nautes-commands 
-          bgColor="{{selectedBox.bgcolor}}" 
-          toast="{{$.toast}}">
+       <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="commands">
+        <nautes-commands bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
         </nautes-commands>
        </nautes-dashboard-page>
       </section>
 
       <section name="objects" on-page-back="{{back}}" fit>
        <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="objects">
-          <nautes-object-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
-          </nautes-object-list>
+          <!-- <nautes-object-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
+          </nautes-object-list> -->
+          <fd-things></fd-things>
        </nautes-dashboard-page>
       </section>
 
@@ -128,8 +128,10 @@
 
       <section name="family">
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="family">
+       <fd-users bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}"></fd-users>
        </nautes-dashboard-page>
       </section>
+
     </core-animated-pages>
 
   </template>

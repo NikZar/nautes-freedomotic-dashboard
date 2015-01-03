@@ -3,9 +3,7 @@
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icons/av-icons.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
-
-<link rel="import" href="../elements/nautes-open-sans.html">
-<link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
 
 <polymer-element name="nautes-system" attributes="toast">
   <template>
@@ -36,17 +34,17 @@
 
     </style>
 
-    <fd-rest-element-service id="stopSystemService" 
+    <fd-rest-service id="stopSystemService" 
       auto="false"
       method="POST" 
       fdtype="system/exit"  
       on-rest-response="{{stopped}}"
       toast="{{toast}}">
-    </fd-rest-element-service>
+    </fd-rest-service>
 
     <div layout vertical center>
       <div class="power" layout vertical center>
-        TURN OFF
+        {{'turn_it_off'|translate|upperCase}}
         <core-icon class="shutdown" icon="av:stop" on-tap="{{shutdown}}">
           <paper-ripple fit></paper-ripple>
         </core-icon>

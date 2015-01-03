@@ -1,9 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 <link rel="import" href="../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../bower_components/fd-polymer-elements/fd-polymer-reactions.html">
 
+<link rel="import" href="../elements/fd-elements-list.html">
 <link rel="import" href="../elements/nautes-reaction-list.html">
-<link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/nautes-reaction-add.html">
 
 <polymer-element name="nautes-reactions" attributes="bgColor toast">
   <template>
@@ -28,8 +30,7 @@
         min-width: 110px;
         text-align: center;
       }
-
-      .reactionbtn {
+            .reactionbtn {
         margin: 5px;
         background-color: #fcc;
       }
@@ -48,59 +49,22 @@
         margin: 5px;
         background-color: #f88;
       }
+   </style>
 
-    </style>
-
-    <div layout vertical center>
-
-      <div class="header" layout vertical center>
-        <div layout horizontal center>
-
-          <template if="{{!showAddReaction}}">
-            <core-icon-button class="reactionbtn" icon="add-box" on-tap="{{addReaction}}">
-              REACTION
-            </core-icon-button>
-          </template>
-
-          <template if="{{!showList}}">
-            <core-icon-button class="reactionbtn" icon="send" on-tap="{{showReactionList}}">
-              LIST
-            </core-icon-button>
-          </template>
-          
-        </div>
-      </div>
-    
-      <template if="{{showList}}">
-        <nautes-reaction-list bgColor="{{bgColor}}" toast="{{toast}}">
-        </nautes-reaction-list>
-      </template>
-
-      <template if="{{showAddReaction}}">
+<fd-elements-list elementType="REACTION" bgColor="{{bgColor}}" btnColor="#fcc" toast="{{toast}}">
+<list>
+        <!-- <nautes-reaction-list bgColor="{{bgColor}}" toast="{{toast}}">
+        </nautes-reaction-list> -->
+        <fd-reactions></fd-reactions>
+</list>
+<new-element>
         <nautes-reaction-add smallQuery="max-width: 640px" bgColor="{{bgColor}}" toast="{{toast}}">
         </nautes-reaction-add>
-      </template>
-
-    </div>
-
-  </template>
+</new-element>
+</fd-elements-list>
+   </template>
   <script>
     Polymer("nautes-reactions",{
-      
-      showList: true,
-
-      showAddReaction: false,
-
-      addReaction: function(){
-        this.showList = false;
-        this.showAddReaction = !this.showAddReaction;
-      },
-
-      showReactionList: function(){
-        this.showList = !this.showList;
-        this.showAddReaction = false;
-      }
-
     });
   </script>
 </polymer-element>
