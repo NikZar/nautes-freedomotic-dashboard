@@ -82,7 +82,7 @@
         selected="{{selected}}" 
         selectedBox="{{selectedBox}}" 
         hero hero-id="plugins">
-          <fd-plugins></fd-plugins>
+          <fd-plugins mode="chip"></fd-plugins>
        </nautes-dashboard-page>
       </section>
 
@@ -90,7 +90,7 @@
        <nautes-dashboard-page selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="roles">
        <fd-roles 
           bgColor="{{selectedBox.bgcolor}}" 
-          toast="{{$.toast}}"></fd-roles>
+          toast="{{$.toast}}" mode="chip"></fd-roles>
        </nautes-dashboard-page>
       </section>
 
@@ -134,7 +134,7 @@
        <nautes-dashboard-page on-page-back="{{back}}" selected="{{selected}}" selectedBox="{{selectedBox}}" hero hero-id="triggers">
         <!--<nautes-trigger-list bgColor="{{selectedBox.bgcolor}}" toast="{{$.toast}}">
         </nautes-trigger-list> -->
-        <fd-triggers></fd-triggers>
+        <fd-triggers mode="chip"></fd-triggers>
        </nautes-dashboard-page>
       </section>
     </core-animated-pages>

@@ -16,13 +16,13 @@
   },
   "devDependencies": {},
   "resolutions": {
-    "core-ajax": "~0.5.1",
-    "polymer": "~0.5.1",
-    "core-shared-lib": "^0.5.0",
+    "core-ajax": "~0.5.2",
+    "polymer": "~0.5.2",
+    "core-shared-lib": "^0.5.2",
     "platform": "~0.3.1",
-    "core-component-page": "^0.5.0",
     "fd-polymer-rest-service": "~0.2.2",
     "fd-polymer-card": "0.3.0",
-    "fd-polymer-api-settings": "~0.2.0"
+    "fd-polymer-api-settings": "~0.2.0",
+    "i18next": "1.7.7"
   }
 }

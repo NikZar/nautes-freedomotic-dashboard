@@ -24,7 +24,7 @@
         <link rel="import" href="bower_components/paper-shadow/paper-shadow.html">
         <link rel="import" href="bower_components/fd-polymer-rest-service/fd-polymer-rest-service.html">
         <link rel="import" href="elements/nautes-pass-dashboard.html">
-    </head>
+            </head>
     <body unresolved>
     <template is="auto-binding">
         <fd-api-settings
@@ -77,7 +77,7 @@
         fdType="users/_/logout"
         on-rest-response="{{backToLogin}}"></fd-rest-service>
     
-        <nautes-pass-dashboard></nautes-pass-dashboard>
+        <nautes-pass-dashboard background="{{background}}" on-logout="{{backToLogin}}"></nautes-pass-dashboard>
      </template>
      <script type="text/javascript">
          var scope = document.querySelector('template[is=auto-binding]');
@@ -91,17 +91,19 @@
          scope.backToLogin= function(e){
             console.log(e);
             console.log("BACK TO LOGIN");
+            scope.successLogin=false;
+            
             // cleanup password field
             var password= document.querySelector('#password');
             password.value="";
-            // block login button fo 3 seconds
+
+           // block login button fo 3 seconds
             var loginButton = document.querySelector('#loginButton');
             loginButton.disabled=true;
             setTimeout(function () {
                 var loginButton = document.querySelector('#loginButton');
                 loginButton.disabled=false;
             }, 5000);
-            scope.successLogin=false;
          };
          scope.gotoApp = function(e){
             //console.log("APPARENTLY IT'S A SUCCESSFUL RESPONSE")
@@ -132,6 +134,7 @@
          document.addEventListener('rest-error', function(e) {
             console.log("ERROR ON A REST CALL");
             console.log(e);
+            backToLogin();
          });
      </script>
     </body>
