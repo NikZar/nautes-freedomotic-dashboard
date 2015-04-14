@@ -65,9 +65,10 @@
     <fd-rest-element-service id="updateObjectService" 
       auto="false"
       method="PUT" 
-      fdtype="objects/{{updateUUID}}"  
+      fdtype="things/{{updateUUID}}"  
       toast="{{toast}}"
-      body="{{body}}">
+      body="{{body}}"
+      contentType="application/json">
     </fd-rest-element-service>
 
     <div class="object-row" layout vertical>

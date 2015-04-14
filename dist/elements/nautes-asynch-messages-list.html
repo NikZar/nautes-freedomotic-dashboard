@@ -11,13 +11,13 @@
       }
     </style>
 
-    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{addMessage}}">
+    <nautes-fd-websocket-api-service wstype="ws_objectChange" on-message="{{addMessage}}">
     </nautes-fd-websocket-api-service>
 
-    <nautes-fd-websocket-api-service wstype="zonechange" on-message="{{addMessage}}">
+    <nautes-fd-websocket-api-service wstype="ws_zoneChange" on-message="{{addMessage}}">
     </nautes-fd-websocket-api-service>
 
-    <nautes-fd-websocket-api-service wstype="pluginchange" on-message="{{addMessage}}">
+    <nautes-fd-websocket-api-service wstype="ws_pluginChange" on-message="{{addMessage}}">
     </nautes-fd-websocket-api-service>
 
     <div layout vertical center>

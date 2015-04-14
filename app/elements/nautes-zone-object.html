@@ -57,8 +57,8 @@
 
       reloadUrl: function(){
         if(this.ssl != undefined && this.apiurl && this.envObject.uuid){
-          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid + "/click";
-          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid;
+          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "things/" + this.envObject.uuid + "/click";
+          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "things/" + this.envObject.uuid;
         }
       },
 

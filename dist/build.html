@@ -1633,7 +1633,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       setRequestHeaders: function(xhr, headers) {
         if (headers) {
           for (var name in headers) {
-            xhr.setRequestHeader("Content-Type", headers[name]);
+            xhr.setRequestHeader(name, headers[name]);
           }
         }
       }
@@ -1884,7 +1884,7 @@ element.
       try {
         return JSON.parse(r);
       } catch (x) {
-        console.warn('core-ajax caught an exception trying to parse response as JSON:');
+        console.warn('core-ajax caught an exception trying to parse reponse as JSON:');
         console.warn('url:', this.url);
         console.warn(x);
         return r;
@@ -1949,11 +1949,8 @@ element.
       if (args.headers && typeof(args.headers) == 'string') {
         args.headers = JSON.parse(args.headers);
       }
-      var hasContentType = Object.keys(args.headers).some(function (header) {
-        return header.toLowerCase() === 'content-type';
-      });
-      if (!hasContentType && this.contentType) {
-        args.headers['Content-Type'] = this.contentType;
+      if (this.contentType) {
+        args.headers['content-type'] = this.contentType;
       }
       if (this.handleAs === 'arraybuffer' || this.handleAs === 'blob' ||
           this.handleAs === 'document') {
@@ -1970,6 +1967,7 @@ element.
 
 </script>
 </polymer-element>
+
 
 
 
@@ -10629,7 +10627,7 @@ core-icon {
 
     </style>
 
-    <fd-rest-element-service id="updateObjectService" auto="false" method="PUT" fdtype="objects/{{updateUUID}}" toast="{{toast}}" body="{{body}}">
+    <fd-rest-element-service id="updateObjectService" auto="false" method="PUT" fdtype="things/{{updateUUID}}" toast="{{toast}}" body="{{body}}" contenttype="application/json">
     </fd-rest-element-service>
 
     <div class="object-row" layout="" vertical="">
@@ -11071,7 +11069,7 @@ core-icon {
     <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
     </core-localstorage>
 
-    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast="{{" }}="">
+    <fd-rest-element-service fdtype="things" fditems="{{ objects }}" toast="{{" }}="">
     </fd-rest-element-service>
 
     <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
@@ -11195,8 +11193,8 @@ core-icon {
 
       reloadUrl: function(){
         if(this.ssl != undefined && this.apiurl && this.envObject.uuid){
-          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid + "/click";
-          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid;
+          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "things/" + this.envObject.uuid + "/click";
+          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "things/" + this.envObject.uuid;
         }
       },
 
@@ -12374,13 +12372,13 @@ information about `paper-radio-button`.
       }
     </style>
 
-    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{addMessage}}">
+    <nautes-fd-websocket-api-service wstype="ws_objectChange" on-message="{{addMessage}}">
     </nautes-fd-websocket-api-service>
 
-    <nautes-fd-websocket-api-service wstype="zonechange" on-message="{{addMessage}}">
+    <nautes-fd-websocket-api-service wstype="ws_zoneChange" on-message="{{addMessage}}">
     </nautes-fd-websocket-api-service>
 
-    <nautes-fd-websocket-api-service wstype="pluginchange" on-message="{{addMessage}}">
+    <nautes-fd-websocket-api-service wstype="ws_pluginChange" on-message="{{addMessage}}">
     </nautes-fd-websocket-api-service>
 
     <div layout="" vertical="" center="">
@@ -13356,8 +13354,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <polymer-element name="core-drag-drop" assetpath="../app/bower_components/core-drag-drop/">
 <script>
-(function() {
-  var avatar;
 
   Polymer('core-drag-drop', {
 
@@ -13366,11 +13362,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     ready: function() {
-      if (!avatar) {
-        avatar = document.createElement('core-drag-avatar');
-        document.body.appendChild(avatar);
+      if (!this.__proto__.avatar) {
+        this.__proto__.avatar = document.createElement('core-drag-avatar');
+        document.body.appendChild(this.avatar);
       }
-      this.avatar = avatar;
       this.dragging = false;
     },
 
@@ -13438,9 +13433,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   });
 
-})();
 </script>
 </polymer-element>
+
 <!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -15634,7 +15629,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast="{{" }}="">
+    <fd-rest-element-service fdtype="things" fditems="{{ objects }}" toast="{{ toast }}">
+    </fd-rest-element-service>
+
+    <fd-rest-element-service id="updateObjectService" auto="false" method="PUT" fdtype="things/{{updateUUID}}" toast="{{toast}}" body="{{body}}" contenttype="application/json">
     </fd-rest-element-service>
 
     <core-animated-pages selected="{{page}}" transitions="hero-transition cross-fade" on-core-animated-pages-transition-end="{{complete}}">
@@ -15673,7 +15671,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </div>
           <div class="row">{{selectedObject.description}}</div>
           <template repeat="{{behavior in selectedObject.behaviors}}">
-            <nautes-behavior-edit class="row" behavior="{{behavior}}" object="{{object}}" on-behavior-submit="{{submitBehavior}}">
+            <nautes-behavior-edit class="row" behavior="{{behavior}}" object="{{selectedObject}}" on-behavior-submit="{{submitBehavior}}">
             </nautes-behavior-edit>
           </template>
         </div>
@@ -15697,7 +15695,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         } else {
           this.page = 0;
         }
-      }
+      },
+
+      submitBehavior: function(event, detail, sender){
+        console.log(detail);
+        this.updateUUID = detail.object.uuid;
+
+        var body = JSON.stringify(detail.object);
+        this.$.updateObjectService.body = body;
+
+        this.$.updateObjectService.go();
+
+      } 
 
     });
   </script>

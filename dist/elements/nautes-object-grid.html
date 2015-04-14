@@ -86,7 +86,16 @@
 
     </style>
 
-    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast={{ toast }}>
+    <fd-rest-element-service fdtype="things" fditems="{{ objects }}" toast="{{ toast }}">
+    </fd-rest-element-service>
+
+    <fd-rest-element-service id="updateObjectService" 
+      auto="false"
+      method="PUT" 
+      fdtype="things/{{updateUUID}}"  
+      toast="{{toast}}"
+      body="{{body}}"
+      contentType="application/json">
     </fd-rest-element-service>
 
     <core-animated-pages selected="{{page}}" transitions="hero-transition cross-fade" on-core-animated-pages-transition-end="{{complete}}">
@@ -128,7 +137,7 @@
           <template repeat="{{behavior in selectedObject.behaviors}}">
             <nautes-behavior-edit class="row"
               behavior="{{behavior}}" 
-              object="{{object}}" 
+              object="{{selectedObject}}" 
               on-behavior-submit="{{submitBehavior}}">
             </nautes-behavior-edit>
           </template>
@@ -153,7 +162,18 @@
         } else {
           this.page = 0;
         }
-      }
+      },
+
+      submitBehavior: function(event, detail, sender){
+        console.log(detail);
+        this.updateUUID = detail.object.uuid;
+
+        var body = JSON.stringify(detail.object);
+        this.$.updateObjectService.body = body;
+
+        this.$.updateObjectService.go();
+
+      } 
 
     });
   </script>
