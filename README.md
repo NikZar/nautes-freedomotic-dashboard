@@ -56,7 +56,7 @@ fritz.bestmazzo.it:9111/v3/
 
 * Disable SSL and enable credentials
 
-* ubmit and enjoy! :)
+* Submit and enjoy! :)
 
 =============================
 
