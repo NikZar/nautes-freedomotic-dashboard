@@ -35,7 +35,7 @@
         <canvas id="environmentCanvas" width="{{environment.width}}px" height="{{environment.height}}px"></canvas>
         <img id="environmentImg" width="{{environment.width}}px" height="{{environment.height}}px"/>
         <template repeat="{{zone in environment.zones}}">
-          <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
+          <nautes-zone environment="{{ environment }}" zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
         </template>
       </div>
     </div>

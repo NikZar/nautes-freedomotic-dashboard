@@ -2,8 +2,9 @@
 
 <link rel="import" href="../elements/nautes-zone-object.html">
 <link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/fd-rest-element-service.html">
 
-<polymer-element name="nautes-zone" attributes="zone canvas toast">
+<polymer-element name="nautes-zone" attributes="environment zone canvas toast">
   <template>
     <style>
       :host {
@@ -21,7 +22,30 @@
     <div id="title">
       {{zone.name}}
     </div>
-    <template repeat="{{envObject in zone.objects}}">
+
+    <core-localstorage
+      name="ssl" 
+      value="{{ ssl }}">
+    </core-localstorage>
+
+
+    <core-localstorage
+      name="apiurl" 
+      value="{{ apiurl }}">
+    </core-localstorage>
+
+    <core-localstorage
+      name="credentialrequired" 
+      value="{{ credentialrequired }}">
+    </core-localstorage>
+
+    <fd-rest-element-service 
+      fdtype="environments/{{ environment.uuid }}/rooms/{{ zone.uuid }}/things" 
+      fditems="{{ objects }}" 
+      toast={{ toast }}>
+    </fd-rest-element-service>
+
+    <template repeat="{{envObject in objects}}">
       <nautes-zone-object envObject="{{envObject}}" toast="{{toast}}"></nautes-zone-object>
     </template>
   </template>
