@@ -95,7 +95,10 @@
       contentType="application/json">
     </fd-rest-element-service>
 
-    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast={{ toast }}>
+    <fd-rest-element-service 
+    fdtype="objects" 
+    fditems="{{ objects }}" 
+    toast="{{ toast }}">
     </fd-rest-element-service>
 
     <core-animated-pages selected="{{page}}" transitions="hero-transition cross-fade" on-core-animated-pages-transition-end="{{complete}}">

@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
 
 <link rel="import" href="../elements/nautes-open-sans.html">
+<link rel="import" href="../elements/nautes-i18n.html">
 
 <polymer-element name="nautes-settings" attributes="color">
   <template>
@@ -51,7 +52,7 @@
         <paper-input id="apiInput"
           label="{{apiurl}}" 
           floatingLabel="true" 
-          inputValue="{{newAPIUrl}}">
+          value="{{newAPIUrl}}">
         </paper-input>
       </div>
 
@@ -60,7 +61,7 @@
           name="credentialrequired" 
           value="{{credentialrequired}}">
         </core-localstorage>
-          {{"cr" | translate }}:  
+          {{"cr" | i18n }}:  
           <paper-toggle-button checked="{{newCredentialRequired}}">
           </paper-toggle-button>
       </div>
@@ -80,7 +81,7 @@
           name="locale" 
           value="{{locale}}">
         </core-localstorage>
-        {{"language" | translate}}: <paper-radio-group selected="{{newLocale}}">
+        {{"language" | i18n }}: <paper-radio-group selected="{{newLocale}}">
                                       <paper-radio-button name="en-US" label="English">
                                       </paper-radio-button>
                                       <paper-radio-button name="it-IT" label="Italiano">
@@ -94,6 +95,7 @@
 
   </template>
   <script>
+
     Polymer("nautes-settings",{
 
       newAPIUrl: "",

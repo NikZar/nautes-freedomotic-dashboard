@@ -2,18 +2,18 @@
   "name": "core-item",
   "private": true,
   "dependencies": {
-    "core-icon": "Polymer/core-icon#>=0.3.0 <1.0.0",
-    "core-icons": "Polymer/core-icons#>=0.3.0 <1.0.0"
+    "core-icon": "Polymer/core-icon#^0.5",
+    "core-icons": "Polymer/core-icons#^0.5"
   },
+  "version": "0.5.5",
   "homepage": "https://github.com/Polymer/core-item",
-  "version": "0.3.5",
-  "_release": "0.3.5",
+  "_release": "0.5.5",
   "_resolution": {
     "type": "version",
-    "tag": "0.3.5",
-    "commit": "9d4c6a97a7e70ebfb62bd9266892cfe13de7b70b"
+    "tag": "0.5.5",
+    "commit": "46be57f9435ffe9b43fb533a7f290ad03b3fab7c"
   },
   "_source": "git://github.com/Polymer/core-item.git",
-  "_target": ">=0.3.0 <1.0.0",
+  "_target": "^0.5",
   "_originalSource": "Polymer/core-item"
 }

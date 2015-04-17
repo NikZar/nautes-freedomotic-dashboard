@@ -79,12 +79,12 @@
           <content></content>
           <template if="{{ graph }}">
             <core-icon-button icon="drive-fusiontable" on-tap="{{toggleStats}}">
-              {{label | translate}}
+              {{label | i18n}}
             </core-icon-button>
           </template>
           <template if="{{ hasBehavior() }}">
             <core-icon-button icon="drive-fusiontable" on-tap="{{toggleActions}}">
-              {{labelActions | translate}}
+              {{labelActions | i18n}}
             </core-icon-button>
           </template>
         </div>

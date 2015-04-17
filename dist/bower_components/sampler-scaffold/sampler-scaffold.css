@@ -63,7 +63,7 @@ polyfill-next-selector { content: 'core-menu#menu core-item.core-selected'; }
 /* card */
 #card {
   display: block;
-  margin: 64px 120px 60px 5px;
+  margin: 64px 120px 60px 0;
   background-color: #fff;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   border-radius: 2px;
@@ -124,7 +124,7 @@ polyfill-next-selector { content: '#drawerPanel:not([narrow]) .menuButton';}
 #frame {
   display: block;
   width: 100%;
-  min-height: 500px;
+  min-height: 600px;
   border: none;
 }
 
@@ -144,6 +144,7 @@ polyfill-next-selector { content: '#drawerPanel:not([narrow]) .menuButton';}
 }
 
 #drawerPanel[narrow] #frame {
+  position: absolute;
   min-height: 100%;
 }
 

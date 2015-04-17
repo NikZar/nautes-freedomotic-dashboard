@@ -1,8 +1,17 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
 <!doctype html>
 <html>
 <head>
 
-  <script src="../../platform/platform.js"></script>
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
 
   <link href="../../core-icons/core-icons.html" rel="import">
   <link href="../../core-icon-button/core-icon-button.html" rel="import">
@@ -19,7 +28,12 @@
     }
 
     #container {
-      overflow: auto;
+      overflow: hidden;
+    }
+
+    #noscroll {
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     .card {
@@ -52,10 +66,12 @@
 
       <section vertical layout>
 
-        <div id="container" flex horizontal wrap around-justified layout hero-p>
-          <template repeat="{{item in items}}">
-            <div class="card" vertical center center-justified layout hero-id="item-{{item}}" hero?="{{$.pages.selected === item + 1 || lastSelected === item + 1}}" on-tap="{{selectView}}"><span cross-fade>{{item}}</span></div>
-          </template>
+        <div id="noscroll" fit hero-p>
+          <div id="container" flex horizontal wrap around-justified layout cross-fade>
+            <template repeat="{{item in items}}">
+              <div class="card" vertical center center-justified layout hero-id="item-{{item}}" hero?="{{$.pages.selected === item + 1 || lastSelected === item + 1}}" on-tap="{{selectView}}"><span cross-fade>{{item}}</span></div>
+            </template>
+          </div>
         </div>
 
       </section>

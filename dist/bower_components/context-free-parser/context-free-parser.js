@@ -1,3 +1,13 @@
+/**
+ * @license
+ * Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+ * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+ * The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+ * The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+ * Code distributed by Google as part of the polymer project is also
+ * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+ */
+
 (function(scope) {
   
   var ContextFreeParser = {
@@ -50,7 +60,7 @@
               };
               entities.push(current);
               break;
-            
+
             // an entity may have these describable sub-features
             case 'attribute':
             case 'property':
@@ -84,7 +94,30 @@
               }
 
               break;
-  
+
+            case 'extends':
+            case 'mixins':
+              var parts = content.split(' ');
+              var subObj = {
+                name: parts[0],
+                url: parts[1] || null
+              };
+              makePragma(current, pragma, subObj);
+              break;
+
+            case 'return':
+              var returnRe = /\{(.+)\}\s+(.*)$/;
+
+              var returnReResult = content.match(returnRe);
+              if (returnReResult) {
+                var subReturnObj = {
+                  type: returnReResult[1],
+                  description: returnReResult[2]
+                };
+                subCurrent[pragma] = subReturnObj;
+              }
+              break;
+
             // everything else
             default:
               current[pragma] = content;

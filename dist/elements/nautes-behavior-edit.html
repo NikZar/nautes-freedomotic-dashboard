@@ -84,16 +84,20 @@
         }
       },
 
-      behaviorChanged: function(oldValue, newValue){
-        console.log("behaviorChanged", oldValue, newValue);
-        if(oldValue && (oldValue.value != newValue.value)){
-          console.log("check");
-          checkObjectConsistency(this.object, this.behavior);
-        }
-      },
+      // behaviorChanged: function(oldValue, newValue){
+      //   console.log("behaviorChanged", oldValue, newValue);
+      //   if(oldValue && (oldValue.value != newValue.value)){
+      //     console.log("check");
+      //     checkObjectConsistency(this.object, this.behavior);
+      //   }
+      // },
 
       behaviorValueChanged: function(oldValue, newValue){
         console.log("behaviorValueChanged", oldValue, newValue);
+        if(oldValue != undefined && (oldValue != newValue)){
+          console.log("check");
+          this.checkObjectConsistency(this.object, this.behavior);
+        }
       },
 
       submit: function(){
