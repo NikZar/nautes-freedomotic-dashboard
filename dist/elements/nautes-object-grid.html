@@ -86,6 +86,15 @@
 
     </style>
 
+    <fd-rest-element-service id="updateObjectService" 
+      auto="false"
+      method="PUT" 
+      fdtype="objects/{{updateUUID}}"  
+      toast="{{toast}}"
+      body="{{body}}"
+      contentType="application/json">
+    </fd-rest-element-service>
+
     <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast={{ toast }}>
     </fd-rest-element-service>
 
@@ -146,6 +155,17 @@
 
       selectedObject: null,
 
+      submitBehavior: function(event, detail, sender){
+        console.log("update: ",detail);
+        this.updateUUID = this.selectedObject.uuid;
+
+        var body = JSON.stringify(this.selectedObject.object);
+        this.$.updateObjectService.body = body;
+
+        this.$.updateObjectService.go();
+
+      }, 
+
       transition: function(e) {
         if (this.page === 0 && e.target.templateInstance.model.obj) {
           this.selectedObject = e.target.templateInstance.model.obj;
@@ -153,7 +173,7 @@
         } else {
           this.page = 0;
         }
-      }
+      }   
 
     });
   </script>

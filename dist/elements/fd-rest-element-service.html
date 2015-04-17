@@ -85,7 +85,7 @@
     
     errorHandler: function(event){
       console.log("Error:", event.detail);
-      if(this.toast){
+      if(this.toast && this.toast.show){
         this.toast.text="There was a problem loading "+this.fdtype+" data.";
         this.toast.show();
       }

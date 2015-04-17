@@ -86,6 +86,15 @@
 
     </style>
 
+    <fd-rest-element-service id="updateObjectService" 
+      auto="false"
+      method="PUT" 
+      fdtype="objects/{{updateUUID}}"  
+      toast="{{toast}}"
+      body="{{body}}"
+      contentType="application/json">
+    </fd-rest-element-service>
+
     <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast={{ toast }}>
     </fd-rest-element-service>
 
@@ -128,7 +137,7 @@
           <template repeat="{{behavior in selectedObject.behaviors}}">
             <nautes-behavior-edit class="row"
               behavior="{{behavior}}" 
-              object="{{object}}" 
+              object="{{selectedObject}}" 
               on-behavior-submit="{{submitBehavior}}">
             </nautes-behavior-edit>
           </template>
@@ -145,6 +154,41 @@
       page: 0,
 
       selectedObject: null,
+      
+      checkObjectConsistency: function (object, behavior){
+        if(behavior.name === "brightness"){
+          if(behavior.value <= 0){
+            object.behaviors.map(
+              function(objBehavior){
+                if(objBehavior.name === "powered"){
+                  objBehavior.value = false;
+                }
+              }
+            );
+          }
+          else {
+            object.behaviors.map(
+              function(objBehavior){
+                if(objBehavior.name === "powered"){
+                  objBehavior.value = true;
+                }
+              }
+            );
+          }
+        }
+      },
+
+      submitBehavior: function(event, detail, sender){
+        console.log(detail);
+        //this.checkObjectConsistency(detail.object, detail.behavior);
+        this.updateUUID = detail.object.uuid;
+
+        var body = JSON.stringify(detail.object);
+        this.$.updateObjectService.body = body;
+
+        this.$.updateObjectService.go();
+
+      }, 
 
       transition: function(e) {
         if (this.page === 0 && e.target.templateInstance.model.obj) {
@@ -153,7 +197,7 @@
         } else {
           this.page = 0;
         }
-      }
+      }   
 
     });
   </script>

@@ -2,17 +2,17 @@
   "name": "core-layout-grid",
   "private": true,
   "dependencies": {
-    "polymer": "Polymer/polymer#>=0.3.0 <1.0.0"
+    "polymer": "Polymer/polymer#^0.3.0"
   },
   "homepage": "https://github.com/Polymer/core-layout-grid",
-  "version": "0.3.5",
-  "_release": "0.3.5",
+  "version": "0.3.6",
+  "_release": "0.3.6",
   "_resolution": {
     "type": "version",
-    "tag": "0.3.5",
-    "commit": "1ecfd18678529b78f08230da6166c330fe39bc03"
+    "tag": "0.3.6",
+    "commit": "3e24b1063255ffb57b53bffa5c9ae4b7e235786a"
   },
   "_source": "git://github.com/Polymer/core-layout-grid.git",
-  "_target": ">=0.3.0 <1.0.0",
+  "_target": "^0.3.0",
   "_originalSource": "Polymer/core-layout-grid"
 }

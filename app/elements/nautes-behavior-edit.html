@@ -43,6 +43,11 @@
           flex>
         </paper-slider>
       </template>
+      <template if="{{behavior['@class'] === 'com.freedomotic.model.object.ListBehavior'}}">
+        <core-icon-button icon="create" on-tap="{{submit}}">
+          CHANGE
+        </core-icon-button>
+      </template>
         <div class="uppercase">
           &nbsp {{behavior.name}} : {{behavior.value}}
         </div>
@@ -52,6 +57,44 @@
 
   <script>
     Polymer("nautes-behavior-edit",{
+      observe: {
+        "behavior.value" : "behaviorValueChanged"
+      },
+
+      checkObjectConsistency: function (object, behavior){
+        if(behavior.name === "brightness"){
+          if(behavior.value <= 0){
+            object.behaviors.map(
+              function(objBehavior){
+                if(objBehavior.name === "powered"){
+                  objBehavior.value = false;
+                }
+              }
+            );
+          }
+          else {
+            object.behaviors.map(
+              function(objBehavior){
+                if(objBehavior.name === "powered"){
+                  objBehavior.value = true;
+                }
+              }
+            );
+          }
+        }
+      },
+
+      behaviorChanged: function(oldValue, newValue){
+        console.log("behaviorChanged", oldValue, newValue);
+        if(oldValue && (oldValue.value != newValue.value)){
+          console.log("check");
+          checkObjectConsistency(this.object, this.behavior);
+        }
+      },
+
+      behaviorValueChanged: function(oldValue, newValue){
+        console.log("behaviorValueChanged", oldValue, newValue);
+      },
 
       submit: function(){
         this.fire("behavior-submit",{
