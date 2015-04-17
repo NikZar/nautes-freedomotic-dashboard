@@ -137,7 +137,7 @@
           <template repeat="{{behavior in selectedObject.behaviors}}">
             <nautes-behavior-edit class="row"
               behavior="{{behavior}}" 
-              object="{{object}}" 
+              object="{{selectedObject}}" 
               on-behavior-submit="{{submitBehavior}}">
             </nautes-behavior-edit>
           </template>
@@ -154,12 +154,36 @@
       page: 0,
 
       selectedObject: null,
+      
+      checkObjectConsistency: function (object, behavior){
+        if(behavior.name === "brightness"){
+          if(behavior.value <= 0){
+            object.behaviors.map(
+              function(objBehavior){
+                if(objBehavior.name === "powered"){
+                  objBehavior.value = false;
+                }
+              }
+            );
+          }
+          else {
+            object.behaviors.map(
+              function(objBehavior){
+                if(objBehavior.name === "powered"){
+                  objBehavior.value = true;
+                }
+              }
+            );
+          }
+        }
+      },
 
       submitBehavior: function(event, detail, sender){
-        console.log("update: ",detail);
-        this.updateUUID = this.selectedObject.uuid;
+        console.log(detail);
+        //this.checkObjectConsistency(detail.object, detail.behavior);
+        this.updateUUID = detail.object.uuid;
 
-        var body = JSON.stringify(this.selectedObject.object);
+        var body = JSON.stringify(detail.object);
         this.$.updateObjectService.body = body;
 
         this.$.updateObjectService.go();
