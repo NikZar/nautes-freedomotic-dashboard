@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/core-icons/core-icons.html">
 
 <link rel="import" href="../elements/fd-rest-element-service.html">
+<link rel="import" href="../elements/nautes-fd-websocket-api-service.html">
 <link rel="import" href="../elements/nautes-object-cell.html">
 <link rel="import" href="../elements/nautes-open-sans.html">
 
@@ -86,20 +87,25 @@
 
     </style>
 
-    <fd-rest-element-service id="updateObjectService" 
+    <fd-rest-element-service id="updateBehaviorService" 
       auto="false"
-      method="PUT" 
-      fdtype="objects/{{updateUUID}}"  
+      method="POST" 
+      fdtype="things/{{updateUUID}}/behaviorchange/{{updateBID}}/{{updateBvalue}}"  
       toast="{{toast}}"
       body="{{body}}"
       contentType="application/json">
     </fd-rest-element-service>
 
     <fd-rest-element-service 
-    fdtype="objects" 
+    fdtype="things" 
     fditems="{{ objects }}" 
     toast="{{ toast }}">
     </fd-rest-element-service>
+
+    <nautes-fd-websocket-api-service 
+      wstype="objectchange" 
+      on-message="{{ updateObject }}">
+    </nautes-fd-websocket-api-service>
 
     <core-animated-pages selected="{{page}}" transitions="hero-transition cross-fade" on-core-animated-pages-transition-end="{{complete}}">
 
@@ -157,39 +163,36 @@
       page: 0,
 
       selectedObject: null,
-      
-      checkObjectConsistency: function (object, behavior){
-        if(behavior.name === "brightness"){
-          if(behavior.value <= 0){
-            object.behaviors.map(
-              function(objBehavior){
-                if(objBehavior.name === "powered"){
-                  objBehavior.value = false;
-                }
-              }
-            );
-          }
-          else {
-            object.behaviors.map(
-              function(objBehavior){
-                if(objBehavior.name === "powered"){
-                  objBehavior.value = true;
-                }
-              }
-            );
+
+      updateObject: function(event){
+        //TODO: fix API!!!
+        var wsObj = JSON.parse(event.detail.data.uuid);
+        var uuid = JSON.parse(event.detail.data.uuid).uuid;
+
+        if(uuid){
+        
+          for (var i = 0; i < this.objects.length; i++) {
+            var obj = this.objects[i];
+
+            if (obj.uuid === uuid) {
+              console.log("Object Grid - Asynch update of: " + wsObj);
+              this.objects[i] = wsObj;
+            }
+
           }
         }
       },
 
       submitBehavior: function(event, detail, sender){
-        console.log(detail);
+        //console.log(detail);
         //this.checkObjectConsistency(detail.object, detail.behavior);
         this.updateUUID = detail.object.uuid;
+        this.updateBID = detail.behavior.name;
+        this.updateBvalue = detail.behavior.value;
 
         var body = JSON.stringify(detail.object);
-        this.$.updateObjectService.body = body;
 
-        this.$.updateObjectService.go();
+        this.$.updateBehaviorService.go();
 
       }, 
 

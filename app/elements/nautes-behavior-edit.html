@@ -43,11 +43,11 @@
           flex>
         </paper-slider>
       </template>
-      <template if="{{behavior['@class'] === 'com.freedomotic.model.object.ListBehavior'}}">
+     <!--  <template if="{{behavior['@class'] === 'com.freedomotic.model.object.ListBehavior'}}">
         <core-icon-button icon="create" on-tap="{{submit}}">
           CHANGE
         </core-icon-button>
-      </template>
+      </template> -->
         <div class="uppercase">
           &nbsp {{behavior.name}} : {{behavior.value}}
         </div>
@@ -84,18 +84,8 @@
         }
       },
 
-      // behaviorChanged: function(oldValue, newValue){
-      //   console.log("behaviorChanged", oldValue, newValue);
-      //   if(oldValue && (oldValue.value != newValue.value)){
-      //     console.log("check");
-      //     checkObjectConsistency(this.object, this.behavior);
-      //   }
-      // },
-
       behaviorValueChanged: function(oldValue, newValue){
-        console.log("behaviorValueChanged", oldValue, newValue);
         if(oldValue != undefined && (oldValue != newValue)){
-          console.log("check");
           this.checkObjectConsistency(this.object, this.behavior);
         }
       },

@@ -57,8 +57,8 @@
 
       reloadUrl: function(){
         if(this.ssl != undefined && this.apiurl && this.envObject.uuid){
-          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid + "/click";
-          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid;
+          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "things/" + this.envObject.uuid + "/click";
+          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "things/" + this.envObject.uuid;
         }
       },
 
@@ -116,7 +116,8 @@
         },
 
       updateObject: function(event){
-          var uuid = event.detail.data.uuid;
+          //TODO: FIX API!!!
+          var uuid = JSON.parse(event.detail.data.uuid).uuid;
           if(uuid){
             var obj = this.envObject;
             if (obj.uuid === uuid) {
@@ -128,7 +129,7 @@
 
       getImg: function() {
         var obj = this.envObject;
-        if(obj){
+        if(obj && obj.representation){
           var icon = obj.representation[obj.currentRepresentation].icon;
           if(icon){
             var src = (this.ssl ? "https" : "http") + "://" + this.apiurl + "resources/" + icon;
