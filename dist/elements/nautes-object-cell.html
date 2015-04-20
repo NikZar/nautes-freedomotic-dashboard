@@ -43,7 +43,7 @@
       },
 
       reloadImage: function(){
-        if(this.object){
+        if(this.object && this.object.representation){
           var icon = this.object.representation[this.object.currentRepresentation].icon;
           if(icon != null && this.ssl != null && this.apiurl != null){
             this.$.image.src = this.getImg(icon);

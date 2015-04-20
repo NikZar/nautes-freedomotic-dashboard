@@ -11665,11 +11665,11 @@ core-icon {
         <paper-slider id="ratings" pin="" snaps="" min="{{behavior.min}}" max="{{behavior.max}}" step="1" value="{{behavior.value}}" flex="">
         </paper-slider>
       </template>
-      <template if="{{behavior[&apos;@class&apos;] === &apos;com.freedomotic.model.object.ListBehavior&apos;}}">
+     <!--  <template if="{{behavior['@class'] === 'com.freedomotic.model.object.ListBehavior'}}">
         <core-icon-button icon="create" on-tap="{{submit}}">
           CHANGE
         </core-icon-button>
-      </template>
+      </template> -->
         <div class="uppercase">
           &nbsp {{behavior.name}} : {{behavior.value}}
         </div>
@@ -11706,18 +11706,8 @@ core-icon {
         }
       },
 
-      // behaviorChanged: function(oldValue, newValue){
-      //   console.log("behaviorChanged", oldValue, newValue);
-      //   if(oldValue && (oldValue.value != newValue.value)){
-      //     console.log("check");
-      //     checkObjectConsistency(this.object, this.behavior);
-      //   }
-      // },
-
       behaviorValueChanged: function(oldValue, newValue){
-        console.log("behaviorValueChanged", oldValue, newValue);
         if(oldValue != undefined && (oldValue != newValue)){
-          console.log("check");
           this.checkObjectConsistency(this.object, this.behavior);
         }
       },
@@ -11801,7 +11791,7 @@ core-icon {
 
     </style>
 
-    <fd-rest-element-service id="updateObjectService" auto="false" method="PUT" fdtype="objects/{{updateUUID}}" toast="{{toast}}" body="{{body}}" contenttype="application/json">
+    <fd-rest-element-service id="updateObjectService" auto="false" method="PUT" fdtype="things/{{updateUUID}}" toast="{{toast}}" body="{{body}}" contenttype="application/json">
     </fd-rest-element-service>
 
     <div class="object-row" layout="" vertical="">
@@ -12243,7 +12233,7 @@ core-icon {
     <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
     </core-localstorage>
 
-    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast="{{" }}="">
+    <fd-rest-element-service fdtype="things" fditems="{{ objects }}" toast="{{" }}="">
     </fd-rest-element-service>
 
     <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
@@ -12298,7 +12288,8 @@ core-icon {
       },
 
       updateObject: function(event){
-        var uuid = event.detail.data.uuid;
+        //TODO: fix API!!!
+        var uuid = JSON.parse(event.detail.data.uuid).uuid;
 
         if(uuid){
         
@@ -12367,8 +12358,8 @@ core-icon {
 
       reloadUrl: function(){
         if(this.ssl != undefined && this.apiurl && this.envObject.uuid){
-          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid + "/click";
-          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "objects/" + this.envObject.uuid;
+          this.$.objTapRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "things/" + this.envObject.uuid + "/click";
+          this.$.objGetRequest.url = (this.ssl ? "https" : "http") + "://" + this.apiurl + "things/" + this.envObject.uuid;
         }
       },
 
@@ -12426,7 +12417,8 @@ core-icon {
         },
 
       updateObject: function(event){
-          var uuid = event.detail.data.uuid;
+          //TODO: FIX API!!!
+          var uuid = JSON.parse(event.detail.data.uuid).uuid;
           if(uuid){
             var obj = this.envObject;
             if (obj.uuid === uuid) {
@@ -12438,7 +12430,7 @@ core-icon {
 
       getImg: function() {
         var obj = this.envObject;
-        if(obj){
+        if(obj && obj.representation){
           var icon = obj.representation[obj.currentRepresentation].icon;
           if(icon){
             var src = (this.ssl ? "https" : "http") + "://" + this.apiurl + "resources/" + icon;
@@ -12456,7 +12448,9 @@ core-icon {
 
 
 
-<polymer-element name="nautes-zone" attributes="zone canvas toast" assetpath="../app/elements/">
+
+
+<polymer-element name="nautes-zone" attributes="environment zone canvas toast" assetpath="../app/elements/">
   <template>
     <style>
       :host {
@@ -12474,7 +12468,20 @@ core-icon {
     <div id="title">
       {{zone.name}}
     </div>
-    <template repeat="{{envObject in zone.objects}}">
+    <core-localstorage name="ssl" value="{{ ssl }}">
+    </core-localstorage>
+
+
+    <core-localstorage name="apiurl" value="{{ apiurl }}">
+    </core-localstorage>
+
+    <core-localstorage name="credentialrequired" value="{{ credentialrequired }}">
+    </core-localstorage>
+
+    <fd-rest-element-service fdtype="environments/{{ environment.uuid }}/rooms/{{ zone.uuid }}/things" fditems="{{ objects }}" toast="{{" }}="">
+    </fd-rest-element-service>
+
+    <template repeat="{{envObject in objects}}">
       <nautes-zone-object envobject="{{envObject}}" toast="{{toast}}"></nautes-zone-object>
     </template>
   </template>
@@ -12545,7 +12552,7 @@ core-icon {
         <canvas id="environmentCanvas" width="{{environment.width}}px" height="{{environment.height}}px"></canvas>
         <img id="environmentImg" width="{{environment.width}}px" height="{{environment.height}}px">
         <template repeat="{{zone in environment.zones}}">
-          <nautes-zone zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
+          <nautes-zone environment="{{ environment }}" zone="{{zone}}" canvas="{{$.environmentCanvas}}" toast="{{toast}}"></nautes-zone>
         </template>
       </div>
     </div>
@@ -17010,7 +17017,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       reloadImage: function(){
-        if(this.object){
+        if(this.object && this.object.representation){
           var icon = this.object.representation[this.object.currentRepresentation].icon;
           if(icon != null && this.ssl != null && this.apiurl != null){
             this.$.image.src = this.getImg(icon);
@@ -17026,6 +17033,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
   </script>
 </polymer-element>
+
 
 
 
@@ -17115,11 +17123,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <fd-rest-element-service id="updateObjectService" auto="false" method="PUT" fdtype="objects/{{updateUUID}}" toast="{{toast}}" body="{{body}}" contenttype="application/json">
+    <fd-rest-element-service id="updateBehaviorService" auto="false" method="POST" fdtype="things/{{updateUUID}}/behaviorchange/{{updateBID}}/{{updateBvalue}}" toast="{{toast}}" body="{{body}}" contenttype="application/json">
     </fd-rest-element-service>
 
-    <fd-rest-element-service fdtype="objects" fditems="{{ objects }}" toast="{{ toast }}">
+    <fd-rest-element-service fdtype="things" fditems="{{ objects }}" toast="{{ toast }}">
     </fd-rest-element-service>
+
+    <nautes-fd-websocket-api-service wstype="objectchange" on-message="{{ updateObject }}">
+    </nautes-fd-websocket-api-service>
 
     <core-animated-pages selected="{{page}}" transitions="hero-transition cross-fade" on-core-animated-pages-transition-end="{{complete}}">
 
@@ -17173,39 +17184,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       page: 0,
 
       selectedObject: null,
-      
-      checkObjectConsistency: function (object, behavior){
-        if(behavior.name === "brightness"){
-          if(behavior.value <= 0){
-            object.behaviors.map(
-              function(objBehavior){
-                if(objBehavior.name === "powered"){
-                  objBehavior.value = false;
-                }
-              }
-            );
-          }
-          else {
-            object.behaviors.map(
-              function(objBehavior){
-                if(objBehavior.name === "powered"){
-                  objBehavior.value = true;
-                }
-              }
-            );
+
+      updateObject: function(event){
+        //TODO: fix API!!!
+        var wsObj = JSON.parse(event.detail.data.uuid);
+        var uuid = JSON.parse(event.detail.data.uuid).uuid;
+
+        if(uuid){
+        
+          for (var i = 0; i < this.objects.length; i++) {
+            var obj = this.objects[i];
+
+            if (obj.uuid === uuid) {
+              console.log("Object Grid - Asynch update of: " + wsObj);
+              this.objects[i] = wsObj;
+            }
+
           }
         }
       },
 
       submitBehavior: function(event, detail, sender){
-        console.log(detail);
+        //console.log(detail);
         //this.checkObjectConsistency(detail.object, detail.behavior);
         this.updateUUID = detail.object.uuid;
+        this.updateBID = detail.behavior.name;
+        this.updateBvalue = detail.behavior.value;
 
         var body = JSON.stringify(detail.object);
-        this.$.updateObjectService.body = body;
 
-        this.$.updateObjectService.go();
+        this.$.updateBehaviorService.go();
 
       }, 
 
